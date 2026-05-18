@@ -54,11 +54,11 @@ app.innerHTML = `
         </span>
       </div>
       <div class="hero-actions">
-        <a href="https://drive.google.com/file/d/1vrhPiirAeWcPQdVbA3BZ9CdhjiMAfUFX/view?usp=sharing" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+        <a href="https://drive.google.com/file/d/1vrhPiirAeWcPQdVbA3BZ9CdhjiMAfUFX/view?usp=sharing" class="btn btn-primary" target="_blank" rel="noopener noreferrer" onclick="if(typeof gtag !== 'undefined') gtag('event', 'click', {'event_category': 'outbound', 'event_label': 'resume_view'});">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 8 9"></polyline></svg>
           View Resume
         </a>
-        <a href="https://medium.com/@axvrma" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+        <a href="https://medium.com/@axvrma" class="btn btn-secondary" target="_blank" rel="noopener noreferrer" onclick="if(typeof gtag !== 'undefined') gtag('event', 'click', {'event_category': 'outbound', 'event_label': 'blog_view'});">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
           Read Blog
         </a>
