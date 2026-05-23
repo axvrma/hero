@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>formflow-ai-assistant | Abhishek Verma</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Portfolio of Abhishek Verma, Software Development Engineer 2. Specialist in frontend systems, Angular, React, UI architecture, and performance-focused design." />
+    <meta name="keywords" content="Abhishek Verma, Frontend Engineer, Software Developer, Angular, React, Web Development, UI Architecture" />
+    <meta name="author" content="Abhishek Verma" />
+    <meta property="og:title" content="Abhishek Verma | Frontend Engineer" />
+    <meta property="og:description" content="I build frontend systems that scale, not just screens. Explore my projects and background." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://abhishekverma.com/" />
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6LX0PRSXXC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6LX0PRSXXC');
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+      <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+    </button>
+    <div class="bg-blob"></div>
+    <div class="container">
+      <div style="margin-bottom: 2rem;">
+        <a href="/" class="btn btn-secondary" style="margin-bottom: 2rem; display: inline-flex;">&larr; Back to Home</a>
+        <h1 style="margin-bottom: 1rem;">formflow-ai-assistant</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">An AI-powered workflow and form automation assistant designed to streamline form handling, validation, and intelligent user interactions. Built to reduce manual effort, improve workflow efficiency, and enable smarter form-driven experiences through conversational AI and automation capabilities.</p>
+        <div style="display: flex; gap: 1rem;">
+          <a href="https://github.com/axvrma/formflow-ai-assistant" class="btn btn-primary" target="_blank">View Source on GitHub</a>
+          
+        </div>
+      </div>
+      <div class="markdown-body">
+        <h1>formflow-ai-assistant</h1>
+<p>A React chatbot widget for form-driven applications. It converts natural language into structured actions that can fill <code>react-hook-form</code> fields, navigate tabs, and add or update table rows.</p>
+<h2>What This Package Owns</h2>
+<ul>
+<li>Chat UI: <code>AIAssistantWidget</code>, <code>ChatPanel</code>, message rendering.</li>
+<li>AI orchestration: prompt building, Gemini/OpenAI request handling, response parsing.</li>
+<li>Action execution: field updates, tab navigation, table handlers.</li>
+<li>UI-library adapters: DOM behavior for controls that cannot be updated safely with direct form state writes, such as async dropdowns.</li>
+</ul>
+<p>App/domain knowledge stays outside the package in an <code>AIAssistantConfig</code>.</p>
+<h2>Installation</h2>
+<pre><code class="language-bash">npm install formflow-ai-assistant
+</code></pre>
+<h2>Quick Start</h2>
+<h3>1. Create App Config</h3>
+<pre><code class="language-ts">import type { AIAssistantConfig } from 'formflow-ai-assistant';
+
+export const aiConfig: AIAssistantConfig = {
+  appType: 'shipment',
+  appDescription: 'Freight shipment management for ocean and air cargo',
+  fields: {
+    transportMode: {
+      formPath: 'transportMode',
+      label: 'Transport Mode',
+      type: 'dropdown',
+      options: [
+        { value: 'SEA', aliases: ['sea', 'ocean'] },
+        { value: 'AIR', aliases: ['air', 'flight'] },
+      ],
+    },
+    client: {
+      formPath: 'client',
+      label: 'Client',
+      type: 'async-dropdown',
+      description: 'Customer/client for this shipment',
+    },
+  },
+  tabs: {
+    main: [
+      { id: 'shipmentDetails', label: 'Shipment Details', aliases: ['details'] },
+      { id: 'cargo', label: 'Cargo', aliases: ['cargo', 'containers'] },
+    ],
+  },
+};
+</code></pre>
+<h3>2. Mount Provider and Widget</h3>
+<pre><code class="language-tsx">import { FormProvider, useForm } from 'react-hook-form';
+import {
+  AIAssistantWidget,
+  AIAssistantProvider,
+  defaultUIAdapter,
+} from 'formflow-ai-assistant';
+import { aiConfig } from './ai-assistant/config';
+
+function ShipmentForm() {
+  const formMethods = useForm();
+  const [currentTab, setCurrentTab] = useState('shipmentDetails');
+
+  return (
+    &lt;AIAssistantProvider
+      config={aiConfig}
+      formMethods={formMethods}
+      tabNavigator={{
+        currentTab,
+        setTab: setCurrentTab,
+      }}
+      uiAdapter={defaultUIAdapter}
+      geminiApiKey={process.env.REACT_APP_GEMINI_API_KEY}
+      provider="gemini"
+      model="gemini-flash-latest"
+    &gt;
+      &lt;FormProvider {...formMethods}&gt;{/* app */}&lt;/FormProvider&gt;
+      &lt;AIAssistantWidget position="bottom-right" /&gt;
+    &lt;/AIAssistantProvider&gt;
+  );
+}
+</code></pre>
+<h2>UI-Library Adapters</h2>
+<p>The assistant is app-config driven, but some UI controls need real DOM interaction. Async dropdowns are the main case: direct <code>setValue</code> can miss option metadata or side effects, so the assistant opens the dropdown, searches, waits for API results, and selects a result.</p>
+<p>UI-library-specific behavior lives under:</p>
+<pre><code class="language-txt">src/ui-libs/&lt;ui-library&gt;/
+</code></pre>
+<p>Current built-in adapter:</p>
+<pre><code class="language-ts">import { defaultUIAdapter } from 'formflow-ai-assistant';
+</code></pre>
+<h3>Adapter Interface</h3>
+<pre><code class="language-ts">interface UIAdapterConfig {
+  asyncDropdown?: {
+    getTrigger: (field: FieldConfig, formPath: string) =&gt; HTMLElement | null;
+    getPopover: () =&gt; HTMLElement | null;
+    getSearchInput: (popover: HTMLElement) =&gt; HTMLInputElement | null;
+    getOptions: (popover: HTMLElement) =&gt; HTMLElement[];
+    openWaitMs?: number;
+    searchWaitMs?: number;
+    afterSelectWaitMs?: number;
+  };
+}
+</code></pre>
+<p>The default adapter uses common accessible DOM selectors:</p>
+<ul>
+<li>trigger: <code>document.getElementById(formPath)</code></li>
+<li>popover: latest <code>[role="listbox"]</code></li>
+<li>search input: first <code>input</code> inside popover</li>
+<li>options: <code>[role="option"]</code></li>
+<li>waits: <code>2000ms</code>, <code>2000ms</code>, <code>100ms</code></li>
+</ul>
+<p>Async dropdown action behavior:</p>
+<ol>
+<li>Open dropdown.</li>
+<li>Wait for initial async options.</li>
+<li>Type the requested value in the search input.</li>
+<li>Wait for searched API results.</li>
+<li>Select the first returned option.</li>
+</ol>
+<p>To add another UI library, create a folder such as <code>src/ui-libs/mui/</code>, implement the same adapter interface, export it from <code>src/ui-libs/index.ts</code>, then pass it as <code>uiAdapter</code> from the host app.</p>
+<h2>Provider Props</h2>
+<pre><code class="language-ts">interface AIAssistantProviderProps {
+  config: AIAssistantConfig;
+  formMethods: UseFormReturn&lt;Record&lt;string, unknown&gt;&gt;;
+  tabNavigator: TabNavigator;
+  tableHandlers?: Record&lt;string, TableHandler&gt;;
+  uiAdapter?: UIAdapterConfig;
+  openAIApiKey?: string;
+  geminiApiKey?: string;
+  claudeApiKey?: string; // deprecated alias
+  provider?: 'openai' | 'gemini';
+  model?: string;
+  additionalSystemPrompt?: string;
+  onActionExecuted?: (action: AIAction, success: boolean) =&gt; void;
+  onError?: (error: Error) =&gt; void;
+  children: React.ReactNode;
+}
+</code></pre>
+<h2>Tables</h2>
+<p>Use <code>react-hook-form</code> field-array handlers for table actions:</p>
+<pre><code class="language-tsx">const { append, update } = useFieldArray({
+  control: formMethods.control,
+  name: 'containersList',
+});
+
+&lt;AIAssistantProvider
+  tableHandlers={{
+    containers: { append, update },
+  }}
+  // ...
+/&gt;
+</code></pre>
+<h2>Using Another Model or Training a Future Model</h2>
+<p>There are two different paths: using another hosted model, or training/fine-tuning a model to produce this app's action JSON more reliably.</p>
+<h3>Use Another Hosted Model</h3>
+<ol>
+<li>Add provider support in the AI request hook (<code>src/hooks/useOpenAIAPI.ts</code>, or split it into provider-specific clients later).</li>
+<li>Keep the output contract unchanged: the model must return JSON with:<pre><code class="language-json">{
+  "message": "Human-readable response",
+  "actions": []
+}
+</code></pre>
+</li>
+<li>Add a provider name to the <code>provider</code> union type.</li>
+<li>Add provider-specific API key prop if needed, for example <code>anthropicApiKey</code> or <code>localModelUrl</code>.</li>
+<li>Map the provider response text into <code>parseAIResponse</code>.</li>
+<li>Build and test with the same app config and examples.</li>
+</ol>
+<h3>Fine-Tune or Train a Model for This App</h3>
+<ol>
+<li>Keep the action schema stable. The important training target is <code>AIResponse</code> and <code>AIAction</code>, not the UI.</li>
+<li>Collect examples from real usage:<ul>
+<li>user request</li>
+<li>relevant current form context</li>
+<li>expected <code>message</code></li>
+<li>expected <code>actions</code></li>
+</ul>
+</li>
+<li>Store examples in the same shape as <code>ConversationExample</code> where possible.</li>
+<li>Include negative examples where the model should return <code>CLARIFY</code> instead of guessing.</li>
+<li>Train/fine-tune the model to output only valid JSON matching the action schema.</li>
+<li>Validate every model response with <code>parseAIResponse</code> before executing actions.</li>
+<li>Keep UI library logic out of training data. The model should decide <em>what action</em> to perform; the adapter decides <em>how the UI executes it</em>.</li>
+<li>Add regression prompts for core flows: static dropdowns, async dropdowns, tab navigation, table row creation, and ambiguous requests.</li>
+</ol>
+<p>Recommended starting point: do not fine-tune immediately. First improve <code>examples</code> in the app config and add provider support. Fine-tune only after you have enough failed prompts or repeated workflows to justify it.</p>
+<h2>Security</h2>
+<p>Browser env keys such as <code>REACT_APP_GEMINI_API_KEY</code> are exposed to users. This is acceptable for local testing only. For production, route model calls through a backend proxy and keep provider keys server-side.</p>
+<h2>Troubleshooting</h2>
+<ul>
+<li>If static fields do not update, verify <code>formPath</code> matches <code>react-hook-form</code> state.</li>
+<li>If async dropdowns do not work, verify the correct <code>uiAdapter</code> is passed.</li>
+<li>If async dropdown opens but does not select, inspect the UI library's trigger, popover, search input, and option selectors.</li>
+<li>If the model returns bad JSON, add examples or tighten <code>additionalSystemPrompt</code>.</li>
+<li>If actions are valid but fail, check <code>onActionExecuted</code> and browser console warnings.</li>
+</ul>
+<h2>Validation</h2>
+<pre><code class="language-ts">import { validateConfig, formatValidationErrors } from 'formflow-ai-assistant';
+
+const errors = validateConfig(aiConfig);
+if (errors.length &gt; 0) {
+  console.error(formatValidationErrors(errors));
+}
+</code></pre>
+<h2>License</h2>
+<p>MIT</p>
+
+      </div>
+    </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

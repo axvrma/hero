@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>azure-devops-pr-helper | Abhishek Verma</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Portfolio of Abhishek Verma, Software Development Engineer 2. Specialist in frontend systems, Angular, React, UI architecture, and performance-focused design." />
+    <meta name="keywords" content="Abhishek Verma, Frontend Engineer, Software Developer, Angular, React, Web Development, UI Architecture" />
+    <meta name="author" content="Abhishek Verma" />
+    <meta property="og:title" content="Abhishek Verma | Frontend Engineer" />
+    <meta property="og:description" content="I build frontend systems that scale, not just screens. Explore my projects and background." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://abhishekverma.com/" />
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6LX0PRSXXC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6LX0PRSXXC');
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+      <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+    </button>
+    <div class="bg-blob"></div>
+    <div class="container">
+      <div style="margin-bottom: 2rem;">
+        <a href="/" class="btn btn-secondary" style="margin-bottom: 2rem; display: inline-flex;">&larr; Back to Home</a>
+        <h1 style="margin-bottom: 1rem;">azure-devops-pr-helper</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Extenstion for VS Code to raise Azure DevOps PR without leaving the VS Code window</p>
+        <div style="display: flex; gap: 1rem;">
+          <a href="https://github.com/axvrma/azure-devops-pr-helper" class="btn btn-primary" target="_blank">View Source on GitHub</a>
+          
+        </div>
+      </div>
+      <div class="markdown-body">
+        <h1>Azure DevOps PR Helper</h1>
+<p>A VS Code extension to streamline creating Pull Requests on Azure DevOps with AI-powered title and description generation using Claude.</p>
+<h2>Features</h2>
+<ul>
+<li><strong>Create PRs directly from VS Code</strong> - No need to switch to the browser</li>
+<li><strong>AI-Powered Suggestions</strong> - Claude generates PR titles and descriptions based on your branch name</li>
+<li><strong>Work Item Linking</strong> - Link PRs to Azure DevOps work items</li>
+<li><strong>Secure Credential Storage</strong> - PAT and API keys stored using VS Code SecretStorage</li>
+<li><strong>Auto-Detection</strong> - Automatically detects current branch and repository</li>
+<li><strong>Comprehensive Settings</strong> - All configuration in one place</li>
+</ul>
+<h2>Installation</h2>
+<ol>
+<li>Open VS Code and go to the Extensions view (<code>Ctrl+Shift+X</code> / <code>Cmd+Shift+X</code>).</li>
+<li>Search for <code>Azure DevOps PR Helper</code> and install it.
+<em>(Alternatively, install from a <code>.vsix</code> file using the "Install from VSIX..." option in the Extensions menu).</em></li>
+</ol>
+<h2>How to Use</h2>
+<h3>1. Initial Setup</h3>
+<p>Before creating your first pull request, configure your connection:</p>
+<ol>
+<li>Click the <strong>Azure DevOps PR</strong> icon in the VS Code Activity Bar to open the sidebar, or run the command <code>Azure DevOps: Open Settings</code>.</li>
+<li>Under <strong>Azure DevOps Connection</strong>, enter your Organization URL, Project Name, and a Personal Access Token (PAT). Click <strong>Save</strong>.</li>
+<li><em>(Optional)</em> Under <strong>Claude AI Integration</strong>, enter your Anthropic API Key to enable AI-powered PR titles and descriptions.</li>
+</ol>
+<h3>2. Creating a Pull Request</h3>
+<p>Once configured, you have two ways to create pull requests:</p>
+<p><strong>Option A: The Sidebar (Quick Action)</strong></p>
+<ol>
+<li>Open the <strong>Azure DevOps PR</strong> view in the Activity Bar.</li>
+<li>The extension automatically detects your current branch, repository, and active changes.</li>
+<li>If Claude is configured, click <strong>Generate Using AI</strong> to automatically draft a context-aware title and description based on your commits.</li>
+<li>Click <strong>Create Pull Request</strong>.</li>
+</ol>
+<p><strong>Option B: The Full Webview (Detailed View)</strong></p>
+<ol>
+<li>Run the command <code>Azure DevOps: Create Pull Request</code> from the Command Palette (<code>Ctrl+Shift+P</code> / <code>Cmd+Shift+P</code>).</li>
+<li>Select your target branch, adjust the AI-generated description, and manually link Azure DevOps Work Items if needed.</li>
+<li>Click <strong>Create</strong> to instantly open the PR on Azure DevOps.</li>
+</ol>
+<h3>3. AI Generation</h3>
+<p>When connected to Anthropic, the AI analyzes your <code>git diff</code> and local commit history to write a structured, descriptive summary of your changes—saving you the hassle of manually explaining your work!</p>
+<h2>Configuration</h2>
+<p>Open the settings panel via Command Palette: <code>Azure DevOps: Open Settings</code></p>
+<h3>Azure DevOps Settings</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Organization URL</td>
+<td>Your Azure DevOps org URL (e.g., <code>https://dev.azure.com/your-org</code>)</td>
+</tr>
+<tr>
+<td>Project</td>
+<td>Project name containing your repositories</td>
+</tr>
+<tr>
+<td>PAT</td>
+<td>Personal Access Token with Code and Work Items permissions</td>
+</tr>
+<tr>
+<td>API Version</td>
+<td>Azure DevOps REST API version (default: 7.1)</td>
+</tr>
+</tbody></table>
+<h3>Claude AI Settings</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>API Key</td>
+<td>Your Anthropic API key from console.anthropic.com</td>
+</tr>
+<tr>
+<td>Model</td>
+<td>Claude model to use (default: claude-sonnet-4-5)</td>
+</tr>
+<tr>
+<td>Max Tokens</td>
+<td>Maximum response length (default: 1024)</td>
+</tr>
+<tr>
+<td>Temperature</td>
+<td>Creativity level 0-1 (default: 0.3)</td>
+</tr>
+</tbody></table>
+<h3>AI Behavior Toggles</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Enable AI Suggestions</td>
+<td>Use Claude to generate PR titles/descriptions</td>
+</tr>
+<tr>
+<td>Generate Description</td>
+<td>Also generate description (not just title)</td>
+</tr>
+<tr>
+<td>Auto-Accept AI</td>
+<td>Skip confirmation and use AI content directly</td>
+</tr>
+</tbody></table>
+<h3>Privacy Settings</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Enable Analytics</td>
+<td>Send anonymous usage data to help improve the extension</td>
+</tr>
+</tbody></table>
+<h2>Commands</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Azure DevOps: Raise PR</code></td>
+<td>Create a new pull request</td>
+</tr>
+<tr>
+<td><code>Azure DevOps: Copy Last PR URL</code></td>
+<td>Copy the last created PR URL</td>
+</tr>
+<tr>
+<td><code>Azure DevOps: Clear Azure DevOps PAT</code></td>
+<td>Remove stored PAT</td>
+</tr>
+<tr>
+<td><code>Azure DevOps: Open Settings</code></td>
+<td>Open the settings panel</td>
+</tr>
+<tr>
+<td><code>Azure DevOps: Generate PR Title with Claude</code></td>
+<td>Generate a title using AI</td>
+</tr>
+</tbody></table>
+<h2>Project Structure</h2>
+<pre><code>src/
+├── extension.ts          # Entry point
+├── api/
+│   ├── azureDevOps.ts    # Azure DevOps API client
+│   └── claude.ts         # Claude API client
+├── commands/
+│   ├── raisePR.ts        # PR creation command
+│   ├── copyUrl.ts        # Copy URL command
+│   ├── clearPAT.ts       # Clear credentials command
+│   ├── generateTitle.ts  # AI title generation
+│   └── index.ts          # Command exports
+├── webviews/
+│   ├── settingsPanel.ts  # Settings webview
+│   ├── sidebarProvider.ts # Sidebar webview
+│   └── index.ts          # Webview exports
+├── utils/
+│   ├── constants.ts      # Configuration keys and defaults
+│   ├── git.ts            # Git utilities
+│   ├── helpers.ts        # General utilities
+│   └── services.ts       # Extension services wrapper
+└── types/
+    └── index.ts          # TypeScript interfaces
+</code></pre>
+<h2>Security</h2>
+<ul>
+<li>Azure DevOps PAT and Claude API key are stored securely using VS Code's SecretStorage API</li>
+<li>Credentials are never exposed in logs or configuration files</li>
+<li>CSP headers protect webviews from XSS attacks</li>
+</ul>
+<h2>Analytics &amp; Privacy</h2>
+<p>This extension collects anonymous usage analytics to help improve the product. We use <a href="https://posthog.com">PostHog</a> for analytics.</p>
+<h3>What We Track</h3>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Extension activated</td>
+<td>When the extension starts</td>
+</tr>
+<tr>
+<td>PR created/failed</td>
+<td>Success and failure rates for PR creation</td>
+</tr>
+<tr>
+<td>AI generation used</td>
+<td>When AI title/description generation is used</td>
+</tr>
+<tr>
+<td>Settings changed</td>
+<td>Which settings are being configured</td>
+</tr>
+<tr>
+<td>Connection tests</td>
+<td>Success/failure of Azure DevOps and Claude connections</td>
+</tr>
+</tbody></table>
+<h3>What We DON'T Track</h3>
+<ul>
+<li><strong>No personal information</strong> - We never collect names, emails, or identifiable data</li>
+<li><strong>No code or content</strong> - We never see your PR titles, descriptions, branch names, or code</li>
+<li><strong>No repository data</strong> - We don't collect repository names or project details</li>
+<li><strong>No credentials</strong> - Your PAT and API keys are never transmitted</li>
+</ul>
+<h3>Privacy Controls</h3>
+<p>Analytics respects your preferences:</p>
+<ol>
+<li><strong>VS Code Telemetry Setting</strong> - If you've disabled telemetry in VS Code settings, we won't collect any data</li>
+<li><strong>Extension Setting</strong> - You can disable analytics specifically for this extension in Settings → Privacy → Enable Analytics</li>
+</ol>
+<h3>Anonymous User ID</h3>
+<p>We use VS Code's built-in <code>machineId</code> (already anonymized by VS Code) to count unique users. This ID cannot be traced back to you.</p>
+<h2>Requirements</h2>
+<ul>
+<li>VS Code 1.60.0 or higher</li>
+<li>Git repository connected to Azure DevOps</li>
+<li>Azure DevOps PAT with:<ul>
+<li>Code (Read &amp; Write)</li>
+<li>Work Items (Read &amp; Write)</li>
+</ul>
+</li>
+<li>Claude API key (optional, for AI features)</li>
+</ul>
+<h2>License</h2>
+<p>MIT</p>
+<h2>Author</h2>
+<p>Built by Abhishek Verma</p>
+
+      </div>
+    </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

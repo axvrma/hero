@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>web-xr | Abhishek Verma</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Portfolio of Abhishek Verma, Software Development Engineer 2. Specialist in frontend systems, Angular, React, UI architecture, and performance-focused design." />
+    <meta name="keywords" content="Abhishek Verma, Frontend Engineer, Software Developer, Angular, React, Web Development, UI Architecture" />
+    <meta name="author" content="Abhishek Verma" />
+    <meta property="og:title" content="Abhishek Verma | Frontend Engineer" />
+    <meta property="og:description" content="I build frontend systems that scale, not just screens. Explore my projects and background." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://abhishekverma.com/" />
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6LX0PRSXXC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6LX0PRSXXC');
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+      <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+    </button>
+    <div class="bg-blob"></div>
+    <div class="container">
+      <div style="margin-bottom: 2rem;">
+        <a href="/" class="btn btn-secondary" style="margin-bottom: 2rem; display: inline-flex;">&larr; Back to Home</a>
+        <h1 style="margin-bottom: 1rem;">web-xr</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">An immersive, browser-based spatial computing application designed to deliver real-time, interactive 3D experiences directly on the web. Built with modern web standards, this project leverages WebGL and the WebXR Device API to bridge the gap between traditional web interfaces and immersive virtual environments without requiring external plugins.</p>
+        <div style="display: flex; gap: 1rem;">
+          <a href="https://github.com/axvrma/web-xr" class="btn btn-primary" target="_blank">View Source on GitHub</a>
+          <a href="https://webxrio.netlify.app/" class="btn btn-secondary" target="_blank">View Live App</a>
+        </div>
+      </div>
+      <div class="markdown-body">
+        <h1>Voice AR Object Placer</h1>
+<p>A WebXR augmented reality app that lets you place 3D objects in the real world using voice commands. Point your camera at a surface, tap the mic, and say "red cube" or "blue sphere" to place objects that persist as you move around.</p>
+<h2>Features</h2>
+<ul>
+<li><strong>Surface Detection</strong> - Automatically detects flat surfaces (tables, floors, walls)</li>
+<li><strong>Voice Commands</strong> - Place objects by speaking color + shape combinations</li>
+<li><strong>Persistent Objects</strong> - Placed objects stay anchored in world space</li>
+<li><strong>Real-time Feedback</strong> - Visual reticle shows where objects will be placed</li>
+</ul>
+<h2>Supported Voice Commands</h2>
+<p>Speak a combination of <strong>color</strong> + <strong>shape</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Colors</th>
+<th>Shapes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>red</td>
+<td>cube</td>
+</tr>
+<tr>
+<td>blue</td>
+<td>sphere</td>
+</tr>
+<tr>
+<td>green</td>
+<td>cylinder</td>
+</tr>
+<tr>
+<td>yellow</td>
+<td>cone</td>
+</tr>
+<tr>
+<td>orange</td>
+<td></td>
+</tr>
+<tr>
+<td>purple</td>
+<td></td>
+</tr>
+<tr>
+<td>white</td>
+<td></td>
+</tr>
+<tr>
+<td>black</td>
+<td></td>
+</tr>
+<tr>
+<td>pink</td>
+<td></td>
+</tr>
+<tr>
+<td>cyan</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>"red cube"</li>
+<li>"blue sphere"</li>
+<li>"green cylinder"</li>
+<li>"yellow cone"</li>
+</ul>
+<h2>Requirements</h2>
+<h3>Device Requirements</h3>
+<ul>
+<li><strong>Android phone</strong> with ARCore support (most phones from 2018+)</li>
+<li><strong>Chrome browser</strong> version 81 or later</li>
+<li><strong>Google Play Services for AR</strong> installed</li>
+</ul>
+<h3>Network Requirements</h3>
+<ul>
+<li>Must be served over <strong>HTTPS</strong> (or localhost for development)</li>
+<li>Same WiFi network for local development testing</li>
+</ul>
+<h3>Not Supported</h3>
+<ul>
+<li>iOS Safari (Apple has not implemented WebXR AR)</li>
+<li>Desktop browsers</li>
+<li>Non-Chrome mobile browsers</li>
+</ul>
+<h2>Getting Started</h2>
+<h3>Installation</h3>
+<pre><code class="language-bash">npm install
+</code></pre>
+<h3>Development</h3>
+<pre><code class="language-bash">npm start
+</code></pre>
+<p>This starts a development server with HTTPS enabled at:</p>
+<ul>
+<li>Local: <code>https://localhost:8084/</code></li>
+<li>Network: <code>https://&lt;your-ip&gt;:8084/</code></li>
+</ul>
+<h3>Production Build</h3>
+<pre><code class="language-bash">npm run build
+</code></pre>
+<p>Output is generated in the <code>dist/</code> folder.</p>
+<h2>Testing on Android</h2>
+<ol>
+<li><p><strong>Start the dev server</strong> on your computer:</p>
+<pre><code class="language-bash">npm start
+</code></pre>
+</li>
+<li><p><strong>Get the network URL</strong> from the terminal output (e.g., <code>https://192.168.x.x:8084/</code>)</p>
+</li>
+<li><p><strong>On your Android phone:</strong></p>
+<ul>
+<li>Open Chrome browser</li>
+<li>Navigate to the HTTPS URL</li>
+<li>Accept the security warning (tap "Advanced" → "Proceed")</li>
+<li>Allow camera and microphone permissions</li>
+<li>Tap "Start AR"</li>
+</ul>
+</li>
+<li><p><strong>Using the app:</strong></p>
+<ul>
+<li>Point camera at a flat surface</li>
+<li>Wait for the green reticle to appear</li>
+<li>Tap the mic button</li>
+<li>Say a command like "red cube"</li>
+<li>The object appears on the surface!</li>
+</ul>
+</li>
+</ol>
+<h2>Tech Stack</h2>
+<ul>
+<li><strong>Three.js</strong> (r152) - 3D rendering</li>
+<li><strong>WebXR Device API</strong> - AR session and hit-testing</li>
+<li><strong>Web Speech API</strong> - Voice recognition</li>
+<li><strong>Webpack 5</strong> - Bundling and dev server</li>
+</ul>
+<h2>Project Structure</h2>
+<pre><code>web-xr/
+├── src/
+│   ├── index.html    # Main HTML with UI overlay
+│   ├── index.js      # App logic (WebXR, speech, 3D)
+│   └── style.css     # UI styling
+├── webpack.config.js # Build configuration
+└── package.json      # Dependencies
+</code></pre>
+<h2>Architecture</h2>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                    User Input                           │
+│  ┌─────────────┐                    ┌──────────────┐   │
+│  │  Mic Button │                    │ Camera Feed  │   │
+│  └──────┬──────┘                    └──────┬───────┘   │
+│         │                                  │           │
+│         ▼                                  ▼           │
+│  ┌─────────────┐                    ┌──────────────┐   │
+│  │ Web Speech  │                    │   WebXR      │   │
+│  │    API      │                    │  Hit Test    │   │
+│  └──────┬──────┘                    └──────┬───────┘   │
+│         │                                  │           │
+│         ▼                                  ▼           │
+│  ┌─────────────┐                    ┌──────────────┐   │
+│  │  Command    │                    │   Reticle    │   │
+│  │   Parser    │                    │  Placement   │   │
+│  └──────┬──────┘                    └──────────────┘   │
+│         │                                              │
+│         ▼                                              │
+│  ┌─────────────────────────────────────────────────┐   │
+│  │              Three.js Scene                      │   │
+│  │         (3D objects + AR overlay)                │   │
+│  └─────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>"WebXR API not available"</td>
+<td>Use Chrome browser on Android</td>
+</tr>
+<tr>
+<td>"Immersive AR not supported"</td>
+<td>Install Google Play Services for AR from Play Store</td>
+</tr>
+<tr>
+<td>"Page must be loaded over HTTPS"</td>
+<td>Use the <code>https://</code> URL, not <code>http://</code></td>
+</tr>
+<tr>
+<td>Security certificate warning</td>
+<td>Tap "Advanced" → "Proceed" (safe for local dev)</td>
+</tr>
+<tr>
+<td>No reticle appearing</td>
+<td>Point camera at a well-lit flat surface</td>
+</tr>
+<tr>
+<td>Voice not recognized</td>
+<td>Speak clearly, try "red cube" or "blue sphere"</td>
+</tr>
+<tr>
+<td>iOS not working</td>
+<td>WebXR AR is not supported on iOS Safari</td>
+</tr>
+</tbody></table>
+<h2>License</h2>
+<p>ISC</p>
+
+      </div>
+    </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

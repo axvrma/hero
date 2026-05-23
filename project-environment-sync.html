@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>environment-sync | Abhishek Verma</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Portfolio of Abhishek Verma, Software Development Engineer 2. Specialist in frontend systems, Angular, React, UI architecture, and performance-focused design." />
+    <meta name="keywords" content="Abhishek Verma, Frontend Engineer, Software Developer, Angular, React, Web Development, UI Architecture" />
+    <meta name="author" content="Abhishek Verma" />
+    <meta property="og:title" content="Abhishek Verma | Frontend Engineer" />
+    <meta property="og:description" content="I build frontend systems that scale, not just screens. Explore my projects and background." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://abhishekverma.com/" />
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6LX0PRSXXC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6LX0PRSXXC');
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+      <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+    </button>
+    <div class="bg-blob"></div>
+    <div class="container">
+      <div style="margin-bottom: 2rem;">
+        <a href="/" class="btn btn-secondary" style="margin-bottom: 2rem; display: inline-flex;">&larr; Back to Home</a>
+        <h1 style="margin-bottom: 1rem;">environment-sync</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">A lightweight developer utility for synchronizing environment configurations across projects and machines, helping teams maintain consistent .env setups with minimal friction. Built to simplify configuration management, reduce setup time, and streamline local development workflows.</p>
+        <div style="display: flex; gap: 1rem;">
+          <a href="https://github.com/axvrma/environment-sync" class="btn btn-primary" target="_blank">View Source on GitHub</a>
+          
+        </div>
+      </div>
+      <div class="markdown-body">
+        <h1>Environment Manager</h1>
+<h2>Overview</h2>
+<p>The <strong>Environment Manager</strong> is a comprehensive tool-set for managing and tracking the current environment configuration across UI applications. It consists of:</p>
+<ol>
+<li><strong>JavaScript File</strong>: A script to get the current environment and app related configurations.</li>
+<li><strong>Node.js Application</strong>: An app to set and store the environment in a file.</li>
+<li><strong>Chrome Extension</strong>: An extension to set the environment directly from the Chrome browser.</li>
+</ol>
+<h2>Components</h2>
+<h3>1. JavaScript File</h3>
+<p><strong>Purpose</strong>: Returns the current environment and app configs.</p>
+<p><strong>Usage</strong>:</p>
+<ul>
+<li>Include the script at the top of your project in <code>app.ts</code>.</li>
+<li>pass the <code>appName</code> to get the app relate configuration</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Application</th>
+<th>appName</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Web Service</td>
+<td><code>web-service</code></td>
+</tr>
+<tr>
+<td>OMS</td>
+<td><code>oms</code></td>
+</tr>
+<tr>
+<td>Manage</td>
+<td><code>manage</code></td>
+</tr>
+</tbody></table>
+<p><strong>Code</strong>:</p>
+<pre><code class="language-javascript">/**
+ * LOCAL CONFIGURATION
+ * [Should never be pushed]
+ */
+import getEnvironmentConfig from '[PATH-TO-ENVIRONMENT-SYNC]/local-config/activeConfig';
+const currentConfig = getEnvironmentConfig('appName');
+/**
+ * Local configuration ends here
+ */
+</code></pre>
+<h3>2. Chrome Extension</h3>
+<p><strong>Purpose</strong>: Allows you to set the environment directly from your Chrome browser.</p>
+<p><strong>Usage</strong>:</p>
+<ul>
+<li>Load the extension into Chrome:<ul>
+<li>Open <code>chrome://extensions/</code> in your Chrome browser.</li>
+<li>Enable "Developer mode".</li>
+<li>Click "Load unpacked" and select the extension directory, in this case <code>chrome-extension</code>.</li>
+</ul>
+</li>
+<li>Click on <code>extensions</code> icon and select <code>Environment Selector</code>.</li>
+<li>A popup will appear offering a dropdown with option <code>Development</code>, <code>QA</code>, <code>Staging</code> for now. you can add more by yourself in the <code>popup.html</code>.</li>
+<li>Click on <code>Save Environment</code>.</li>
+<li>An alert will be shown saying <code>current environment: [user selected Environment]</code></li>
+</ul>
+<h3>3. Node.js Application</h3>
+<p><strong>Purpose</strong>: Sets the current environment and saves it to a file.</p>
+<p><strong>Usage</strong>:</p>
+<ul>
+<li>Run the application using Node.js using the command <code>npm start</code>.</li>
+<li>Application will run on port <code>4000</code>.</li>
+<li>As the environment is selected from the <code>chrome-extension</code> it will be saved to <code>environment.json</code> of the Node application</li>
+</ul>
+<h2>Steps to use</h2>
+<ol>
+<li>import the script into your application</li>
+<li>Start the Environment Manager Node.js server</li>
+<li>Load the Chrome extension</li>
+<li>Select the environment and refresh the page</li>
+</ol>
+<h2>Contributing</h2>
+<p>Feel free to open issues or submit pull requests if you have suggestions or improvements!</p>
+<h2>Note</h2>
+<p>Add all your domains in <code>host_permissions</code> of <code>manifest.json</code></p>
+<pre><code class="language-json">"host_permissions": [
+    "https://dev-runner.cargoes.com/*",
+    "https://qa-runner.cargoes.com/*",
+    "https://staging-runner.cargoes.com/*"
+  ],
+</code></pre>
+
+      </div>
+    </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

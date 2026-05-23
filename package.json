@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "node scripts/build-ssg.js",
     "dev": "vite",
+    "prebuild": "node scripts/build-ssg.js",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -13,6 +15,7 @@
   },
   "dependencies": {
     "dompurify": "^3.4.5",
+    "isomorphic-dompurify": "^3.14.0",
     "marked": "^18.0.3"
   }
 }

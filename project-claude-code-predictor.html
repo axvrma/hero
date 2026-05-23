@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>claude-code-predictor | Abhishek Verma</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Portfolio of Abhishek Verma, Software Development Engineer 2. Specialist in frontend systems, Angular, React, UI architecture, and performance-focused design." />
+    <meta name="keywords" content="Abhishek Verma, Frontend Engineer, Software Developer, Angular, React, Web Development, UI Architecture" />
+    <meta name="author" content="Abhishek Verma" />
+    <meta property="og:title" content="Abhishek Verma | Frontend Engineer" />
+    <meta property="og:description" content="I build frontend systems that scale, not just screens. Explore my projects and background." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://abhishekverma.com/" />
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6LX0PRSXXC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6LX0PRSXXC');
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+      <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+    </button>
+    <div class="bg-blob"></div>
+    <div class="container">
+      <div style="margin-bottom: 2rem;">
+        <a href="/" class="btn btn-secondary" style="margin-bottom: 2rem; display: inline-flex;">&larr; Back to Home</a>
+        <h1 style="margin-bottom: 1rem;">claude-code-predictor</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">An AI-assisted code prediction and developer productivity tool powered by Claude, designed to anticipate code patterns, accelerate development workflows, and reduce repetitive engineering effort through intelligent context-aware suggestions and automation.</p>
+        <div style="display: flex; gap: 1rem;">
+          <a href="https://github.com/axvrma/claude-code-predictor" class="btn btn-primary" target="_blank">View Source on GitHub</a>
+          
+        </div>
+      </div>
+      <div class="markdown-body">
+        <h1>Claude Code Predictor</h1>
+<p>A VS Code extension that provides AI-powered code suggestions using Anthropic's Claude models.</p>
+<h2>Features</h2>
+<ul>
+<li>Real-time code predictions and suggestions</li>
+<li>Support for multiple programming languages</li>
+<li>Two options for using Claude:<ol>
+<li>Cloud-based Claude API</li>
+<li>Local Claude Code CLI (if installed)</li>
+</ol>
+</li>
+<li>Customizable settings for prediction behavior</li>
+<li>Keyboard shortcuts for triggering predictions</li>
+</ul>
+<h2>Installation</h2>
+<ol>
+<li>Install the extension from the VS Code Marketplace</li>
+<li>Configure your Claude API key or set up Claude Code CLI</li>
+</ol>
+<h2>Setting Up</h2>
+<h3>Option 1: Using Claude API</h3>
+<ol>
+<li>Get an API key from Anthropic</li>
+<li>In VS Code, either:<ul>
+<li>Press <code>Ctrl+Shift+P</code> (or <code>Cmd+Shift+P</code> on macOS) and search for "Claude Code Predictor: Set API Key"</li>
+<li>When prompted automatically on first use</li>
+</ul>
+</li>
+<li>Enter your API key when prompted</li>
+</ol>
+<h3>Option 2: Using Claude Code CLI (Local)</h3>
+<ol>
+<li>Press <code>Ctrl+Shift+P</code> (or <code>Cmd+Shift+P</code> on macOS) and search for "Claude Code Predictor: Setup Claude Code CLI"</li>
+<li>Follow the instructions in the setup guide</li>
+<li>Once installed, the extension will automatically detect and use Claude Code CLI</li>
+</ol>
+<h2>Using the Extension</h2>
+<ul>
+<li>As you type, the extension will automatically suggest code completions</li>
+<li>Press <code>Alt+C</code> to manually trigger a code suggestion</li>
+<li>Code suggestions appear as standard VS Code completions</li>
+</ul>
+<h2>Configuration Options</h2>
+<ul>
+<li><code>claudeCodePredictor.apiKey</code>: Your Claude API key (stored securely)</li>
+<li><code>claudeCodePredictor.model</code>: The Claude model to use for predictions</li>
+<li><code>claudeCodePredictor.contextLines</code>: Number of preceding lines to use for context</li>
+<li><code>claudeCodePredictor.useClaudeCodeCLI</code>: Whether to use local Claude Code CLI</li>
+<li><code>claudeCodePredictor.claudeCodePath</code>: Custom path to Claude Code binary (if not in PATH)</li>
+</ul>
+<h2>Security</h2>
+<ul>
+<li>Your API key is stored in VS Code's secure storage</li>
+<li>When using Claude Code CLI, no API key is required as authentication is handled by the CLI</li>
+<li>Code context is only sent to Claude's API or processed locally with Claude Code CLI</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>API Key Issues</h3>
+<p>If you're having trouble with your API key:</p>
+<ol>
+<li>Try setting it again with the "Claude Code Predictor: Set API Key" command</li>
+<li>Check that the API key is valid in your Anthropic account</li>
+<li>Try clearing and re-entering your API key</li>
+</ol>
+<h3>Claude Code CLI Issues</h3>
+<p>If Claude Code CLI isn't working:</p>
+<ol>
+<li>Verify installation with <code>claude-code --version</code> in your terminal</li>
+<li>Check that you've authenticated with <code>claude-code auth login</code></li>
+<li>Restart VS Code after installing Claude Code</li>
+</ol>
+<h2>Privacy &amp; Data Usage</h2>
+<ul>
+<li>Code context is sent to Claude API for processing</li>
+<li>No code is stored by the extension beyond the current session</li>
+<li>When using Claude Code CLI, processing happens through your local account</li>
+</ul>
+<h2>License</h2>
+<p>MIT</p>
+
+      </div>
+    </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

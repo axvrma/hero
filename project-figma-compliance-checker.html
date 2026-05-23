@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>figma-compliance-checker | Abhishek Verma</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Portfolio of Abhishek Verma, Software Development Engineer 2. Specialist in frontend systems, Angular, React, UI architecture, and performance-focused design." />
+    <meta name="keywords" content="Abhishek Verma, Frontend Engineer, Software Developer, Angular, React, Web Development, UI Architecture" />
+    <meta name="author" content="Abhishek Verma" />
+    <meta property="og:title" content="Abhishek Verma | Frontend Engineer" />
+    <meta property="og:description" content="I build frontend systems that scale, not just screens. Explore my projects and background." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://abhishekverma.com/" />
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6LX0PRSXXC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6LX0PRSXXC');
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+      <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+    </button>
+    <div class="bg-blob"></div>
+    <div class="container">
+      <div style="margin-bottom: 2rem;">
+        <a href="/" class="btn btn-secondary" style="margin-bottom: 2rem; display: inline-flex;">&larr; Back to Home</a>
+        <h1 style="margin-bottom: 1rem;">figma-compliance-checker</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">An intelligent Figma auditing and compliance validation tool that helps teams enforce design system standards, accessibility rules, component consistency, and developer handoff quality. Built to automate design reviews, detect UI inconsistencies early, and improve design-to-code reliability across large-scale products.</p>
+        <div style="display: flex; gap: 1rem;">
+          <a href="https://github.com/axvrma/figma-compliance-checker" class="btn btn-primary" target="_blank">View Source on GitHub</a>
+          
+        </div>
+      </div>
+      <div class="markdown-body">
+        <h1>Design Compliance Checker</h1>
+<p>A tool to verify Figma designs against design guidelines like Material Design 3 or Apple Human Interface Guidelines.</p>
+<h2>Overview</h2>
+<p>This project consists of two parts:</p>
+<ol>
+<li><strong>Figma Plugin</strong> - Scans your Figma designs and checks them against design guidelines</li>
+<li><strong>Web Dashboard</strong> - Manage custom guidelines and view detailed compliance reports</li>
+</ol>
+<h2>Features</h2>
+<h3>Figma Plugin</h3>
+<ul>
+<li><strong>Spacing Checker</strong> - Verifies padding, margins, and gaps against your spacing grid (e.g., 4px or 8px base unit)</li>
+<li><strong>Typography Checker</strong> - Validates fonts, sizes, line heights, and weights against type scales</li>
+<li><strong>Color Checker</strong> - Ensures colors match your design palette</li>
+<li><strong>Corner Radius Checker</strong> - Validates border radius values</li>
+<li><strong>Touch Target Checker</strong> - Flags interactive elements that are too small</li>
+</ul>
+<h3>Web Dashboard</h3>
+<ul>
+<li>Browse and manage design guidelines</li>
+<li>Visual editor to create custom guidelines</li>
+<li>Import and view compliance reports</li>
+<li>Export reports as HTML or PDF</li>
+</ul>
+<h2>Getting Started</h2>
+<h3>Figma Plugin</h3>
+<pre><code class="language-bash">cd figma-plugin
+npm install
+npm run build
+</code></pre>
+<p>Then in Figma:</p>
+<ol>
+<li>Go to Plugins &gt; Development &gt; Import plugin from manifest</li>
+<li>Select the <code>figma-plugin/manifest.json</code> file</li>
+</ol>
+<h3>Web Dashboard</h3>
+<pre><code class="language-bash">cd web-dashboard
+npm install
+npm run dev
+</code></pre>
+<p>Open <a href="http://localhost:3000">http://localhost:3000</a> in your browser.</p>
+<h2>Pre-built Guidelines</h2>
+<p>The tool comes with pre-built guidelines for:</p>
+<ul>
+<li><strong>Material Design 3</strong> - Google's latest design system</li>
+<li><strong>Apple Human Interface Guidelines</strong> - iOS/macOS design standards</li>
+</ul>
+<p>You can also create custom guidelines through the web dashboard.</p>
+<h2>How It Works</h2>
+<pre><code>┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│  Figma Design   │────▶│  Figma Plugin    │────▶│  Compliance     │
+│                 │     │  (Scans nodes)   │     │  Report (JSON)  │
+└─────────────────┘     └──────────────────┘     └────────┬────────┘
+                                                          │
+                        ┌──────────────────┐              │
+                        │  Web Dashboard   │◀─────────────┘
+                        │  (View reports)  │
+                        └──────────────────┘
+</code></pre>
+<h2>Guidelines Schema</h2>
+<p>Guidelines are defined as JSON with the following structure:</p>
+<pre><code class="language-json">{
+  "id": "my-design-system",
+  "name": "My Design System",
+  "version": "1.0.0",
+  "rules": {
+    "spacing": {
+      "baseUnit": 4,
+      "allowedValues": [0, 4, 8, 12, 16, 24, 32, 48, 64],
+      "tolerance": 1
+    },
+    "typography": {
+      "fontFamilies": ["Inter", "Roboto"],
+      "scales": {
+        "heading1": { "size": 32, "lineHeight": 40, "weight": 700 },
+        "body": { "size": 16, "lineHeight": 24, "weight": 400 }
+      }
+    },
+    "colors": {
+      "palette": {
+        "primary": ["#6750A4", "#EADDFF"],
+        "error": ["#B3261E", "#F9DEDC"]
+      }
+    },
+    "cornerRadius": {
+      "allowedValues": [0, 4, 8, 16, 9999]
+    },
+    "touchTargets": {
+      "minimum": 48
+    }
+  }
+}
+</code></pre>
+<h2>Project Structure</h2>
+<pre><code>design-compliance-checker/
+├── figma-plugin/
+│   ├── manifest.json
+│   ├── src/
+│   │   ├── main.ts           # Plugin entry point
+│   │   ├── scanner.ts        # Node tree scanner
+│   │   ├── types.ts          # TypeScript types
+│   │   ├── checkers/         # Individual rule checkers
+│   │   │   ├── spacing.ts
+│   │   │   ├── colors.ts
+│   │   │   ├── typography.ts
+│   │   │   ├── cornerRadius.ts
+│   │   │   └── touchTargets.ts
+│   │   ├── guidelines/       # Pre-built guidelines
+│   │   │   ├── material3.ts
+│   │   │   └── appleHIG.ts
+│   │   └── ui/               # Plugin UI
+│   │       └── index.tsx
+│   └── dist/
+│       ├── main.js
+│       ├── ui.js
+│       └── ui.html
+│
+└── web-dashboard/
+    ├── src/
+    │   ├── pages/
+    │   │   ├── Guidelines.tsx
+    │   │   ├── Editor.tsx
+    │   │   └── Reports.tsx
+    │   ├── data/
+    │   │   └── presets.ts
+    │   └── types.ts
+    └── index.html
+</code></pre>
+<h2>License</h2>
+<p>MIT</p>
+
+      </div>
+    </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

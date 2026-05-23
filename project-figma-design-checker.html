@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>figma-design-checker | Abhishek Verma</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Portfolio of Abhishek Verma, Software Development Engineer 2. Specialist in frontend systems, Angular, React, UI architecture, and performance-focused design." />
+    <meta name="keywords" content="Abhishek Verma, Frontend Engineer, Software Developer, Angular, React, Web Development, UI Architecture" />
+    <meta name="author" content="Abhishek Verma" />
+    <meta property="og:title" content="Abhishek Verma | Frontend Engineer" />
+    <meta property="og:description" content="I build frontend systems that scale, not just screens. Explore my projects and background." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://abhishekverma.com/" />
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6LX0PRSXXC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6LX0PRSXXC');
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+      <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+    </button>
+    <div class="bg-blob"></div>
+    <div class="container">
+      <div style="margin-bottom: 2rem;">
+        <a href="/" class="btn btn-secondary" style="margin-bottom: 2rem; display: inline-flex;">&larr; Back to Home</a>
+        <h1 style="margin-bottom: 1rem;">figma-design-checker</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">An AI-powered Figma design auditing tool that helps developers and designers validate UI consistency, accessibility, spacing, typography, and design system compliance before development handoff. Built to streamline design reviews, reduce visual inconsistencies, and improve design-to-code quality.</p>
+        <div style="display: flex; gap: 1rem;">
+          <a href="https://github.com/axvrma/figma-design-checker" class="btn btn-primary" target="_blank">View Source on GitHub</a>
+          
+        </div>
+      </div>
+      <div class="markdown-body">
+        <h1>Figma Design Checker</h1>
+<p>A Chrome extension that compares Figma designs with your app implementation and generates Cursor-friendly fix reports.</p>
+<h2>Features</h2>
+<ul>
+<li><strong>Tab Detection</strong>: Automatically detects Figma and app tabs</li>
+<li><strong>Figma Spec Extraction</strong>: Extracts design specs from Figma Dev Mode panel</li>
+<li><strong>App Style Extraction</strong>: Click-to-select elements and extract computed styles</li>
+<li><strong>Smart Comparison</strong>: Compares layout, typography, colors, and effects with tolerance</li>
+<li><strong>Cursor-Ready Reports</strong>: Generates markdown reports optimized for pasting into Cursor</li>
+</ul>
+<h2>Installation</h2>
+<h3>Developer Mode (Recommended for Development)</h3>
+<ol>
+<li>Open Chrome and navigate to <code>chrome://extensions/</code></li>
+<li>Enable <strong>Developer mode</strong> (toggle in top-right corner)</li>
+<li>Click <strong>Load unpacked</strong></li>
+<li>Select the <code>figma-design-checker</code> folder</li>
+<li>The extension icon should appear in your toolbar</li>
+</ol>
+<h3>Generate Icons (Optional)</h3>
+<p>The extension includes an SVG icon. To generate PNG icons, you can use any image editor or online tool to export the SVG at 16x16, 32x32, 48x48, and 128x128 pixels.</p>
+<h2>Usage</h2>
+<h3>Step 1: Open Both Tabs</h3>
+<ul>
+<li>Open your Figma design file in one tab</li>
+<li>Open your app (the implementation) in another tab</li>
+</ul>
+<h3>Step 2: Enable Figma Dev Mode</h3>
+<p>In Figma:</p>
+<ol>
+<li>Press <code>Shift + D</code> or click the Dev Mode toggle (bottom-right)</li>
+<li>Select the element you want to compare</li>
+<li>Ensure the properties panel is visible on the right</li>
+</ol>
+<h3>Step 3: Use the Extension</h3>
+<ol>
+<li>Click the extension icon in Chrome toolbar</li>
+<li>Select your <strong>Figma tab</strong> from the dropdown</li>
+<li>Select your <strong>App tab</strong> from the dropdown</li>
+<li>Click <strong>Capture Figma Specs</strong> (the extension will switch to Figma and extract specs)</li>
+<li>Click <strong>Select App Element</strong> (the extension will switch to your app)</li>
+<li>Click on the corresponding element in your app (it will highlight on hover)</li>
+<li>Click <strong>Compare Designs</strong></li>
+<li>View the results and click <strong>Copy Report to Clipboard</strong></li>
+<li>Paste into Cursor chat for automated fixes</li>
+</ol>
+<h3>Manual Input (Fallback)</h3>
+<p>If automatic extraction doesn't work:</p>
+<ol>
+<li>Expand the "Manual Input" section</li>
+<li>Paste Figma specs as JSON:<pre><code class="language-json">{"padding": "16px", "fontSize": "14px", "color": "#333333"}
+</code></pre>
+</li>
+<li>Paste app styles as JSON:<pre><code class="language-json">{"padding": "12px", "fontSize": "14px", "color": "#666666"}
+</code></pre>
+</li>
+<li>Click <strong>Compare Manual Input</strong></li>
+</ol>
+<h2>Example Output</h2>
+<pre><code class="language-markdown">## Design Discrepancies Found
+
+**Element**: &lt;button&gt; .primary-btn "Submit"
+**Date**: 2024-01-15
+**Total Issues**: 2
+
+---
+
+### Layout Issues
+
+**1. Padding** [HIGH]
+- **Expected** (Figma): `16px 24px`
+- **Actual** (App): `12px 16px`
+- **Fix**: Update padding to 16px 24px
+
+### Typography Issues
+
+**2. Font Weight** [MEDIUM]
+- **Expected** (Figma): `600`
+- **Actual** (App): `400`
+- **Fix**: Update font-weight to 600
+
+---
+
+### Quick CSS Fix
+
+```css
+.element {
+  padding: 16px 24px;
+  font-weight: 600;
+}
+</code></pre>
+<hr>
+<h3>Cursor Fix Prompt</h3>
+<p>Copy and paste this into Cursor to fix the issues:</p>
+<pre><code>Fix the following design discrepancies for the &lt;button&gt; .primary-btn "Submit":
+
+- Padding: change from `12px 16px` to `16px 24px`
+- Font Weight: change from `400` to `600`
+
+Please update the styles to match the Figma design specifications.
+</code></pre>
+<pre><code>
+## Troubleshooting
+
+### "No Figma tabs found"
+- Make sure you have a Figma file open in a browser tab
+- The URL should contain `figma.com`
+
+### "Could not find design specs"
+- Enable Dev Mode in Figma (Shift + D)
+- Select an element in Figma
+- Make sure the properties panel is visible
+- Try the Manual Input fallback
+
+### "No element selected"
+- Click the "Select App Element" button first
+- Click on an element in your app
+- Press Escape to cancel selection
+
+### Extension not working on internal URLs
+- The extension has `&lt;all_urls&gt;` permission
+- If blocked, check your company's Chrome extension policies
+
+## Technical Details
+
+### Permissions Used
+- `activeTab`: Access the current tab
+- `tabs`: Query and switch between tabs
+- `scripting`: Inject content scripts
+- `storage`: Save preferences (future feature)
+
+### How Figma Extraction Works
+The extension attempts to:
+1. Find the Dev Mode panel in Figma's DOM
+2. Extract text content containing CSS-like properties
+3. Parse values using regex patterns
+
+**Note**: Figma's DOM structure may change. If extraction fails, use Manual Input.
+
+### How App Extraction Works
+1. Injects a selector script that highlights elements on hover
+2. On click, stores the selected element
+3. Uses `window.getComputedStyle()` to extract all CSS properties
+
+## Limitations
+
+- Figma extraction depends on Dev Mode panel being visible
+- Figma's DOM structure may change, breaking automatic extraction
+- Complex nested elements may require manual selector refinement
+- Color comparison has a 5-point RGB tolerance
+
+## Contributing
+
+Feel free to improve the Figma extraction selectors or add new features!
+
+## License
+
+MIT
+</code></pre>
+
+      </div>
+    </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

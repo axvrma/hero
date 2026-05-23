@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>design-spec-generator | Abhishek Verma</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Portfolio of Abhishek Verma, Software Development Engineer 2. Specialist in frontend systems, Angular, React, UI architecture, and performance-focused design." />
+    <meta name="keywords" content="Abhishek Verma, Frontend Engineer, Software Developer, Angular, React, Web Development, UI Architecture" />
+    <meta name="author" content="Abhishek Verma" />
+    <meta property="og:title" content="Abhishek Verma | Frontend Engineer" />
+    <meta property="og:description" content="I build frontend systems that scale, not just screens. Explore my projects and background." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://abhishekverma.com/" />
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6LX0PRSXXC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6LX0PRSXXC');
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+      <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+    </button>
+    <div class="bg-blob"></div>
+    <div class="container">
+      <div style="margin-bottom: 2rem;">
+        <a href="/" class="btn btn-secondary" style="margin-bottom: 2rem; display: inline-flex;">&larr; Back to Home</a>
+        <h1 style="margin-bottom: 1rem;">design-spec-generator</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">An AI-driven design specification generator that transforms UI designs into structured development-ready specs, helping bridge the gap between designers and engineers. Built to automate design documentation, improve handoff clarity, and accelerate frontend implementation workflows.</p>
+        <div style="display: flex; gap: 1rem;">
+          <a href="https://github.com/axvrma/design-spec-generator" class="btn btn-primary" target="_blank">View Source on GitHub</a>
+          
+        </div>
+      </div>
+      <div class="markdown-body">
+        <h1>Design Spec Generator</h1>
+<p>AI-powered design specification and workflow automation tool that creates professional documentation directly in Figma. Built for the cargoes-runner design system.</p>
+<h2>Overview</h2>
+<p>Design Spec Generator automates design system workflows using AI agents and the Model Context Protocol (MCP). It handles everything from component documentation to accessibility audits, design system compliance checks, and multi-platform handoffs.</p>
+<p><strong>Inspired by Uber's <a href="https://uspec.design/">uSpec</a></strong> and the <a href="https://www.figma.com/community">MCP Adoption Toolkit</a> for design teams.</p>
+<h2>Features</h2>
+<h3>Spec Generation (6 skills)</h3>
+<ul>
+<li><strong>Anatomy</strong>: Numbered markers + attribute tables</li>
+<li><strong>API</strong>: Property documentation with types and defaults</li>
+<li><strong>Properties</strong>: Variant grid with live previews</li>
+<li><strong>Color</strong>: Design token annotations per state</li>
+<li><strong>Structure</strong>: Spacing, padding, dimension specs</li>
+<li><strong>Screen Reader</strong>: VoiceOver, TalkBack, ARIA specs</li>
+</ul>
+<h3>Design Workflows (5 skills)</h3>
+<ul>
+<li><strong>Accessibility Audit</strong>: WCAG 2.1 AA compliance checking</li>
+<li><strong>Design System Audit</strong>: Detect hardcoded values and token violations</li>
+<li><strong>Ticket Validation</strong>: Compare designs against acceptance criteria</li>
+<li><strong>Multi-Tech Handoff</strong>: Generate specs for React, Angular, SwiftUI, Compose</li>
+<li><strong>Token Migration</strong>: Audit and batch migrate hardcoded values</li>
+</ul>
+<h2>Quick Start</h2>
+<h3>Prerequisites</h3>
+<ul>
+<li><a href="https://cursor.com/">Cursor</a> or Claude Code</li>
+<li><a href="https://www.figma.com/downloads/">Figma Desktop</a> (not web version)</li>
+<li>Node.js 18+</li>
+<li>Figma Personal Access Token</li>
+</ul>
+<h3>1. Get a Figma Token</h3>
+<ol>
+<li>Go to <a href="https://www.figma.com/developers/api#access-tokens">Figma API Settings</a></li>
+<li>Create a new Personal Access Token</li>
+<li>Enable scopes: File content (Read), Variables (Read), Comments (Read and write)</li>
+<li>Copy the token (starts with <code>figd_</code>)</li>
+</ol>
+<h3>2. Configure MCP</h3>
+<p>Update <code>.mcp.json</code> in the project root:</p>
+<pre><code class="language-json">{
+  "mcpServers": {
+    "figma-console": {
+      "command": "npx",
+      "args": ["-y", "figma-console-mcp@latest"],
+      "env": {
+        "FIGMA_ACCESS_TOKEN": "figd_YOUR_TOKEN_HERE",
+        "ENABLE_MCP_APPS": "true"
+      }
+    }
+  }
+}
+</code></pre>
+<h3>3. Install Desktop Bridge Plugin</h3>
+<ol>
+<li>Open Figma Desktop</li>
+<li>Go to <strong>Plugins → Development → Import plugin from manifest</strong></li>
+<li>Navigate to this project and select <code>figma-plugin/manifest.json</code></li>
+<li>Run the <strong>Design Spec Generator - Desktop Bridge</strong> plugin in your Figma file</li>
+</ol>
+<blockquote>
+<p><strong>Note</strong>: The plugin is included in this project at <code>figma-plugin/</code>. You only need to import it once.</p>
+</blockquote>
+<h3>4. Run First-Time Setup</h3>
+<p>In Cursor, open this project and run:</p>
+<pre><code>@firstrun
+</code></pre>
+<p>Follow the prompts to configure your template library.</p>
+<h2>Usage</h2>
+<h3>Spec Generation Skills</h3>
+<pre><code class="language-bash"># Generate anatomy spec with markers and tables
+@create-anatomy https://figma.com/design/.../node-id=123:456
+This is a Button with label, icons, loading state.
+
+# Generate API documentation
+@create-api https://figma.com/design/.../node-id=123:456
+Dropdown with single/multi-select, searchable, async loading.
+
+# Generate variant exhibit
+@create-properties https://figma.com/design/.../node-id=123:456
+
+# Generate color token annotations
+@create-color https://figma.com/design/.../node-id=123:456
+
+# Generate dimension specs
+@create-structure https://figma.com/design/.../node-id=123:456
+
+# Generate accessibility specs
+@create-screen-reader https://figma.com/design/.../node-id=123:456
+Interactive button with loading and disabled states.
+</code></pre>
+<h3>Design Workflow Skills</h3>
+<pre><code class="language-bash"># Validate design against ticket requirements
+@validate-ticket https://figma.com/design/.../node-id=123:456
+Acceptance Criteria:
+1. User can enter email and password
+2. Form shows validation errors
+3. Loading state during submission
+
+# Audit for WCAG 2.1 AA compliance
+@audit-accessibility https://figma.com/design/.../node-id=123:456
+Focus on the login form components.
+
+# Check design system compliance
+@audit-design-system https://figma.com/design/.../node-id=123:456
+Audit for hardcoded colors and spacing.
+
+# Generate multi-platform handoff
+@handoff-multi-tech https://figma.com/design/.../node-id=123:456
+Button with primary, secondary, tertiary variants.
+Generate for React and SwiftUI.
+
+# Migrate hardcoded values to tokens
+@migrate-tokens https://figma.com/design/.../node-id=123:456
+Migrate all hardcoded colors to design tokens.
+</code></pre>
+<h2>All Available Skills</h2>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Category</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>@firstrun</code></td>
+<td>Setup</td>
+<td>One-time configuration wizard</td>
+</tr>
+<tr>
+<td><code>@create-anatomy</code></td>
+<td>Spec</td>
+<td>Numbered markers + attribute table</td>
+</tr>
+<tr>
+<td><code>@create-api</code></td>
+<td>Spec</td>
+<td>Property documentation with types</td>
+</tr>
+<tr>
+<td><code>@create-properties</code></td>
+<td>Spec</td>
+<td>Variant grid with live previews</td>
+</tr>
+<tr>
+<td><code>@create-color</code></td>
+<td>Spec</td>
+<td>Design token annotations</td>
+</tr>
+<tr>
+<td><code>@create-structure</code></td>
+<td>Spec</td>
+<td>Spacing and dimension specs</td>
+</tr>
+<tr>
+<td><code>@create-screen-reader</code></td>
+<td>Spec</td>
+<td>VoiceOver, TalkBack, ARIA specs</td>
+</tr>
+<tr>
+<td><code>@validate-ticket</code></td>
+<td>Workflow</td>
+<td>Compare design vs acceptance criteria</td>
+</tr>
+<tr>
+<td><code>@audit-accessibility</code></td>
+<td>Workflow</td>
+<td>WCAG 2.1 AA compliance audit</td>
+</tr>
+<tr>
+<td><code>@audit-design-system</code></td>
+<td>Workflow</td>
+<td>Detect hardcoded values/violations</td>
+</tr>
+<tr>
+<td><code>@handoff-multi-tech</code></td>
+<td>Workflow</td>
+<td>Multi-platform implementation specs</td>
+</tr>
+<tr>
+<td><code>@migrate-tokens</code></td>
+<td>Workflow</td>
+<td>Batch migrate to design tokens</td>
+</tr>
+</tbody></table>
+<h2>Project Structure</h2>
+<pre><code>design-spec-generator/
+├── .cursor/skills/              # Cursor agent skills
+│   ├── firstrun/
+│   ├── create-anatomy/
+│   ├── create-api/
+│   ├── create-properties/
+│   ├── create-color/
+│   ├── create-structure/
+│   ├── create-screen-reader/
+│   ├── validate-ticket/         # NEW
+│   ├── audit-accessibility/     # NEW
+│   ├── audit-design-system/     # NEW
+│   ├── handoff-multi-tech/      # NEW
+│   └── migrate-tokens/          # NEW
+├── .claude/skills/              # Claude Code skills (mirror)
+├── reference/
+│   ├── accessibility/
+│   │   ├── aria.md              # Web ARIA reference
+│   │   ├── voiceover.md         # iOS VoiceOver reference
+│   │   ├── talkback.md          # Android TalkBack reference
+│   │   └── wcag-checklist.md    # WCAG 2.1 AA checklist
+│   ├── component-patterns/
+│   │   └── cargoes-runner.md    # Design system patterns
+│   └── handoff/
+│       └── platform-conventions.md  # React/Angular/Swift/Compose
+├── templates/
+│   ├── figma-template-guide.md  # Figma template creation guide
+│   └── prompt-templates.md      # Copy-paste prompt templates
+├── config/
+│   └── spec-generator.config.json
+├── .mcp.json                    # MCP configuration
+├── CLAUDE.md                    # Claude Code instructions
+└── README.md
+</code></pre>
+<h2>Configuration</h2>
+<h3>MCP Servers</h3>
+<p>The project uses two MCP servers:</p>
+<table>
+<thead>
+<tr>
+<th>Server</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>figma-console</code></td>
+<td>Deep canvas control, tokens, variables, components</td>
+</tr>
+<tr>
+<td><code>figma-mcp-server</code></td>
+<td>Code Connect features, design context reading</td>
+</tr>
+</tbody></table>
+<h3>Workflow Settings</h3>
+<p><code>config/spec-generator.config.json</code> contains workflow-specific settings:</p>
+<pre><code class="language-json">{
+  "workflows": {
+    "accessibility": {
+      "defaultStandard": "WCAG21AA",
+      "contrastThresholds": { "normalText": 4.5, "largeText": 3.0 }
+    },
+    "handoff": {
+      "platforms": ["react", "angular", "swiftui", "compose"]
+    },
+    "migration": {
+      "batchSize": 50,
+      "dryRunFirst": true
+    }
+  }
+}
+</code></pre>
+<h2>Reference Documentation</h2>
+<h3>Accessibility</h3>
+<ul>
+<li><code>reference/accessibility/aria.md</code> - Web ARIA roles, states, keyboard patterns</li>
+<li><code>reference/accessibility/voiceover.md</code> - iOS VoiceOver traits and patterns</li>
+<li><code>reference/accessibility/talkback.md</code> - Android TalkBack semantics</li>
+<li><code>reference/accessibility/wcag-checklist.md</code> - WCAG 2.1 AA success criteria</li>
+</ul>
+<h3>Platform Handoff</h3>
+<ul>
+<li><code>reference/handoff/platform-conventions.md</code> - Code patterns for:<ul>
+<li>React with Tailwind CSS</li>
+<li>Angular with CSS Modules</li>
+<li>SwiftUI for iOS</li>
+<li>Jetpack Compose for Android</li>
+</ul>
+</li>
+</ul>
+<h3>Design System</h3>
+<ul>
+<li><code>reference/component-patterns/cargoes-runner.md</code> - Component APIs and tokens</li>
+</ul>
+<h2>Prompt Templates</h2>
+<p>See <code>templates/prompt-templates.md</code> for copy-paste templates:</p>
+<ul>
+<li>Accessibility audit prompts</li>
+<li>Design system audit prompts</li>
+<li>Ticket validation prompts</li>
+<li>Multi-platform handoff prompts</li>
+<li>Token migration prompts</li>
+</ul>
+<h2>MCP Tools Available</h2>
+<p>When connected to Figma Console MCP:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>figma_get_status</code></td>
+<td>Check connection status</td>
+</tr>
+<tr>
+<td><code>figma_get_file_data</code></td>
+<td>Get full file structure</td>
+</tr>
+<tr>
+<td><code>figma_get_component</code></td>
+<td>Extract component data</td>
+</tr>
+<tr>
+<td><code>figma_get_variables</code></td>
+<td>Get design tokens</td>
+</tr>
+<tr>
+<td><code>figma_get_styles</code></td>
+<td>Get color/text/effect styles</td>
+</tr>
+<tr>
+<td><code>figma_execute</code></td>
+<td>Run Figma Plugin API code</td>
+</tr>
+<tr>
+<td><code>figma_take_screenshot</code></td>
+<td>Capture screenshots</td>
+</tr>
+<tr>
+<td><code>figma_batch_create_variables</code></td>
+<td>Create tokens in batch</td>
+</tr>
+<tr>
+<td><code>figma_batch_update_variables</code></td>
+<td>Update tokens in batch</td>
+</tr>
+</tbody></table>
+<h2>Best Practices</h2>
+<h3>Session Management</h3>
+<ul>
+<li>Start fresh sessions for each skill</li>
+<li>Each skill uses significant context</li>
+<li>Don't chain multiple skills in one session</li>
+</ul>
+<h3>During Generation</h3>
+<ul>
+<li>Don't interact with Figma while generating</li>
+<li>Keep Desktop Bridge plugin running</li>
+<li>Wait for completion before making changes</li>
+</ul>
+<h3>Providing Context</h3>
+<ul>
+<li>Describe states not visible in the current frame</li>
+<li>List all variants and their purposes</li>
+<li>Mention edge cases and error states</li>
+</ul>
+<h3>Cost Management</h3>
+<ul>
+<li>Scope sessions to specific components/pages</li>
+<li>Run audits before migrations</li>
+<li>Use batch operations for efficiency</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>"MCP not connected"</h3>
+<ol>
+<li>Ensure Figma Desktop is running (not web)</li>
+<li>Run the Desktop Bridge plugin in your Figma file</li>
+<li>Check the MCP server is configured in <code>.mcp.json</code></li>
+</ol>
+<h3>"Template not found"</h3>
+<p>Run <code>@firstrun</code> to configure your template library.</p>
+<h3>"Component not found"</h3>
+<p>Verify the Figma URL contains a valid <code>node-id</code> parameter.</p>
+<h3>"Skills not showing in Cursor"</h3>
+<ol>
+<li>Ensure this project folder is open in Cursor</li>
+<li>Check <code>.cursor/skills/</code> contains the skill folders</li>
+<li>Restart Cursor</li>
+</ol>
+<h3>"Token migration failed"</h3>
+<ol>
+<li>Check if the file is editable</li>
+<li>Verify you have edit permissions</li>
+<li>Try smaller batches</li>
+</ol>
+<h2>Security</h2>
+<ul>
+<li>All processing runs locally via Figma Console MCP</li>
+<li>No design data sent to external APIs</li>
+<li>WebSocket connection stays on localhost</li>
+<li>Figma token stored locally in <code>.mcp.json</code></li>
+</ul>
+<h2>Credits</h2>
+<ul>
+<li>Inspired by <a href="https://uspec.design/">Uber's uSpec</a></li>
+<li>Built on <a href="https://github.com/southleft/figma-console-mcp">Figma Console MCP</a> by Southleft</li>
+<li>Workflow patterns from <a href="https://www.figma.com/community">MCP Adoption Toolkit</a> by Hugo França</li>
+<li>Designed for <a href="https://github.com/your-org/cargoes-runner">cargoes-runner</a> design system</li>
+</ul>
+<h2>License</h2>
+<p>MIT</p>
+
+      </div>
+    </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
