@@ -552,3 +552,62 @@ h2::after {
     right: 1rem;
   }
 }
+
+/* Split-Screen Project Pages Layout */
+.project-split-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 80px 40px;
+  gap: 60px;
+}
+
+.project-sidebar {
+  width: 350px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 80px;
+  height: max-content;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  padding-right: 20px;
+}
+
+.project-content {
+  flex-grow: 1;
+  max-width: 800px;
+  background: var(--card-bg);
+  padding: 40px;
+  border-radius: 24px;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+}
+
+@media (max-width: 1024px) {
+  .project-split-layout {
+    gap: 40px;
+    padding: 60px 30px;
+  }
+  .project-sidebar {
+    width: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .project-split-layout {
+    flex-direction: column;
+    padding: 40px 20px;
+    gap: 30px;
+  }
+  .project-sidebar {
+    position: static;
+    width: 100%;
+    max-height: none;
+    padding-right: 0;
+  }
+  .project-content {
+    padding: 30px 20px;
+  }
+}

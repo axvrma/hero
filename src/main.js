@@ -40,3 +40,31 @@ if (themeToggle) {
     updateThemeIcon(newTheme === 'light');
   });
 }
+
+// Client-side Hydration
+import { db } from './firebase.js';
+import { doc, getDoc } from 'firebase/firestore';
+
+async function hydrateProfile() {
+  if (!db) return; // Firebase not configured
+  try {
+    const docRef = doc(db, "portfolio", "content");
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      if(data.name) document.getElementById('profile-name').innerText = data.name;
+      if(data.headline) document.getElementById('profile-headline').innerText = data.headline;
+      if(data.about) document.getElementById('profile-about').innerText = data.about;
+      if(data.location) document.getElementById('profile-location').innerText = data.location;
+      if(data.experience) document.getElementById('profile-experience').innerText = data.experience;
+      if(data.resumeLink) document.getElementById('profile-resume').href = data.resumeLink;
+    }
+  } catch (e) {
+    console.error("Hydration failed (maybe rules restrict read or project is missing):", e);
+  }
+}
+
+// Only run hydration on the home page (where profile-name exists)
+if (document.getElementById('profile-name')) {
+  hydrateProfile();
+}

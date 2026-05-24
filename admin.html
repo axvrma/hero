@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio Dashboard</title>
+    <link rel="stylesheet" href="/src/style.css">
+    <style>
+      .admin-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 40px;
+        background: var(--card-bg);
+        border-radius: 32px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      }
+      .form-group {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+      }
+      .form-group label {
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+      .form-group input, .form-group textarea {
+        padding: 12px;
+        border: 1px solid var(--glass-border);
+        border-radius: 8px;
+        font-family: var(--font-body);
+        font-size: 1rem;
+      }
+      .btn-save {
+        background: var(--google-blue);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 20px;
+      }
+      #login-section, #dashboard-section {
+        display: none;
+      }
+      .active-section {
+        display: block !important;
+      }
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 16px 24px;
+        background: var(--google-green);
+        color: white;
+        border-radius: 8px;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-container">
+      <h1>Portfolio Admin</h1>
+      
+      <div id="login-section" class="active-section">
+        <p>Please sign in with your Google Account to access the dashboard.</p>
+        <button id="login-btn" class="btn-save">Sign in with Google</button>
+      </div>
+
+      <div id="dashboard-section">
+        <p id="user-info" style="margin-bottom: 20px; color: var(--text-secondary);"></p>
+        
+        <div class="form-group">
+          <label>Name / Heading</label>
+          <input type="text" id="input-name" placeholder="Abhishek Verma">
+        </div>
+        
+        <div class="form-group">
+          <label>Headline</label>
+          <textarea id="input-headline" rows="2" placeholder="Software Development Engineer 2..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>About Description</label>
+          <textarea id="input-about" rows="3" placeholder="I build frontend systems that scale..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" id="input-location" placeholder="Bengaluru, Karnataka, India">
+        </div>
+
+        <div class="form-group">
+          <label>Current Experience</label>
+          <input type="text" id="input-experience" placeholder="Software Development Engineer 2 at DP World">
+        </div>
+
+        <div class="form-group">
+          <label>Resume Link URL</label>
+          <input type="text" id="input-resume" placeholder="https://drive.google.com/...">
+        </div>
+
+        <button id="save-btn" class="btn-save">Save Changes to Live Site</button>
+      </div>
+    </div>
+    
+    <div id="toast" class="toast">Saved Successfully!</div>
+
+    <script type="module" src="/src/admin.js"></script>
+  </body>
+</html>

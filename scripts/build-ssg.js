@@ -14,6 +14,11 @@ const FEATURED_PROJECTS = [
   'design-spec-generator', 'paytm-hackathon', 'figma-compliance-checker', 'claude-code-predictor'
 ];
 
+function formatRepoName(name) {
+  // Convert "figma-design-checker" -> "Figma Design Checker"
+  return name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
+
 async function fetchProjects() {
   const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`);
   const repos = await response.json();
@@ -64,7 +69,7 @@ async function build() {
     projectsHtml += `
       <div class="project-card" style="animation: fadeInDown 0.5s ease-out ${index * 0.1}s backwards" onclick="window.location.href='/project-${repo.name}.html'">
         <div class="project-name">
-          <span>${repo.name}</span>
+          <span>${formatRepoName(repo.name)}</span>
           ${homepageLink}
         </div>
         <div class="project-desc">${repo.description || 'No description provided.'}</div>
@@ -90,22 +95,22 @@ async function build() {
   <div class="bg-blob"></div>
   <div class="container">
     <header>
-      <h1>${profileData.name}</h1>
-      <div class="headline">${profileData.headline}</div>
-      <p class="about">${profileData.about}</p>
+      <h1 id="profile-name">${profileData.name}</h1>
+      <div class="headline" id="profile-headline">${profileData.headline}</div>
+      <p class="about" id="profile-about">${profileData.about}</p>
       <div class="meta-info">
         <span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          ${profileData.location}
+          <span id="profile-location">${profileData.location}</span>
         </span>
         <span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-          ${profileData.experience}
+          <span id="profile-experience">${profileData.experience}</span>
         </span>
       </div>
       <div class="action-bar">
         <div class="hero-actions">
-          <a href="https://drive.google.com/file/d/1vrhPiirAeWcPQdVbA3BZ9CdhjiMAfUFX/view?usp=sharing" class="btn btn-primary" target="_blank" rel="noopener noreferrer" onclick="if(typeof gtag !== 'undefined') gtag('event', 'click', {'event_category': 'outbound', 'event_label': 'resume_view'});">
+          <a id="profile-resume" href="https://drive.google.com/file/d/1vrhPiirAeWcPQdVbA3BZ9CdhjiMAfUFX/view?usp=sharing" class="btn btn-primary" target="_blank" rel="noopener noreferrer" onclick="if(typeof gtag !== 'undefined') gtag('event', 'click', {'event_category': 'outbound', 'event_label': 'resume_view'});">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 8 9"></polyline></svg>
             View Resume
           </a>
@@ -159,24 +164,24 @@ async function build() {
       <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
     </button>
     <div class="bg-blob"></div>
-    <div class="container">
-      <div style="margin-bottom: 2rem;">
+    <div class="project-split-layout">
+      <aside class="project-sidebar">
         <a href="/" class="btn btn-secondary" style="margin-bottom: 2rem; display: inline-flex;">&larr; Back to Home</a>
-        <h1 style="margin-bottom: 1rem;">${repo.name}</h1>
+        <h1 style="margin-bottom: 1rem;">${formatRepoName(repo.name)}</h1>
         <p style="color: var(--text-secondary); margin-bottom: 2rem;">${repo.description || ''}</p>
-        <div style="display: flex; gap: 1rem;">
-          <a href="${repo.html_url}" class="btn btn-primary" target="_blank">View Source on GitHub</a>
-          ${repo.homepage ? `<a href="${repo.homepage}" class="btn btn-secondary" target="_blank">View Live App</a>` : ''}
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <a href="${repo.html_url}" class="btn btn-primary" target="_blank" style="flex: 1; text-align: center;">Source on GitHub</a>
+          ${repo.homepage ? `<a href="${repo.homepage}" class="btn btn-secondary" target="_blank" style="flex: 1; text-align: center;">Live App</a>` : ''}
         </div>
-      </div>
-      <div class="markdown-body">
+      </aside>
+      <div class="project-content markdown-body">
         ${readmeHtml}
       </div>
     </div>
     `;
 
     // Set page title for SEO
-    let pageTemplate = projectTemplate.replace(/<title>.*<\/title>/, `<title>${repo.name} | Abhishek Verma</title>`);
+    let pageTemplate = projectTemplate.replace(/<title>.*<\/title>/, `<title>${formatRepoName(repo.name)} | Abhishek Verma</title>`);
     
     // Inject the GA script tracking event to track the pageview properly
     const finalProjectHtml = pageTemplate.replace('<div id="app"></div>', `<div id="app">${projectHtml}</div>`);
