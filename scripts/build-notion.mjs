@@ -161,6 +161,7 @@ async function build() {
   let heroHtml = '';
   let footerWordsHtml = '';
   let marqueeHtml = '';
+  let badgeHtml = '';
   
   if (profile) {
     const profileData = {};
@@ -209,6 +210,19 @@ async function build() {
       </div>`;
       }
     }
+
+    if (profileData['Badge']) {
+      const props = profileData['Badge'];
+      const badgeText = getPlainText(props.Subtitle?.rich_text);
+      const badgeLink = props.Link?.url;
+      if (badgeText) {
+        if (badgeLink) {
+          badgeHtml = `<a href="${badgeLink}" class="hero-badge" target="_blank" rel="noopener noreferrer">${badgeText}</a>`;
+        } else {
+          badgeHtml = `<div class="hero-badge">${badgeText}</div>`;
+        }
+      }
+    }
   }
 
   const injectMarquee = (html) => html.replace(
@@ -221,6 +235,7 @@ async function build() {
   
   console.log('Building index.html...');
   let indexTemplate = fs.readFileSync(path.join(rootDir, 'index-template.html'), 'utf-8');
+  indexTemplate = indexTemplate.replace('<!-- NOTION_HERO_BADGE -->', badgeHtml);
   indexTemplate = indexTemplate.replace('<!-- NOTION_HERO -->', heroHtml);
   indexTemplate = indexTemplate.replace('<!-- NOTION_FOOTER_WORDS -->', footerWordsHtml);
   indexTemplate = indexTemplate.replace('<!-- NOTION_EXPERIENCE -->', experienceHtml);

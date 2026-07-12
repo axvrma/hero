@@ -206,6 +206,14 @@ body {
   color: var(--text-secondary);
   margin-bottom: 2rem;
   letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.hero-badge[href]:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
 }
 
 .hero-title {
