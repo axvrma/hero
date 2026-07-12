@@ -538,8 +538,8 @@ body {
 }
 
 .scroller-wrapper {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-top: 50vh;
+  padding-bottom: 50vh;
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
