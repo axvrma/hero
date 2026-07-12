@@ -9,7 +9,7 @@
   --border-hover: #3f3f46;
   --accent-color: #8b5cf6;
   --accent-glow: rgba(139, 92, 246, 0.25);
-  
+
   --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -160,6 +160,7 @@ body {
   line-height: 1.1;
   letter-spacing: -0.03em;
   margin-bottom: 1.5rem;
+  margin-top: 5rem;
   color: var(--text-primary);
 }
 
@@ -229,9 +230,12 @@ body {
 .bento-cell::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   border-radius: 16px;
-  background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.03), transparent 40%);
+  background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.03), transparent 40%);
   opacity: 0;
   transition: opacity 0.5s;
   pointer-events: none;
@@ -294,7 +298,9 @@ body {
   border: 2px solid var(--accent-color);
 }
 
-.mt-8 { margin-top: 2rem; }
+.mt-8 {
+  margin-top: 2rem;
+}
 
 .exp-header {
   margin-bottom: 1rem;
@@ -354,7 +360,10 @@ body {
 .skill-category {
   margin-bottom: 1.5rem;
 }
-.skill-category:last-child { margin-bottom: 0; }
+
+.skill-category:last-child {
+  margin-bottom: 0;
+}
 
 .skill-category h4 {
   font-size: 0.85rem;
@@ -390,7 +399,10 @@ body {
 .edu-item {
   margin-bottom: 1.25rem;
 }
-.edu-item:last-child { margin-bottom: 0; }
+
+.edu-item:last-child {
+  margin-bottom: 0;
+}
 
 .edu-item h4 {
   font-size: 0.95rem;
@@ -414,11 +426,13 @@ body {
 .achieve-list {
   list-style: none;
 }
+
 .achieve-list li {
   margin-bottom: 1.25rem;
   padding-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
+
 .achieve-list li:last-child {
   margin-bottom: 0;
   padding-bottom: 0;
@@ -484,6 +498,7 @@ body {
   display: flex;
   align-items: center;
 }
+
 .project-meta .tag {
   font-size: 0.75rem;
   padding: 0.2rem 0.5rem;
@@ -504,6 +519,7 @@ body {
   .bento-container {
     grid-template-columns: 1fr;
   }
+
   .hero-title {
     font-size: 2.75rem;
   }
@@ -513,6 +529,7 @@ body {
   .hero-title {
     font-size: 2rem;
   }
+
   .desktop-nav {
     display: flex;
     flex-wrap: wrap;
@@ -522,26 +539,32 @@ body {
     margin-top: 0.75rem;
     width: 100%;
   }
+
   .desktop-nav .nav-item {
     font-size: 0.8rem;
   }
+
   .nav-btn-primary {
     padding: 0.4rem 0.8rem;
     font-size: 0.8rem;
   }
+
   .nav-container {
     flex-direction: column;
     align-items: center;
     padding: 1rem;
     height: auto;
   }
+
   .logo-link {
     align-items: center;
     text-align: center;
   }
+
   .bento-cell {
     padding: 1.25rem;
   }
+
   .projects-grid {
     grid-template-columns: 1fr;
   }
@@ -550,6 +573,7 @@ body {
     margin-top: 2rem;
     margin-bottom: 4rem;
   }
+
   .hero-contact {
     flex-direction: column;
     align-items: flex-start;
@@ -605,7 +629,9 @@ body {
   line-height: 1.6;
 }
 
-.markdown-body h1, .markdown-body h2, .markdown-body h3 {
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3 {
   color: var(--text-primary);
   margin-top: 1.5rem;
   margin-bottom: 1rem;
