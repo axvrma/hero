@@ -34,7 +34,7 @@ for (const card of document.querySelectorAll('.bento-cell, .project-card, .btn, 
 const expTimeline = document.getElementById('expTimeline');
 const expToggleBtn = document.getElementById('expToggleBtn');
 if (expTimeline && expToggleBtn) {
-  const items = expTimeline.querySelectorAll('.timeline-item');
+  const items = expTimeline.querySelectorAll('.exp-item');
   if (items.length > 2) {
     for (let i = 2; i < items.length; i++) {
       items[i].style.display = 'none';
