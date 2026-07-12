@@ -704,9 +704,7 @@ body {
   left: 0;
   width: 100%;
   height: 100vh;
-  background: rgba(10,10,10,0.98);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: var(--bg-color);
   z-index: 40;
   display: flex;
   flex-direction: column;
@@ -721,7 +719,7 @@ body {
 .mobile-nav-overlay.open {
   opacity: 1;
   pointer-events: auto;
-  clip-path: circle(150% at calc(100% - 2.5rem) 2.5rem);
+  clip-path: circle(250% at calc(100% - 2.5rem) 2.5rem);
 }
 
 .mobile-nav-content {
@@ -760,7 +758,7 @@ body {
   transform: translateY(-8px) rotate(-45deg);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 900px) {
   .mobile-menu-btn {
     display: flex !important;
   }
