@@ -29,6 +29,7 @@ body {
   font-family: var(--font-main);
   line-height: 1.6;
   overflow-x: hidden;
+  padding-top: 104px;
 }
 
 /* Background Glows */
@@ -76,6 +77,12 @@ body {
 
 /* Header & Nav */
 .glass-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  width: 100%;
   background: rgba(10, 10, 10, 0.8);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
