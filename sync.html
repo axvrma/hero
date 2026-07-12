@@ -43,15 +43,17 @@
       .btn-sync {
         width: 100%;
         padding: 14px;
-        background: linear-gradient(135deg, var(--google-blue), #8ab4f8);
-        color: #000;
+        background: #4285f4; /* Hardcoded Google Blue */
+        color: #ffffff; /* White text */
         border: none;
         border-radius: 12px;
         font-weight: 600;
+        font-size: 16px;
         cursor: pointer;
-        transition: transform 0.2s ease, opacity 0.2s ease;
+        transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
       }
       .btn-sync:hover {
+        background: #3367d6;
         transform: translateY(-2px);
       }
       .btn-sync:disabled {
