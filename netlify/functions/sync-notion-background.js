@@ -42,6 +42,17 @@ async function createPage(dbId, properties, token) {
 }
 
 export default async (req, context) => {
+  // Allow hitting this from the browser via GET with a secret query parameter
+  // Example: /api/sync-notion-background?secret=YOUR_SECRET
+  
+  const url = new URL(req.url);
+  const secret = url.searchParams.get('secret') || (req.headers && req.headers.get('x-api-secret'));
+  const configuredSecret = process.env.API_SECRET || 'dev-secret-key';
+  
+  if (secret !== configuredSecret) {
+    return new Response('Unauthorized: Invalid secret token', { status: 401 });
+  }
+
   console.log("Background sync started!");
   const token = process.env.NOTION_API_KEY;
   const geminiKey = process.env.GEMINI_API_KEY;
