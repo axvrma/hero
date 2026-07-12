@@ -10,6 +10,7 @@ const DB_PROJECTS = '39b3888d-7765-8123-a7de-fff0ca4fdf3b';
 const DB_EXPERIENCE = '39b3888d-7765-8136-8887-d1e40594e620';
 const DB_SKILLS = '39b3888d-7765-81ce-b5ea-df48c5d34555';
 const DB_EDUCATION = '39b3888d-7765-8176-8bba-e7132440897d';
+const DB_PROFILE = '39b3888d-7765-81a5-a395-ea404ea6371d';
 
 async function fetchDb(dbId) {
   const response = await fetch(`https://api.notion.com/v1/databases/${dbId}/query`, {
@@ -40,14 +41,26 @@ function getPlainText(richTextArr) {
   return richTextArr.map(t => t.plain_text).join('');
 }
 
+function getHtmlText(richTextArr) {
+  if (!richTextArr) return '';
+  return richTextArr.map(t => {
+    let text = t.plain_text;
+    if (t.annotations && t.annotations.color === 'purple') {
+      text = `<span class="text-gradient">${text}</span>`;
+    }
+    return text;
+  }).join('');
+}
+
 async function build() {
   console.log('Fetching Notion data...');
   
-  const [projects, experience, skills, education] = await Promise.all([
+  const [projects, experience, skills, education, profile] = await Promise.all([
     fetchDb(DB_PROJECTS),
     fetchDb(DB_EXPERIENCE),
     fetchDb(DB_SKILLS),
-    fetchDb(DB_EDUCATION)
+    fetchDb(DB_EDUCATION),
+    fetchDb(DB_PROFILE)
   ]);
 
   console.log('Generating Experience HTML...');
@@ -141,11 +154,28 @@ async function build() {
     }
   });
 
+  console.log('Generating Profile HTML...');
+  let heroHtml = '';
+  if (profile && profile.length > 0) {
+    const props = profile[0].properties;
+    const headingHtml = getHtmlText(props.Heading?.rich_text);
+    const subtitleHtml = getHtmlText(props.Subtitle?.rich_text);
+    heroHtml = `
+            <h1 class="hero-title">
+              ${headingHtml}
+            </h1>
+            <p class="hero-desc">
+              ${subtitleHtml}
+            </p>
+    `;
+  }
+
   // Inject into templates
   const rootDir = path.join(__dirname, '..');
   
   console.log('Building index.html...');
   let indexTemplate = fs.readFileSync(path.join(rootDir, 'index-template.html'), 'utf-8');
+  indexTemplate = indexTemplate.replace('<!-- NOTION_HERO -->', heroHtml);
   indexTemplate = indexTemplate.replace('<!-- NOTION_EXPERIENCE -->', experienceHtml);
   indexTemplate = indexTemplate.replace('<!-- NOTION_EDUCATION -->', educationHtml);
   indexTemplate = indexTemplate.replace('<!-- NOTION_SKILLS -->', skillsHtml);
