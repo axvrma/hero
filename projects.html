@@ -32,14 +32,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/src/style.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6LX0PRSXXC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6LX0PRSXXC');
+    </script>
   </head>
   <body class="bg-black text-white antialiased">
     <div id="app">
             <!-- Glow Elements in Background -->
-      <div class="fixed inset-0 pointer-events-none z-0">
+      <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="revolving-gradient"></div>
         <div class="glow-orb top-left"></div>
+        <div class="glow-orb bottom-right"></div>
       </div>
-      
       <header id="header" class="fixed top-0 left-0 right-0 z-50 glass-nav">
         <div class="nav-container">
           <a href="/" class="logo-link">
