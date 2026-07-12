@@ -552,12 +552,14 @@ body {
 .scroller-prefix {
   color: var(--text-primary);
   justify-self: end;
+  align-self: start;
   height: max-content;
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .scroller {
   justify-self: start;
+  position: relative;
 }
 
 .scroller-inner {
