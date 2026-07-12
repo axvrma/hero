@@ -75,7 +75,9 @@ if (mobileMenuBtn && mobileNavOverlay) {
 
 // Footer Scroll-driven Highlight
 const scrollWords = document.querySelectorAll('.scroll-word');
-if (scrollWords.length > 0) {
+const scrollerPrefix = document.querySelector('.scroller-prefix');
+
+if (scrollWords.length > 0 && scrollerPrefix) {
   const checkHighlight = () => {
     const viewportCenter = window.innerHeight / 2;
     let closestWord = null;
@@ -99,6 +101,11 @@ if (scrollWords.length > 0) {
         word.classList.remove('active');
       }
     });
+
+    // Animate prefix to align perfectly with the active word
+    if (closestWord) {
+      scrollerPrefix.style.transform = `translateY(${closestWord.offsetTop}px)`;
+    }
   };
   window.addEventListener('scroll', checkHighlight, { passive: true });
   window.addEventListener('resize', checkHighlight, { passive: true });

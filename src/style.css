@@ -529,6 +529,7 @@ body {
   border-top: 1px solid var(--border-color);
   position: relative;
   z-index: 10;
+  padding: 6rem 1.5rem 2rem;
 }
 
 .footer-container {
@@ -537,8 +538,8 @@ body {
 }
 
 .scroller-wrapper {
-  padding-top: 50vh;
-  padding-bottom: 50vh;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -549,11 +550,10 @@ body {
 }
 
 .scroller-prefix {
-  position: sticky;
-  top: calc(50vh - 0.6em);
   color: var(--text-primary);
   justify-self: end;
   height: max-content;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .scroller {
