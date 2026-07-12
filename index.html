@@ -4,10 +4,28 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Abhishek Verma | Senior Software Engineer | IIT-G</title>
+    <title>Abhishek Verma | Senior Software Engineer</title>
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="Senior Software Engineer bridging scalable UI architecture with intelligent, AI-driven automation." />
+    <meta name="keywords" content="Software Engineer, Frontend Engineer, AI, UI Architecture, React, Portfolio" />
+    <meta name="author" content="Abhishek Verma" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://axvrma.netlify.app/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://axvrma.netlify.app/" />
+    <meta property="og:title" content="Abhishek Verma | Senior Software Engineer" />
+    <meta property="og:description" content="Senior Software Engineer bridging scalable UI architecture with intelligent, AI-driven automation." />
+    <meta property="og:image" content="https://axvrma.netlify.app/og-image.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://axvrma.netlify.app/" />
+    <meta property="twitter:title" content="Abhishek Verma | Senior Software Engineer" />
+    <meta property="twitter:description" content="Senior Software Engineer bridging scalable UI architecture with intelligent, AI-driven automation." />
+    <meta property="twitter:image" content="https://axvrma.netlify.app/og-image.jpg" />
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -78,7 +96,7 @@
           <!-- Experience Section -->
           <section id="experience" class="bento-cell col-span-2">
             <h2 class="section-title">Experience</h2>
-            <div class="exp-timeline">
+            <div class="exp-timeline" id="expTimeline">
               
       <div class="exp-item ">
         <div class="exp-header">
@@ -86,7 +104,7 @@
           <span class="exp-company">DP World</span>
           <span class="exp-date">March 2022 - Present</span>
         </div>
-        <ul class="exp-details"><li>Spearheaded the end-to-end frontend development of the Workflow Management module, translating complex, legacy email-driven processes into a streamlined, system-led UI.</li><li>Engineered a custom, event-driven field highlighting engine capable of processing inputs across multiple Micro Frontends (MFEs) using a dynamic spotlight overlay.</li><li>Scaled and maintained the Unified Design System (UDS), engineering reusable UI components to enforce design consistency across agile teams.</li><li>Developed Runner Environment Manager, a Chrome extension automating environment switching to streamline developer workflows and enhance team efficiency.</li><li>Drove UI implementation for Cargoes Runner utilizing Angular and React to optimize rendering performance and overall system scalability.</li></ul>
+        <ul class="exp-details"><li>Spearheaded the end-to-end frontend development of the Workflow Management module, translating complex, legacy email-driven processes into a streamlined, system-led UI.</li><li>Engineered a custom, event-driven field highlighting engine capable of processing inputs across multiple Micro Frontends (MFEs) using a dynamic spotlight overlay.</li><li>Scaled and maintained the Unified Design System (UDS), engineering reusable UI components to enforce design consistency across agile teams.</li><li>Developed Runner Environment Manager, a Chrome extension automating environment switching to streamline developer workflows and enhance team efficiency. </li><li>Drove UI implementation for Cargoes Runner utilizing Angular and React to optimize rendering performance and overall system scalability.</li></ul>
       </div>
     
       <div class="exp-item mt-8">
@@ -98,7 +116,26 @@
         <ul class="exp-details"><li>Architected and developed a core enterprise Intranet Portal from the ground up, establishing the initial frontend structure and improving internal operational efficiency.</li><li>Built a highly configurable, backend-controlled UI framework (Dynamic UI Automation) that bypassed traditional frontend cycles, empowering QA to configure business requirements directly.</li><li>Engineered high-traffic B2B modules for Airtel Business Care and Airtel Business Gateway, optimizing user flows for enterprise clients.</li><li>Developed secure data-fetching modules for a localized law enforcement integration portal, ensuring strict performance and data privacy standards.</li></ul>
       </div>
     
+      <div class="exp-item mt-8">
+        <div class="exp-header">
+          <h3>Frontend Developer</h3>
+          <span class="exp-company">IRIS Worldwide</span>
+          <span class="exp-date">April 2020 - November 2020</span>
+        </div>
+        <ul class="exp-details"><li>Delivered cross-platform client solutions for major brands (including Zaxby's) utilizing Angular, React, and Ionic, ensuring consistent UI delivery across web and mobile platforms.</li></ul>
+      </div>
+    
+      <div class="exp-item mt-8">
+        <div class="exp-header">
+          <h3>Frontend Developer</h3>
+          <span class="exp-company">Nurtr</span>
+          <span class="exp-date">May 2018 - Mar 2020</span>
+        </div>
+        <ul class="exp-details"><li>1. Spearheaded the migration of the core platform to a Progressive Web Application (PWA), implementing web performance optimization standards and advanced Angular concepts to maximize scalability.</li><li>2. Designed a modular component architecture to maintain high code readability, drastically minimizing technical debt during rapid platform scaling.</li><li>3. Collaborated cross-functionally to optimize the in-house CRM, introducing future-ready features that improved internal operational workflows.</li><li>4. Optimized legacy UI components across the core web application, significantly lowering page load times and enhancement iterations.</li></ul>
+      </div>
+    
             </div>
+            <button id="expToggleBtn" class="btn-toggle-exp" style="margin-top: 1.5rem; color: var(--google-blue); background: none; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">Show More Experience &darr;</button>
           </section>
 
           <!-- Right Column -->
@@ -110,12 +147,12 @@
               
       <div class="edu-item">
         <h4>Indian Institute of Technology, Guwahati</h4>
-        <p>Post Graduate - Artificial Intelligence and Machine Learning (2025 - 2026)</p>
+        <p>Post Graduate - Artificial Intelligence and Machine Learning (2025-2026)</p>
       </div>
     
       <div class="edu-item">
         <h4>Lakshmi Narain College of Technology, Bhopal</h4>
-        <p>B.Tech - Information Technology (2013 - 2017)</p>
+        <p>B.Tech - Information Technology (2013-2017)</p>
       </div>
     
       <div class="edu-item">
@@ -145,23 +182,23 @@
               <h2 class="section-title">Skills</h2>
               
       <div class="skill-category">
+        <h4>Architectural & Concepts</h4>
+        <div class="tags">
+          <span class="tag">Micro-Frontends (MFEs)</span><span class="tag">Enterprise UI Design Systems</span><span class="tag">Performance Optimization</span><span class="tag">Server-Driven UI</span><span class="tag">System Design</span><span class="tag">Scalable Component Architecture</span><span class="tag">Workflow Management System</span><span class="tag">Configurable UI</span>
+        </div>
+      </div>
+    
+      <div class="skill-category">
         <h4>Front-End Frameworks</h4>
         <div class="tags">
-          <span class="tag">Micro-Frontends</span><span class="tag">UI Design Systems</span><span class="tag">Performance</span><span class="tag">Server-Driven UI</span>
+          <span class="tag">Angular</span><span class="tag">React</span><span class="tag">Redux</span>
         </div>
       </div>
     
       <div class="skill-category">
-        <h4>Frameworks & Tools</h4>
+        <h4>Languages</h4>
         <div class="tags">
-          <span class="tag">Angular</span><span class="tag">React</span><span class="tag">Redux</span><span class="tag">JavaScript (ES6+)</span><span class="tag">TypeScript</span><span class="tag">HTML5/CSS3</span>
-        </div>
-      </div>
-    
-      <div class="skill-category">
-        <h4>Specialized Solutions</h4>
-        <div class="tags">
-          <span class="tag">Workflow Management</span><span class="tag">Configurable UI</span><span class="tag">Scalable Architecture</span>
+          <span class="tag">JavaScript (ES6+)</span><span class="tag">TypeScript</span><span class="tag">HTML5/CSS3</span>
         </div>
       </div>
     
@@ -199,13 +236,63 @@
             <h2 class="section-title">Projects</h2>
             <div class="projects-grid">
               
+      <a href="/project-tom-riddle-diary.html" class="project-card">
+        <div class="project-name">
+          <span>tom-riddle-diary</span>
+        </div>
+        <div class="project-desc"></div>
+        <div class="project-meta">
+          <span class="tag">TypeScript</span>
+        </div>
+      </a>
+    
       <a href="/project-figma-compliance-checker.html" class="project-card">
         <div class="project-name">
-          <span>Figma Compliance Checker</span>
+          <span>figma-compliance-checker</span>
         </div>
-        <div class="project-desc">An intelligent Figma auditing and compliance validation tool.</div>
+        <div class="project-desc">An intelligent Figma auditing and compliance validation tool that helps teams enforce design system standards, accessibility rules, component consistency, and developer handoff quality. Built to automate design reviews, detect UI inconsistencies early, and improve design-to-code reliability across large-scale products.</div>
         <div class="project-meta">
-          <span class="tag">TypeScript</span><span class="tag">Figma API</span>
+          <span class="tag">TypeScript</span>
+        </div>
+      </a>
+    
+      <a href="/project-vox-ar.html" class="project-card">
+        <div class="project-name">
+          <span>vox-ar</span>
+        </div>
+        <div class="project-desc">An immersive, browser-based spatial computing application designed to deliver real-time, interactive 3D experiences directly on the web. Built with modern web standards, this project leverages WebGL and the WebXR Device API to bridge the gap between traditional web interfaces and immersive virtual environments without requiring external plugins.</div>
+        <div class="project-meta">
+          <span class="tag">JavaScript</span>
+        </div>
+      </a>
+    
+      <a href="/project-vibes.html" class="project-card">
+        <div class="project-name">
+          <span>vibes</span>
+        </div>
+        <div class="project-desc">A minimalist offline-first reels player built for distraction-free media consumption, allowing users to swipe through local videos, like content, and attach personal notes without relying on social media algorithms or internet connectivity.</div>
+        <div class="project-meta">
+          <span class="tag">Dart</span>
+        </div>
+      </a>
+    
+      <a href="/project-azure-devops-pr-helper.html" class="project-card">
+        <div class="project-name">
+          <span>azure-devops-pr-helper</span>
+        </div>
+        <div class="project-desc">Extenstion for VS Code to raise Azure DevOps PR without leaving the VS Code window</div>
+        <div class="project-meta">
+          <span class="tag">TypeScript</span>
+        </div>
+      </a>
+    
+      <a href="/project-servio.html" class="project-card">
+        <div class="project-name">
+          <span>servio</span>
+        </div>
+        <div class="project-desc">A modern self-hosted server management platform built to simplify deployment, monitoring, and control of dedicated services through a clean web interface. Focused on automation, real-time management, and a lightweight developer-first experience inspired by modern DevOps tooling.</div>
+        <div class="project-meta">
+          <span class="tag">JavaScript</span>
         </div>
       </a>
     

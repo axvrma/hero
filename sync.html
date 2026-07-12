@@ -124,27 +124,27 @@
       </div>
       
       <div class="sync-container relative z-10">
-        <h1 class="text-3xl font-bold mb-2">Automated Sync</h1>
-        <p class="text-secondary mb-8">Pull your latest GitHub projects into Notion and rebuild the live site.</p>
+        <h1 class="text-3xl font-bold mb-2">Manual Rebuild</h1>
+        <p class="text-secondary mb-8">Trigger a live site rebuild using the latest data manually updated in Notion.</p>
         
         <div class="form-group">
           <label>API Secret Token</label>
           <input type="password" id="secretInput" placeholder="Enter your secret...">
         </div>
         
-        <button id="syncBtn" class="btn-sync">Sync & Rebuild Site</button>
+        <button id="syncBtn" class="btn-sync">Trigger Rebuild</button>
         
         <div class="loader-wrapper" id="loaderWrapper">
           <div class="spinner"></div>
-          <div class="status-text" id="statusText">Initiating Background Task...</div>
+          <div class="status-text" id="statusText">Authenticating...</div>
           <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
           </div>
         </div>
         
         <div class="success-message" id="successMessage">
-          ✅ <strong>Sync Triggered Successfully!</strong><br><br>
-          GitHub repos have been pulled into Notion and Netlify is rebuilding your site. Your changes will be live in about 30 seconds!
+          ✅ <strong>Rebuild Triggered Successfully!</strong><br><br>
+          Netlify is now pulling your latest data from Notion and rebuilding the site. Your changes will be live in about 30 seconds!
         </div>
         
         <div class="error-message" id="errorMessage"></div>
@@ -162,11 +162,10 @@
 
       // Helper for simulated progress
       const stages = [
-        { time: 0, text: "Authenticating with API...", progress: 10 },
-        { time: 2000, text: "Fetching Repositories from GitHub...", progress: 30 },
-        { time: 5000, text: "Syncing projects into Notion Database...", progress: 60 },
-        { time: 9000, text: "Triggering Netlify Rebuild...", progress: 85 },
-        { time: 12000, text: "Sync Complete!", progress: 100 }
+        { time: 0, text: "Authenticating...", progress: 20 },
+        { time: 1000, text: "Triggering Netlify Rebuild...", progress: 60 },
+        { time: 2500, text: "Pulling latest data from Notion...", progress: 90 },
+        { time: 3500, text: "Rebuild Started!", progress: 100 }
       ];
 
       syncBtn.addEventListener('click', async () => {

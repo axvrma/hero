@@ -51,43 +51,16 @@ export default async (req, context) => {
   }
 
   console.log("Background sync started!");
-  const token = process.env.NOTION_API_KEY;
-  const geminiKey = process.env.GEMINI_API_KEY;
-  const resumeUrl = process.env.RESUME_URL || 'https://drive.google.com/file/d/1VK5y-OIx-8EKoSX0bx1INsAJrqr0qX_-/view';
-  const githubUser = process.env.GITHUB_USER || 'axvrma';
 
   try {
-
-
-    // 4. Fetch GitHub & Update Projects
-    console.log("Fetching Github Repos...");
-    const ghRes = await fetch(`https://api.github.com/users/${githubUser}/repos?sort=updated&per_page=10`);
-    if (ghRes.ok) {
-      const repos = await ghRes.json();
-      console.log("Pushing Projects...");
-      await clearDb(DB_PROJECTS, token);
-      for (let i = 0; i < repos.length; i++) {
-        const repo = repos[i];
-        if (repo.fork) continue; // skip forks
-        await createPage(DB_PROJECTS, {
-          'Name': { title: [{ text: { content: repo.name } }] },
-          'Description': { rich_text: [{ text: { content: repo.description || '' } }] },
-          'Slug': { rich_text: [{ text: { content: repo.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') } }] },
-          'Github URL': { url: repo.html_url },
-          'Tags': { multi_select: repo.language ? [{ name: repo.language }] : [] },
-          'Order': { number: i + 1 }
-        }, token);
-      }
-    }
-
-    console.log("Background sync complete!");
-
     // Trigger Netlify Rebuild so the new Notion data gets pulled into the static site
     if (process.env.NETLIFY_BUILD_HOOK) {
       console.log("Triggering Netlify rebuild...");
       await fetch(process.env.NETLIFY_BUILD_HOOK, { method: 'POST' });
+    } else {
+      console.log("No NETLIFY_BUILD_HOOK found in env variables.");
     }
-
+    console.log("Background sync complete!");
   } catch (error) {
     console.error("Background sync failed:", error);
   }
