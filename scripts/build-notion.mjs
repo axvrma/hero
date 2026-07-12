@@ -159,18 +159,37 @@ async function build() {
 
   console.log('Generating Profile HTML...');
   let heroHtml = '';
-  if (profile && profile.length > 0) {
-    const props = profile[0].properties;
-    const headingHtml = getHtmlText(props.Heading?.rich_text);
-    const subtitleHtml = getHtmlText(props.Subtitle?.rich_text);
-    heroHtml = `
+  let footerWordsHtml = '';
+  
+  if (profile) {
+    const profileData = {};
+    profile.forEach(page => {
+      const name = getPlainText(page.properties.Name?.title);
+      profileData[name] = page.properties;
+    });
+
+    if (profileData['Hero Section']) {
+      const props = profileData['Hero Section'];
+      const headingHtml = getHtmlText(props.Heading?.rich_text);
+      const subtitleHtml = getHtmlText(props.Subtitle?.rich_text);
+      heroHtml = `
             <h1 class="hero-title">
               ${headingHtml}
             </h1>
             <p class="hero-desc">
               ${subtitleHtml}
             </p>
-    `;
+      `;
+    }
+
+    if (profileData['Footer Section']) {
+      const props = profileData['Footer Section'];
+      const wordsText = getPlainText(props.Subtitle?.rich_text);
+      if (wordsText) {
+        const words = wordsText.split(',').map(w => w.trim()).filter(w => w);
+        footerWordsHtml = words.map(w => `<span class="scroll-word">${w}.</span>`).join('\n                ');
+      }
+    }
   }
 
   // Inject into templates
@@ -179,6 +198,7 @@ async function build() {
   console.log('Building index.html...');
   let indexTemplate = fs.readFileSync(path.join(rootDir, 'index-template.html'), 'utf-8');
   indexTemplate = indexTemplate.replace('<!-- NOTION_HERO -->', heroHtml);
+  indexTemplate = indexTemplate.replace('<!-- NOTION_FOOTER_WORDS -->', footerWordsHtml);
   indexTemplate = indexTemplate.replace('<!-- NOTION_EXPERIENCE -->', experienceHtml);
   indexTemplate = indexTemplate.replace('<!-- NOTION_EDUCATION -->', educationHtml);
   indexTemplate = indexTemplate.replace('<!-- NOTION_SKILLS -->', skillsHtml);
@@ -187,6 +207,7 @@ async function build() {
   
   console.log('Building resume.html...');
   let resumeTemplate = fs.readFileSync(path.join(rootDir, 'resume-template.html'), 'utf-8');
+  resumeTemplate = resumeTemplate.replace('<!-- NOTION_FOOTER_WORDS -->', footerWordsHtml);
   resumeTemplate = resumeTemplate.replace('<!-- NOTION_EXPERIENCE -->', experienceHtml);
   resumeTemplate = resumeTemplate.replace('<!-- NOTION_EDUCATION -->', educationHtml);
   resumeTemplate = resumeTemplate.replace('<!-- NOTION_SKILLS -->', skillsHtml);
@@ -194,6 +215,7 @@ async function build() {
   
   console.log('Building projects.html...');
   let projectsTemplate = fs.readFileSync(path.join(rootDir, 'projects-template.html'), 'utf-8');
+  projectsTemplate = projectsTemplate.replace('<!-- NOTION_FOOTER_WORDS -->', footerWordsHtml);
   projectsTemplate = projectsTemplate.replace('<!-- NOTION_PROJECTS_FULL -->', projectsHtmlFull);
   fs.writeFileSync(path.join(rootDir, 'projects.html'), projectsTemplate);
   
