@@ -127,8 +127,6 @@ body {
   overflow: hidden;
   user-select: none;
   gap: 2rem;
-  background: rgba(255, 255, 255, 0.02);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding: 8px 0;
   width: 100%;
 }
@@ -718,7 +716,7 @@ body {
   border-radius: 16px;
   padding: 2rem;
   position: sticky;
-  top: 100px;
+  top: 136px;
   height: max-content;
 }
 
