@@ -12,7 +12,17 @@ const DB_SKILLS = '39b3888d-7765-81ce-b5ea-df48c5d34555';
 const DB_EDUCATION = '39b3888d-7765-8176-8bba-e7132440897d';
 const DB_PROFILE = '39b3888d-7765-81a5-a395-ea404ea6371d';
 
-async function fetchDb(dbId) {
+async function fetchDb(dbId, sortBy = 'Order') {
+  const body = {};
+  if (sortBy) {
+    body.sorts = [
+      {
+        property: sortBy,
+        direction: 'ascending',
+      },
+    ];
+  }
+  
   const response = await fetch(`https://api.notion.com/v1/databases/${dbId}/query`, {
     method: 'POST',
     headers: {
@@ -20,14 +30,7 @@ async function fetchDb(dbId) {
       'Notion-Version': '2022-06-28',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({
-      sorts: [
-        {
-          property: 'Order',
-          direction: 'ascending',
-        },
-      ],
-    })
+    body: JSON.stringify(body)
   });
   const data = await response.json();
   if (data.object === 'error') {
@@ -60,7 +63,7 @@ async function build() {
     fetchDb(DB_EXPERIENCE),
     fetchDb(DB_SKILLS),
     fetchDb(DB_EDUCATION),
-    fetchDb(DB_PROFILE)
+    fetchDb(DB_PROFILE, null)
   ]);
 
   console.log('Generating Experience HTML...');
