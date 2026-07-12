@@ -45,3 +45,30 @@ if (showFullResumeBtn && resumePreviewWrapper && resumeFadeMask) {
     }, 800);
   });
 }
+
+// Mobile Hamburger Menu
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+const mobileNavLinks = document.querySelectorAll('.mobile-nav-content a');
+
+if (mobileMenuBtn && mobileNavOverlay) {
+  const toggleMenu = () => {
+    mobileMenuBtn.classList.toggle('open');
+    mobileNavOverlay.classList.toggle('open');
+    if (mobileNavOverlay.classList.contains('open')) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  };
+
+  mobileMenuBtn.addEventListener('click', toggleMenu);
+
+  mobileNavLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenuBtn.classList.remove('open');
+      mobileNavOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+}
