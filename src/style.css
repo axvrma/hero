@@ -179,7 +179,7 @@ body {
   color: #c4b5fd;
   border: 1px solid rgba(139, 92, 246, 0.3);
   padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border-radius: 9999px;
   font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
@@ -752,7 +752,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 0.6rem 1.2rem;
-  border-radius: 8px;
+  border-radius: 9999px;
   font-size: 0.9rem;
   font-weight: 500;
   text-decoration: none;
