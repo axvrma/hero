@@ -152,6 +152,13 @@ async function build() {
   indexTemplate = indexTemplate.replace('<!-- NOTION_PROJECTS -->', projectsHtmlTop6);
   fs.writeFileSync(path.join(rootDir, 'index.html'), indexTemplate);
   
+  console.log('Building resume.html...');
+  let resumeTemplate = fs.readFileSync(path.join(rootDir, 'resume-template.html'), 'utf-8');
+  resumeTemplate = resumeTemplate.replace('<!-- NOTION_EXPERIENCE -->', experienceHtml);
+  resumeTemplate = resumeTemplate.replace('<!-- NOTION_EDUCATION -->', educationHtml);
+  resumeTemplate = resumeTemplate.replace('<!-- NOTION_SKILLS -->', skillsHtml);
+  fs.writeFileSync(path.join(rootDir, 'resume.html'), resumeTemplate);
+  
   console.log('Building projects.html...');
   let projectsTemplate = fs.readFileSync(path.join(rootDir, 'projects-template.html'), 'utf-8');
   projectsTemplate = projectsTemplate.replace('<!-- NOTION_PROJECTS_FULL -->', projectsHtmlFull);

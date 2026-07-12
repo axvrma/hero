@@ -30,24 +30,18 @@ for (const card of document.querySelectorAll('.bento-cell, .project-card, .btn, 
   card.onmousemove = e => handleOnMouseMove(e);
 }
 
-// Experience Section Toggle
-const expTimeline = document.getElementById('expTimeline');
-const expToggleBtn = document.getElementById('expToggleBtn');
-if (expTimeline && expToggleBtn) {
-  const items = expTimeline.querySelectorAll('.exp-item');
-  if (items.length > 2) {
-    for (let i = 2; i < items.length; i++) {
-      items[i].style.display = 'none';
-    }
-    let isExpanded = false;
-    expToggleBtn.addEventListener('click', () => {
-      isExpanded = !isExpanded;
-      for (let i = 2; i < items.length; i++) {
-        items[i].style.display = isExpanded ? 'block' : 'none';
-      }
-      expToggleBtn.innerHTML = isExpanded ? 'Show Less Experience &uarr;' : 'Show More Experience &darr;';
-    });
-  } else {
-    expToggleBtn.style.display = 'none';
-  }
+// Resume Section Full Expand Toggle
+const resumePreviewWrapper = document.getElementById('resumePreviewWrapper');
+const showFullResumeBtn = document.getElementById('showFullResumeBtn');
+const resumeFadeMask = document.getElementById('resumeFadeMask');
+
+if (showFullResumeBtn && resumePreviewWrapper && resumeFadeMask) {
+  showFullResumeBtn.addEventListener('click', () => {
+    resumePreviewWrapper.style.maxHeight = resumePreviewWrapper.scrollHeight + 'px';
+    resumeFadeMask.style.opacity = '0';
+    setTimeout(() => {
+      resumeFadeMask.style.display = 'none';
+      resumePreviewWrapper.style.maxHeight = 'none';
+    }, 800);
+  });
 }

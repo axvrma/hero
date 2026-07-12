@@ -50,7 +50,7 @@
             <a href="/projects.html" class="nav-item">Projects</a>
             <a href="/#experience" class="nav-item">Experience</a>
             <a href="/#skills" class="nav-item">Skills</a>
-            <a href="https://drive.google.com/file/d/1VK5y-OIx-8EKoSX0bx1INsAJrqr0qX_-/view" target="_blank" class="nav-btn-primary">View Resume</a>
+            <a href="/resume.html" class="nav-btn-primary">View Resume</a>
           </nav>
         </div>
       </header>
@@ -90,8 +90,11 @@
           </div>
         </section>
 
-        <!-- Bento Grid Layout -->
-        <div class="bento-container">
+        <!-- Resume Preview Wrapper -->
+        <div class="resume-preview-wrapper relative" id="resumePreviewWrapper" style="max-height: 800px; overflow: hidden; transition: max-height 0.8s ease-in-out; position: relative;">
+          
+          <!-- Bento Grid Layout -->
+          <div class="bento-container">
           
           <!-- Experience Section -->
           <section id="experience" class="bento-cell col-span-2">
@@ -99,7 +102,6 @@
             <div class="exp-timeline" id="expTimeline">
               <!-- NOTION_EXPERIENCE -->
             </div>
-            <button id="expToggleBtn" class="btn-toggle-exp" style="margin-top: 1.5rem; color: var(--google-blue); background: none; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">Show More Experience &darr;</button>
           </section>
 
           <!-- Right Column -->
@@ -152,6 +154,19 @@
 
           </div>
         </div>
+
+        <!-- Gradient Fade Mask -->
+        <div id="resumeFadeMask" class="absolute bottom-0 left-0 right-0 h-48 flex items-end justify-center pb-8" style="background: linear-gradient(to top, rgba(10, 10, 10, 1), rgba(10, 10, 10, 0)); pointer-events: none; z-index: 10;">
+          <div style="display: flex; gap: 1rem; pointer-events: auto;">
+            <button id="showFullResumeBtn" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1rem; border-radius: 999px; box-shadow: 0 4px 14px rgba(136, 172, 241, 0.3); background: var(--text-primary); color: var(--bg-color); font-weight: 500; border: none; cursor: pointer; transition: transform 0.2s ease;">
+              Show Resume Section &darr;
+            </button>
+            <a href="/resume.html" class="nav-btn-primary" style="display: flex; align-items: center; justify-content: center; padding: 0.75rem 2rem; border-radius: 999px; font-size: 1rem;">
+              Dedicated Resume Page &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
 
         <!-- Projects Section -->
         <section id="projects" class="bento-container" style="margin-top: 1.5rem;">
