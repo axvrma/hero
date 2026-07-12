@@ -115,6 +115,40 @@ body {
   text-transform: uppercase;
 }
 
+.marquee-container {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  gap: 2rem;
+  background: rgba(10, 10, 10, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 8px 0;
+  width: 100%;
+}
+
+.marquee-content {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-around;
+  min-width: 100%;
+  gap: 2rem;
+  animation: marquee-scroll 25s linear infinite;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  align-items: center;
+}
+
+.marquee-dot {
+  color: var(--accent-color);
+  opacity: 0.6;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-100% - 2rem)); }
+}
 .desktop-nav {
   display: flex;
   align-items: center;

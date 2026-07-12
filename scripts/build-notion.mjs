@@ -160,6 +160,7 @@ async function build() {
   console.log('Generating Profile HTML...');
   let heroHtml = '';
   let footerWordsHtml = '';
+  let marqueeHtml = '';
   
   if (profile) {
     const profileData = {};
@@ -190,7 +191,30 @@ async function build() {
         footerWordsHtml = words.map(w => `<span class="scroll-word">${w}.</span>`).join('\n                ');
       }
     }
+
+    if (profileData['Marquee']) {
+      const props = profileData['Marquee'];
+      const wordsText = getPlainText(props.Subtitle?.rich_text);
+      if (wordsText) {
+        const words = wordsText.split(',').map(w => w.trim()).filter(w => w);
+        const repeatedWords = [...words, ...words, ...words];
+        const innerHtml = repeatedWords.map(w => `<span>${w}</span><span class="marquee-dot">•</span>`).join('\n          ');
+        marqueeHtml = `      <div class="marquee-container">
+        <div class="marquee-content">
+          ${innerHtml}
+        </div>
+        <div class="marquee-content" aria-hidden="true">
+          ${innerHtml}
+        </div>
+      </div>`;
+      }
+    }
   }
+
+  const injectMarquee = (html) => html.replace(
+    /<!-- NOTION_MARQUEE_START -->[\s\S]*?<!-- NOTION_MARQUEE_END -->/g,
+    `<!-- NOTION_MARQUEE_START -->\n${marqueeHtml}\n<!-- NOTION_MARQUEE_END -->`
+  );
 
   // Inject into templates
   const rootDir = path.join(__dirname, '..');
@@ -203,6 +227,7 @@ async function build() {
   indexTemplate = indexTemplate.replace('<!-- NOTION_EDUCATION -->', educationHtml);
   indexTemplate = indexTemplate.replace('<!-- NOTION_SKILLS -->', skillsHtml);
   indexTemplate = indexTemplate.replace('<!-- NOTION_PROJECTS -->', projectsHtmlTop6);
+  indexTemplate = injectMarquee(indexTemplate);
   fs.writeFileSync(path.join(rootDir, 'index.html'), indexTemplate);
   
   console.log('Building resume.html...');
@@ -211,13 +236,24 @@ async function build() {
   resumeTemplate = resumeTemplate.replace('<!-- NOTION_EXPERIENCE -->', experienceHtml);
   resumeTemplate = resumeTemplate.replace('<!-- NOTION_EDUCATION -->', educationHtml);
   resumeTemplate = resumeTemplate.replace('<!-- NOTION_SKILLS -->', skillsHtml);
+  resumeTemplate = injectMarquee(resumeTemplate);
   fs.writeFileSync(path.join(rootDir, 'resume.html'), resumeTemplate);
   
   console.log('Building projects.html...');
   let projectsTemplate = fs.readFileSync(path.join(rootDir, 'projects-template.html'), 'utf-8');
   projectsTemplate = projectsTemplate.replace('<!-- NOTION_FOOTER_WORDS -->', footerWordsHtml);
   projectsTemplate = projectsTemplate.replace('<!-- NOTION_PROJECTS_FULL -->', projectsHtmlFull);
+  projectsTemplate = injectMarquee(projectsTemplate);
   fs.writeFileSync(path.join(rootDir, 'projects.html'), projectsTemplate);
+  
+  console.log('Updating project pages...');
+  const allFiles = fs.readdirSync(rootDir);
+  const projectPages = allFiles.filter(f => f.startsWith('project-') && f.endsWith('.html'));
+  for (const page of projectPages) {
+    let content = fs.readFileSync(path.join(rootDir, page), 'utf-8');
+    content = injectMarquee(content);
+    fs.writeFileSync(path.join(rootDir, page), content);
+  }
   
   console.log('Notion SSG Build Complete!');
 }
