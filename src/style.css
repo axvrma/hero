@@ -666,9 +666,15 @@ body {
   display: none !important;
 }
 
-/* Utilities missing from Tailwind */
-.pt-24 { padding-top: 6rem; }
-.pb-20 { padding-bottom: 5rem; }
+/* Specific page main containers (2 separate classes) */
+.home-page-main {
+  padding-top: 2rem;
+}
+
+.resume-page-main {
+  padding-top: 6rem;
+  padding-bottom: 5rem;
+}
 
 /* Mobile Menu Button */
 .mobile-menu-btn {
