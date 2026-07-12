@@ -72,3 +72,36 @@ if (mobileMenuBtn && mobileNavOverlay) {
     });
   });
 }
+
+// Footer Scroll-driven Highlight
+const scrollWords = document.querySelectorAll('.scroll-word');
+if (scrollWords.length > 0) {
+  const checkHighlight = () => {
+    const viewportCenter = window.innerHeight / 2;
+    let closestWord = null;
+    let minDistance = Infinity;
+
+    scrollWords.forEach(word => {
+      const rect = word.getBoundingClientRect();
+      const wordCenter = rect.top + rect.height / 2;
+      const distance = Math.abs(viewportCenter - wordCenter);
+      
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestWord = word;
+      }
+    });
+
+    scrollWords.forEach(word => {
+      if (word === closestWord) {
+        word.classList.add('active');
+      } else {
+        word.classList.remove('active');
+      }
+    });
+  };
+  window.addEventListener('scroll', checkHighlight, { passive: true });
+  window.addEventListener('resize', checkHighlight, { passive: true });
+  // Initial check
+  checkHighlight();
+}
