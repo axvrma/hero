@@ -759,3 +759,12 @@ body {
 .mobile-menu-btn.open span:nth-child(3) {
   transform: translateY(-8px) rotate(-45deg);
 }
+
+@media (max-width: 640px) {
+  .mobile-menu-btn {
+    display: flex !important;
+  }
+  .desktop-nav {
+    display: none !important;
+  }
+}
