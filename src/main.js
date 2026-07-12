@@ -5,10 +5,10 @@ const header = document.getElementById('header');
 if (header) {
   window.addEventListener('scroll', () => {
     if (window.scrollY > 20) {
-      header.style.background = 'rgba(10, 10, 10, 0.9)';
+      header.style.backgroundColor = 'rgba(10, 10, 10, 0.65)';
       header.style.borderBottom = '1px solid #2a2a30';
     } else {
-      header.style.background = 'rgba(10, 10, 10, 0.8)';
+      header.style.backgroundColor = 'rgba(10, 10, 10, 0.35)';
       header.style.borderBottom = '1px solid #1f1f23';
     }
   });
