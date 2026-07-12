@@ -93,9 +93,7 @@ body {
   right: 0;
   z-index: 50;
   width: 100%;
-  background: rgba(10, 10, 10, 0.35);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: var(--bg-color);
   border-bottom: 1px solid var(--border-color);
   transition: all 0.3s ease;
 }
