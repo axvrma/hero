@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "predev": "node scripts/build-ssg.js",
+    "predev": "node scripts/build-notion.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/build-ssg.js",
+    "prebuild": "node scripts/build-notion.mjs",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -14,9 +14,12 @@
     "vite": "^8.0.12"
   },
   "dependencies": {
+    "@google/genai": "^2.11.0",
+    "@notionhq/client": "^5.23.0",
     "dompurify": "^3.4.5",
     "firebase": "^12.13.0",
     "isomorphic-dompurify": "^3.14.0",
-    "marked": "^18.0.3"
+    "marked": "^18.0.3",
+    "pdf-parse": "^1.1.1"
   }
 }

@@ -31,10 +31,27 @@
   </head>
   <body>
     <div id="app">
-    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-      <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
-    </button>
-    <div class="bg-blob"></div>
+      <!-- Glow Elements in Background -->
+      <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="glow-orb top-left"></div>
+      </div>
+      
+      <header id="header" class="fixed top-0 left-0 right-0 z-50 glass-nav">
+        <div class="nav-container">
+          <a href="/" class="logo-link">
+            <span class="logo-text">Abhishek Verma</span>
+            <span class="logo-role">Senior Software Engineer | IIT-G</span>
+          </a>
+          <nav class="desktop-nav">
+            <a href="/projects.html" class="nav-item">Projects</a>
+            <a href="/#experience" class="nav-item">Experience</a>
+            <a href="/#skills" class="nav-item">Skills</a>
+            <a href="https://drive.google.com/file/d/1VK5y-OIx-8EKoSX0bx1INsAJrqr0qX_-/view" target="_blank" class="nav-btn-primary">View Resume</a>
+          </nav>
+        </div>
+      </header>
+    
+    
     <div class="project-split-layout">
       <aside class="project-sidebar">
         <a href="/" class="btn btn-secondary" style="margin-bottom: 2rem; display: inline-flex;">&larr; Back to Home</a>
@@ -47,14 +64,14 @@
       </aside>
       <div class="project-content markdown-body">
         <h1>Azure DevOps PR Helper</h1>
-<p>A VS Code extension to streamline creating Pull Requests on Azure DevOps with AI-powered title and description generation using Claude.</p>
+<p>A VS Code extension to streamline creating Pull Requests on Azure DevOps with AI-powered title and description generation using Anthropic, Google Gemini, or OpenAI.</p>
 <h2>Features</h2>
 <ul>
 <li><strong>Create PRs directly from VS Code</strong> - No need to switch to the browser</li>
-<li><strong>AI-Powered Suggestions</strong> - Claude generates PR titles and descriptions based on your branch name</li>
+<li><strong>AI-Powered Suggestions</strong> - Anthropic, Gemini, or OpenAI generates PR titles and descriptions from branch, commit, and diff context</li>
 <li><strong>Work Item Linking</strong> - Link PRs to Azure DevOps work items</li>
 <li><strong>Secure Credential Storage</strong> - PAT and API keys stored using VS Code SecretStorage</li>
-<li><strong>Auto-Detection</strong> - Automatically detects current branch and repository</li>
+<li><strong>Workspace-Aware Auto-Detection</strong> - Automatically detects the branch and repository from the active VS Code workspace folder</li>
 <li><strong>Comprehensive Settings</strong> - All configuration in one place</li>
 </ul>
 <h2>Installation</h2>
@@ -69,7 +86,7 @@
 <ol>
 <li>Click the <strong>Azure DevOps PR</strong> icon in the VS Code Activity Bar to open the sidebar, or run the command <code>Azure DevOps: Open Settings</code>.</li>
 <li>Under <strong>Azure DevOps Connection</strong>, enter your Organization URL, Project Name, and a Personal Access Token (PAT). Click <strong>Save</strong>.</li>
-<li><em>(Optional)</em> Under <strong>Claude AI Integration</strong>, enter your Anthropic API Key to enable AI-powered PR titles and descriptions.</li>
+<li><em>(Optional)</em> Under <strong>AI Provider Integration</strong>, choose Anthropic, Gemini, or OpenAI and enter the provider API key to enable AI-powered PR titles and descriptions.</li>
 </ol>
 <h3>2. Creating a Pull Request</h3>
 <p>Once configured, you have two ways to create pull requests:</p>
@@ -77,7 +94,7 @@
 <ol>
 <li>Open the <strong>Azure DevOps PR</strong> view in the Activity Bar.</li>
 <li>The extension automatically detects your current branch, repository, and active changes.</li>
-<li>If Claude is configured, click <strong>Generate Using AI</strong> to automatically draft a context-aware title and description based on your commits.</li>
+<li>If an AI provider is configured, click <strong>Generate Using AI</strong> to draft a context-aware title and description from your commits and diff.</li>
 <li>Click <strong>Create Pull Request</strong>.</li>
 </ol>
 <p><strong>Option B: The Full Webview (Detailed View)</strong></p>
@@ -87,7 +104,7 @@
 <li>Click <strong>Create</strong> to instantly open the PR on Azure DevOps.</li>
 </ol>
 <h3>3. AI Generation</h3>
-<p>When connected to Anthropic, the AI analyzes your <code>git diff</code> and local commit history to write a structured, descriptive summary of your changes—saving you the hassle of manually explaining your work!</p>
+<p>When an AI provider is configured, the extension can analyze your <code>git diff</code> and local commit history to write a structured, descriptive summary of your changes.</p>
 <h2>Configuration</h2>
 <p>Open the settings panel via Command Palette: <code>Azure DevOps: Open Settings</code></p>
 <h3>Azure DevOps Settings</h3>
@@ -115,7 +132,7 @@
 <td>Azure DevOps REST API version (default: 7.1)</td>
 </tr>
 </tbody></table>
-<h3>Claude AI Settings</h3>
+<h3>AI Provider Settings</h3>
 <table>
 <thead>
 <tr>
@@ -124,12 +141,16 @@
 </tr>
 </thead>
 <tbody><tr>
+<td>Provider</td>
+<td>Anthropic, Google Gemini, or OpenAI</td>
+</tr>
+<tr>
 <td>API Key</td>
-<td>Your Anthropic API key from console.anthropic.com</td>
+<td>Provider API key stored securely in VS Code SecretStorage</td>
 </tr>
 <tr>
 <td>Model</td>
-<td>Claude model to use (default: claude-sonnet-4-5)</td>
+<td>Provider model id. Leave blank in VS Code settings to use the provider default</td>
 </tr>
 <tr>
 <td>Max Tokens</td>
@@ -137,7 +158,7 @@
 </tr>
 <tr>
 <td>Temperature</td>
-<td>Creativity level 0-1 (default: 0.3)</td>
+<td>Creativity level 0-2 (default: 0.3)</td>
 </tr>
 </tbody></table>
 <h3>AI Behavior Toggles</h3>
@@ -150,7 +171,7 @@
 </thead>
 <tbody><tr>
 <td>Enable AI Suggestions</td>
-<td>Use Claude to generate PR titles/descriptions</td>
+<td>Use the selected AI provider to generate PR titles/descriptions</td>
 </tr>
 <tr>
 <td>Generate Description</td>
@@ -199,7 +220,7 @@
 <td>Open the settings panel</td>
 </tr>
 <tr>
-<td><code>Azure DevOps: Generate PR Title with Claude</code></td>
+<td><code>Azure DevOps: Generate PR Title with AI</code></td>
 <td>Generate a title using AI</td>
 </tr>
 </tbody></table>
@@ -208,7 +229,7 @@
 ├── extension.ts          # Entry point
 ├── api/
 │   ├── azureDevOps.ts    # Azure DevOps API client
-│   └── claude.ts         # Claude API client
+│   └── ai.ts             # Multi-provider AI client
 ├── commands/
 │   ├── raisePR.ts        # PR creation command
 │   ├── copyUrl.ts        # Copy URL command
@@ -229,7 +250,7 @@
 </code></pre>
 <h2>Security</h2>
 <ul>
-<li>Azure DevOps PAT and Claude API key are stored securely using VS Code's SecretStorage API</li>
+<li>Azure DevOps PAT and AI provider API keys are stored securely using VS Code's SecretStorage API</li>
 <li>Credentials are never exposed in logs or configuration files</li>
 <li>CSP headers protect webviews from XSS attacks</li>
 </ul>
@@ -261,7 +282,7 @@
 </tr>
 <tr>
 <td>Connection tests</td>
-<td>Success/failure of Azure DevOps and Claude connections</td>
+<td>Success/failure of Azure DevOps and AI provider connections</td>
 </tr>
 </tbody></table>
 <h3>What We DON'T Track</h3>
@@ -288,7 +309,7 @@
 <li>Work Items (Read &amp; Write)</li>
 </ul>
 </li>
-<li>Claude API key (optional, for AI features)</li>
+<li>Anthropic, Gemini, or OpenAI API key (optional, for AI features)</li>
 </ul>
 <h2>License</h2>
 <p>MIT</p>
