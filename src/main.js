@@ -26,6 +26,28 @@ const handleOnMouseMove = e => {
   target.style.setProperty('--mouse-y', `${y}px`);
 }
 
-for(const cell of document.querySelectorAll('.bento-cell')) {
-  cell.onmousemove = e => handleOnMouseMove(e);
+for (const card of document.querySelectorAll('.bento-cell, .project-card, .btn, .nav-btn-primary')) {
+  card.onmousemove = e => handleOnMouseMove(e);
+}
+
+// Experience Section Toggle
+const expTimeline = document.getElementById('expTimeline');
+const expToggleBtn = document.getElementById('expToggleBtn');
+if (expTimeline && expToggleBtn) {
+  const items = expTimeline.querySelectorAll('.timeline-item');
+  if (items.length > 2) {
+    for (let i = 2; i < items.length; i++) {
+      items[i].style.display = 'none';
+    }
+    let isExpanded = false;
+    expToggleBtn.addEventListener('click', () => {
+      isExpanded = !isExpanded;
+      for (let i = 2; i < items.length; i++) {
+        items[i].style.display = isExpanded ? 'block' : 'none';
+      }
+      expToggleBtn.innerHTML = isExpanded ? 'Show Less Experience &uarr;' : 'Show More Experience &darr;';
+    });
+  } else {
+    expToggleBtn.style.display = 'none';
+  }
 }

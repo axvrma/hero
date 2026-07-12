@@ -153,8 +153,7 @@ async function build() {
   
   console.log('Building projects.html...');
   let projectsTemplate = fs.readFileSync(path.join(rootDir, 'projects-template.html'), 'utf-8');
-  // Just use regex to replace everything inside the grid to handle the partial replacement issue
-  projectsTemplate = projectsTemplate.replace(/<div class="projects-grid">[\s\S]*?<\/div>\s*<div style="text-align: center; margin-top: 3rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">/, `<div class="projects-grid">\n${projectsHtmlFull}\n</div>\n<div style="text-align: center; margin-top: 3rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">`);
+  projectsTemplate = projectsTemplate.replace('<!-- NOTION_PROJECTS_FULL -->', projectsHtmlFull);
   fs.writeFileSync(path.join(rootDir, 'projects.html'), projectsTemplate);
   
   console.log('Notion SSG Build Complete!');
