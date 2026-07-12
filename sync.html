@@ -125,14 +125,14 @@
       
       <div class="sync-container relative z-10">
         <h1 class="text-3xl font-bold mb-2">Automated Sync</h1>
-        <p class="text-secondary mb-8">Trigger the AI to pull your latest Resume and GitHub projects into Notion.</p>
+        <p class="text-secondary mb-8">Pull your latest GitHub projects into Notion and rebuild the live site.</p>
         
         <div class="form-group">
           <label>API Secret Token</label>
           <input type="password" id="secretInput" placeholder="Enter your secret...">
         </div>
         
-        <button id="syncBtn" class="btn-sync">Start AI Sync</button>
+        <button id="syncBtn" class="btn-sync">Sync & Rebuild Site</button>
         
         <div class="loader-wrapper" id="loaderWrapper">
           <div class="spinner"></div>
@@ -144,7 +144,7 @@
         
         <div class="success-message" id="successMessage">
           ✅ <strong>Sync Triggered Successfully!</strong><br><br>
-          The AI is running securely in the background. It takes about ~45 seconds for Gemini to parse your PDF and push it to Notion.
+          GitHub repos have been pulled into Notion and Netlify is rebuilding your site. Your changes will be live in about 30 seconds!
         </div>
         
         <div class="error-message" id="errorMessage"></div>
@@ -162,13 +162,11 @@
 
       // Helper for simulated progress
       const stages = [
-        { time: 0, text: "Downloading Resume from Google Drive...", progress: 10 },
-        { time: 5000, text: "Gemini AI is parsing the PDF...", progress: 30 },
-        { time: 18000, text: "Extracting structured JSON...", progress: 50 },
-        { time: 25000, text: "Clearing existing Notion databases...", progress: 65 },
-        { time: 30000, text: "Pushing fresh data to Notion...", progress: 80 },
-        { time: 38000, text: "Fetching Repositories from GitHub...", progress: 95 },
-        { time: 42000, text: "Sync Complete!", progress: 100 }
+        { time: 0, text: "Authenticating with API...", progress: 10 },
+        { time: 2000, text: "Fetching Repositories from GitHub...", progress: 30 },
+        { time: 5000, text: "Syncing projects into Notion Database...", progress: 60 },
+        { time: 9000, text: "Triggering Netlify Rebuild...", progress: 85 },
+        { time: 12000, text: "Sync Complete!", progress: 100 }
       ];
 
       syncBtn.addEventListener('click', async () => {
