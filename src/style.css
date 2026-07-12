@@ -537,8 +537,8 @@ body {
 }
 
 .scroller-wrapper {
-  padding-top: 40vh;
-  padding-bottom: 40vh;
+  padding-top: 50vh;
+  padding-bottom: 50vh;
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -550,8 +550,7 @@ body {
 
 .scroller-prefix {
   position: sticky;
-  top: 50vh;
-  transform: translateY(-50%);
+  top: calc(50vh - 0.6em);
   color: var(--text-primary);
   justify-self: end;
   height: max-content;
