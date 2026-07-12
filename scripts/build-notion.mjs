@@ -162,6 +162,7 @@ async function build() {
   let footerWordsHtml = '';
   let marqueeHtml = '';
   let badgeHtml = '';
+  let copyrightHtml = '&copy; 2026 Abhishek Verma. All rights reserved.';
   
   if (profile) {
     const profileData = {};
@@ -223,6 +224,14 @@ async function build() {
         }
       }
     }
+
+    if (profileData['Copyright']) {
+      const props = profileData['Copyright'];
+      const text = getPlainText(props.Subtitle?.rich_text);
+      if (text) {
+        copyrightHtml = text;
+      }
+    }
   }
 
   const injectMarquee = (html) => html.replace(
@@ -236,6 +245,7 @@ async function build() {
   console.log('Building index.html...');
   let indexTemplate = fs.readFileSync(path.join(rootDir, 'index-template.html'), 'utf-8');
   indexTemplate = indexTemplate.replace('<!-- NOTION_HERO_BADGE -->', badgeHtml);
+  indexTemplate = indexTemplate.replace('<!-- NOTION_COPYRIGHT -->', copyrightHtml);
   indexTemplate = indexTemplate.replace('<!-- NOTION_HERO -->', heroHtml);
   indexTemplate = indexTemplate.replace('<!-- NOTION_FOOTER_WORDS -->', footerWordsHtml);
   indexTemplate = indexTemplate.replace('<!-- NOTION_EXPERIENCE -->', experienceHtml);
@@ -247,6 +257,7 @@ async function build() {
   
   console.log('Building resume.html...');
   let resumeTemplate = fs.readFileSync(path.join(rootDir, 'resume-template.html'), 'utf-8');
+  resumeTemplate = resumeTemplate.replace('<!-- NOTION_COPYRIGHT -->', copyrightHtml);
   resumeTemplate = resumeTemplate.replace('<!-- NOTION_FOOTER_WORDS -->', footerWordsHtml);
   resumeTemplate = resumeTemplate.replace('<!-- NOTION_EXPERIENCE -->', experienceHtml);
   resumeTemplate = resumeTemplate.replace('<!-- NOTION_EDUCATION -->', educationHtml);
@@ -256,6 +267,7 @@ async function build() {
   
   console.log('Building projects.html...');
   let projectsTemplate = fs.readFileSync(path.join(rootDir, 'projects-template.html'), 'utf-8');
+  projectsTemplate = projectsTemplate.replace('<!-- NOTION_COPYRIGHT -->', copyrightHtml);
   projectsTemplate = projectsTemplate.replace('<!-- NOTION_FOOTER_WORDS -->', footerWordsHtml);
   projectsTemplate = projectsTemplate.replace('<!-- NOTION_PROJECTS_FULL -->', projectsHtmlFull);
   projectsTemplate = injectMarquee(projectsTemplate);
