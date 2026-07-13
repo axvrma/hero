@@ -138,9 +138,9 @@ body {
   margin: 0 auto;
   padding: 0 1.5rem;
   height: 64px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   position: relative;
   z-index: 20;
 }
@@ -235,6 +235,10 @@ body {
   background: rgba(139, 92, 246, 0.1);
   border-color: rgba(139, 92, 246, 0.3);
   color: var(--accent-color);
+}
+
+.desktop-theme-toggle {
+  justify-self: end;
 }
 
 .nav-btn-primary {
@@ -737,12 +741,17 @@ body {
     display: none;
   }
 
+  .desktop-theme-toggle {
+    display: none;
+  }
+
   .mobile-menu-btn {
     display: flex;
   }
 
   .nav-container {
     height: 64px;
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
