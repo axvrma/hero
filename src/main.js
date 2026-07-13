@@ -1,13 +1,57 @@
 import './style.css';
 
+// Theme Toggle Logic
+const initTheme = () => {
+  const savedTheme = localStorage.getItem('theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  const initialTheme = savedTheme ? savedTheme : (prefersLight ? 'light' : 'dark');
+  
+  if (initialTheme === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+  
+  const themeToggleBtns = document.querySelectorAll('.theme-toggle-btn');
+  themeToggleBtns.forEach(btn => {
+    updateBtnIcon(btn, initialTheme);
+    btn.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      if (newTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
+      localStorage.setItem('theme', newTheme);
+      themeToggleBtns.forEach(b => updateBtnIcon(b, newTheme));
+    });
+  });
+};
+
+const updateBtnIcon = (btn, theme) => {
+  const sunIcon = btn.querySelector('.sun-icon');
+  const moonIcon = btn.querySelector('.moon-icon');
+  if (sunIcon && moonIcon) {
+    if (theme === 'light') {
+      sunIcon.style.display = 'block';
+      moonIcon.style.display = 'none';
+    } else {
+      sunIcon.style.display = 'none';
+      moonIcon.style.display = 'block';
+    }
+  }
+};
+
+initTheme();
+
 // Glass header blur effect on scroll
 const header = document.getElementById('header');
 if (header) {
   window.addEventListener('scroll', () => {
     if (window.scrollY > 20) {
-      header.style.borderBottom = '1px solid #2a2a30';
+      header.style.borderBottom = '1px solid var(--border-color)';
     } else {
-      header.style.borderBottom = '1px solid #1f1f23';
+      header.style.borderBottom = '1px solid var(--border-hover)';
     }
   });
 }
