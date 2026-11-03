@@ -1,19 +1,10 @@
-import { readFile, access, readdir } from "node:fs/promises";
+import { readFile, access } from "node:fs/promises";
 import { resolve } from "node:path";
 const routes = JSON.parse(await readFile(".generated/routes.json", "utf8"));
 const redirects = JSON.parse(
   await readFile(".generated/redirects.json", "utf8"),
 );
 const routePaths = new Set(routes.map((r) => r.path));
-const files = [];
-async function walk(dir) {
-  for (const entry of await readdir(dir, { withFileTypes: true })) {
-    const file = `${dir}/${entry.name}`;
-    if (entry.isDirectory()) await walk(file);
-    else files.push(file);
-  }
-}
-await walk("dist");
 const errors = [];
 for (const route of routes) {
   const path =
@@ -54,16 +45,6 @@ for (const [path, html] of htmlByRoute) {
 for (const [from, to] of redirects)
   if (!routePaths.has(to))
     errors.push(`Redirect ${from} has no canonical target: ${to}`);
-const source = files.filter((f) => /\.(?:js|html|json|css)$/.test(f));
-for (const file of source) {
-  const value = await readFile(file, "utf8");
-  if (
-    /dev-secret-key|Bearer undefined|NOTION_API_KEY=|api\.netlify\.com\/build_hooks\//.test(
-      value,
-    )
-  )
-    errors.push(`${file}: possible exposed server credential/config`);
-}
 if (errors.length) throw Error(errors.join("\n"));
 console.log(
   `Output check: ${routes.length} routes, ${redirects.length} redirects, local links and asset references passed.`,

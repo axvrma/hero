@@ -1,33 +1,43 @@
-# Notion content management
+# Content editing
 
-The existing database IDs and `2022-06-28` API mapping are preserved. No Notion schema or remote record was changed. Share these databases with the integration associated with `NOTION_API_KEY`:
+All content is maintained in the repository. There is no external CMS or API-key requirement.
 
-| Dataset | Database ID | Existing properties |
-| --- | --- | --- |
-| Projects | `39b3888d-7765-8123-a7de-fff0ca4fdf3b` | Name (title), Description/Slug (rich_text), Tags (multi_select), Github URL (url), Order (number); optional Live URL (url) |
-| Experience | `39b3888d-7765-8136-8887-d1e40594e620` | Company (title), Role/Duration/Details (rich_text), Order (number) |
-| Skills | `39b3888d-7765-81ce-b5ea-df48c5d34555` | Category (title), Tags (multi_select), Order (number) |
-| Education | `39b3888d-7765-8176-8bba-e7132440897d` | Degree (title), Institution/Duration (rich_text), Order (number) |
-| Profile | `39b3888d-7765-81a5-a395-ea404ea6371d` | Name (title), Heading/Subtitle (rich_text), Link (url) |
+## Profile and career
 
-All non-profile databases retain ascending `Order` sorting. If Notion reports an absent sort field, the reader retries without sorting. It follows every pagination cursor, rejects repeated cursors, bounds records and request timeouts, and reports errors without logging secrets or response bodies.
+Edit `content/portfolio.json`:
 
-## Profile rows
+| Key | Content |
+| --- | --- |
+| `profile` | Name, role, location, hero heading/subtitle, contact heading and verified contact/résumé links |
+| `experience` | Company, role, duration and responsibility bullets |
+| `skills` | Capability categories and technology tags |
+| `education` | Institution, degree/certification and duration |
+| `achievements` | Existing recognition titles and descriptions |
+| `projects` | Optional project editorial overrides or additional projects |
 
-`Hero Section` uses Heading/Subtitle. `Contact Section` optionally uses Heading. `About Section` optionally uses Subtitle. `Resume` uses Link. Optional `Identity` uses Heading for the name and Subtitle for the role; `Location` and `Email` use Subtitle; `GitHub` and `LinkedIn` use Link. These additional rows are supported without requiring existing database modifications. Existing `Footer Section`, `Marquee`, `Badge` and `Copyright` rows are preserved in normalized profileRows so no remote data is discarded; the obsolete animated presentation is retired.
+Career content was preserved from the existing portfolio. It is now ordinary local source data, rather than a fallback for a remote service. Update dates and responsibilities directly here as they change.
 
-The requested hero copy is in the committed fallback. A connected existing Hero Section takes precedence, so update that row in Notion to the new approved copy when connecting the CMS. Editable data is rendered as escaped plain text; purple HTML annotations are intentionally not trusted as markup.
+## Flagship case studies
 
-## Projects
+`content/products.mjs` defines Atlas, Vibes, Envision, Servio and Prism. The registry is checked against the Product and CaseSection types in `content/types.ts` using `npm run typecheck`.
 
-Keep Slug stable. `vox-ar` maps to Envision, and `azure-devops-pr-helper` maps to Prism. New names and their legacy aliases match the same registry product. Descriptions and tags can be edited in Notion; technical case-study sections and verified implementation notes live in the typed registry. Live URLs and historical source URLs for the five flagships are fixed as requested. The technical registry records source links and limitations rather than fabricated metrics. No automated script writes content back to Notion.
+Each product includes its canonical slug, brand name, category, description, tagline, fixed live/source URLs, stack, implemented features, architecture, case-study sections, limitations and source evidence. Preserve the requested live URLs and historical repository identities. `vox-ar` maps to Envision, and `azure-devops-pr-helper` maps to Prism.
 
-All sixteen old case-study bodies remain in `legacy-projects.json` and the original documents remain in `content/legacy/`. Four map to current flagships; twelve retain dedicated secondary routes. Atlas is the additional flagship. Secondary Notion records can update descriptions/tags/source/live links, retaining the archived body. A new Notion project without a body renders its description and real source links. `archive-overrides.json` suppresses a specifically verified dead legacy demo URL without changing the preserved original content. A different replacement URL supplied through Notion is allowed.
+An entry in `portfolio.json` → `projects` can override a flagship description or stack by matching its canonical or legacy slug. The registry continues to own flagship identity, URLs and order.
 
-## Local and production behavior
+## Additional projects
 
-No key: use `content/fallback.json` intentionally and print that choice. Key present: read all datasets and fail on integration errors. `NOTION_ALLOW_FALLBACK=true` explicitly allows the committed snapshot if the remote read fails. No automatic snapshot mutation occurs. Review and commit snapshot updates deliberately so a build never overwrites authored templates or creates nondeterministic Git diffs.
+`content/legacy-projects.json` retains all sixteen original case-study bodies. Four map to flagships; twelve have dedicated secondary routes. Atlas is the new seventeenth project. Original HTML is retained under `content/legacy/` for reference and is not another executable generator.
 
-Environment variables are in `.env.example`. `SITE_URL`, `NOTION_API_KEY`, `NOTION_ALLOW_FALLBACK`, `API_SECRET`, `ADMIN_ORIGIN`, `NETLIFY_BUILD_HOOK` are server/build configuration; only site metadata reaches output. Local `.env` is ignored. Netlify provides URL/CONTEXT/DEPLOY_PRIME_URL. No VITE_ credential is supported.
+Secondary entries in `portfolio.json` → `projects` may override `name`, `description`, `stack`, `source` and `live` by `id`; the archived case-study body is retained. A new entry creates a new case-study page from its description and real links. Use a unique lowercase hyphenated slug. Never add placeholder destinations or unsupported claims.
 
-After editing Notion, run the normal Netlify build or request it through `/sync.html` with an administrator secret. A successful request acknowledges the build hook, not the final deployment result. Follow build logs in Netlify.
+`content/archive-overrides.json` suppresses a specifically verified dead demo URL. A different replacement URL is allowed when supplied in local project content. Original archived data remains intact.
+
+## Preview and publish
+
+1. Edit the appropriate file.
+2. Run `npm run generate` during development, or `npm run build` for a production artifact.
+3. Run `npm run verify` and review the affected pages locally.
+4. Commit the change and use Netlify's regular Git-triggered build or dashboard workflow to publish.
+
+Builds do not mutate local content or external services. Text and attributes are HTML-escaped; preserved rich HTML is sanitized. Local development requires no environment variables. The optional SITE_URL setting supplies a verified production origin for canonical URLs and sitemap entries; Netlify's production URL is the fallback and deploy previews use their own origin with noindex.

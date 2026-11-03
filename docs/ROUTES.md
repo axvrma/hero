@@ -41,4 +41,4 @@ The build emits exact forced 301 rules in `dist/_redirects`. Each old project re
 | `/project-web-xr.html` | `/work/web-xr` |
 | `/project-web-xr` | `/work/web-xr` |
 
-The retained admin and rebuild documents remain `/admin.html` and `/sync.html`, excluded from indexing. `/resume.html` redirects to the new printable `/resume`; résumé CTAs retain the existing original document URL. API sync is implemented by `sync-notion.js` at the historical `/api/sync-notion-background` path, with a compatibility rule for the old direct function URL.
+`/resume.html` redirects to the printable `/resume`; résumé CTAs retain the original document URL. Retired admin, sync and API paths have no handlers or redirects and return the ordinary 404.

@@ -3,7 +3,7 @@ import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
 import { products as registry } from "../content/products.mjs";
 import { escape as e, resolveOrigin, safeUrl } from "./lib/content.mjs";
 import * as site from "../src/components/site.mjs";
-const content = JSON.parse(await readFile(".generated/content.json", "utf8"));
+const content = JSON.parse(await readFile("content/portfolio.json", "utf8"));
 const legacy = JSON.parse(
   await readFile("content/legacy-projects.json", "utf8"),
 );
@@ -13,13 +13,13 @@ const aliases = new Map(
   registry.flatMap((p) => p.legacy.map((id) => [id, p.id])),
 );
 const products = registry.map((product) => {
-  const cms = content.projects.find(
+  const local = content.projects.find(
     (item) => item.id === product.id || product.legacy.includes(item.id),
   );
   return {
     ...product,
-    ...(cms?.description ? { description: cms.description } : {}),
-    ...(cms?.stack?.length ? { stack: cms.stack } : {}),
+    ...(local?.description ? { description: local.description } : {}),
+    ...(local?.stack?.length ? { stack: local.stack } : {}),
   };
 });
 const secondary = legacy.filter((p) => !aliases.has(p.id));
@@ -183,15 +183,12 @@ await writeFile(
 );
 await writeFile(
   ".generated/site/robots.txt",
-  `User-agent: *\n${process.env.CONTEXT && process.env.CONTEXT !== "production" ? "Disallow: /" : "Allow: /\nDisallow: /admin.html\nDisallow: /sync.html"}\n${origin ? `Sitemap: ${origin}/sitemap.xml\n` : ""}`,
+  `User-agent: *\n${process.env.CONTEXT && process.env.CONTEXT !== "production" ? "Disallow: /" : "Allow: /"}\n${origin ? `Sitemap: ${origin}/sitemap.xml\n` : ""}`,
 );
 await writeFile(
   ".generated/site/sitemap.xml",
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${origin ? routes.map(([path]) => `<url><loc>${e(origin + (path === "/" ? "/" : path))}</loc></url>`).join("") : ""}</urlset>\n`,
 );
-// Standalone historical Firestore editor and authenticated rebuild UI remain available.
-for (const file of ["admin.html", "sync.html"])
-  await writeFile(`.generated/site/${file}`, await readFile(file, "utf8"));
 console.log(
   `Generated ${routes.length} complete static pages, a 404, and ${redirects.length} exact legacy redirects.${origin ? ` Origin: ${origin}` : " SITE_URL unset: absolute canonicals omitted."}`,
 );

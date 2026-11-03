@@ -7,10 +7,9 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "content": "node scripts/build-notion.mjs",
     "predev": "npm run generate",
     "dev": "vite --host 127.0.0.1",
-    "generate": "node scripts/build-notion.mjs && node scripts/generate.mjs",
+    "generate": "node scripts/generate.mjs",
     "prebuild": "npm run generate",
     "build": "vite build && node scripts/check-output.mjs",
     "preview": "node scripts/preview.mjs",
@@ -26,15 +25,11 @@
     "@types/node": "^22.0.0",
     "lighthouse": "^13.0.0",
     "typescript": "^5.9.3",
-    "vite": "^8.0.12"
-  },
-  "dependencies": {
+    "vite": "^8.0.12",
     "dotenv": "^17.4.2",
-    "firebase": "^12.13.0",
     "sanitize-html": "^2.17.0"
   },
   "overrides": {
-    "@grpc/grpc-js": "^1.14.7",
     "glob": "^14.0.3",
     "minimatch": "^11.0.4"
   }
