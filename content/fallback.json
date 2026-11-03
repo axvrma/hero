@@ -1,0 +1,133 @@
+{
+  "profile": {
+    "name": "Abhishek Verma",
+    "role": "Software Engineer & Product Builder",
+    "location": "Bengaluru, India",
+    "email": "abhishekverma.iitg@gmail.com",
+    "github": "https://github.com/axvrma",
+    "linkedin": "https://linkedin.com/in/axvrma",
+    "resume": "https://drive.google.com/file/d/1VK5y-OIx-8EKoSX0bx1INsAJrqr0qX_-/view",
+    "heading": "I build software that makes complexity feel simple.",
+    "subtitle": "I'm Abhishek Verma, a software engineer building thoughtful digital products, scalable interfaces, and developer tools.",
+    "contactHeading": "Have something worth building?",
+    "instagram": "https://instagram.com/axvrma",
+    "x": "https://x.com/axvrma",
+    "phone": "+919630511305"
+  },
+  "experience": [
+    {
+      "company": "DP World",
+      "role": "Senior Software Engineer",
+      "duration": "March 2022 - Present",
+      "details": [
+        "Spearheaded the end-to-end frontend development of the Workflow Management module, translating complex, legacy email-driven processes into a streamlined, system-led UI.",
+        "Engineered a custom, event-driven field highlighting engine capable of processing inputs across multiple Micro Frontends (MFEs) using a dynamic spotlight overlay.",
+        "Scaled and maintained the Unified Design System (UDS), engineering reusable UI components to enforce design consistency across agile teams.",
+        "Developed Runner Environment Manager, a Chrome extension automating environment switching to streamline developer workflows and enhance team efficiency.",
+        "Drove UI implementation for Cargoes Runner utilizing Angular and React to optimize rendering performance and overall system scalability."
+      ]
+    },
+    {
+      "company": "Airtel Africa",
+      "role": "Software Developer",
+      "duration": "December 2020 - March 2022",
+      "details": [
+        "Architected and developed a core enterprise Intranet Portal from the ground up, establishing the initial frontend structure and improving internal operational efficiency.",
+        "Built a highly configurable, backend-controlled UI framework (Dynamic UI Automation) that bypassed traditional frontend cycles, empowering QA to configure business requirements directly.",
+        "Engineered high-traffic B2B modules for Airtel Business Care and Airtel Business Gateway, optimizing user flows for enterprise clients.",
+        "Developed secure data-fetching modules for a localized law enforcement integration portal, ensuring strict performance and data privacy standards."
+      ]
+    },
+    {
+      "company": "IRIS Worldwide",
+      "role": "Frontend Developer",
+      "duration": "April 2020 - November 2020",
+      "details": [
+        "Delivered cross-platform client solutions for major brands (including Zaxby's) utilizing Angular, React, and Ionic, ensuring consistent UI delivery across web and mobile platforms."
+      ]
+    },
+    {
+      "company": "Nurtr",
+      "role": "Frontend Developer",
+      "duration": "May 2018 - Mar 2020",
+      "details": [
+        "Spearheaded the migration of the core platform to a Progressive Web Application (PWA), implementing web performance optimization standards and advanced Angular concepts to maximize scalability.",
+        "Designed a modular component architecture to maintain high code readability, drastically minimizing technical debt during rapid platform scaling.",
+        "Collaborated cross-functionally to optimize the in-house CRM, introducing future-ready features that improved internal operational workflows.",
+        "Optimized legacy UI components across the core web application, significantly lowering page load times and enhancement iterations."
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "category": "Architectural & Concepts",
+      "tags": [
+        "Micro-Frontends (MFEs)",
+        "Enterprise UI Design Systems",
+        "Performance Optimization",
+        "Server-Driven UI",
+        "System Design",
+        "Scalable Component Architecture",
+        "Workflow Management System",
+        "Configurable UI"
+      ]
+    },
+    {
+      "category": "Front-End Frameworks",
+      "tags": [
+        "Angular",
+        "React",
+        "Redux"
+      ]
+    },
+    {
+      "category": "Languages",
+      "tags": [
+        "JavaScript (ES6+)",
+        "TypeScript",
+        "HTML5/CSS3"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Indian Institute of Technology, Guwahati",
+      "degree": "Post Graduate - Artificial Intelligence and Machine Learning (2025-2026)",
+      "duration": ""
+    },
+    {
+      "institution": "Lakshmi Narain College of Technology, Bhopal",
+      "degree": "B.Tech - Information Technology (2013-2017)",
+      "duration": ""
+    },
+    {
+      "institution": "Deep Learning using TensorFlow",
+      "degree": "IBM (May 2026)",
+      "duration": ""
+    },
+    {
+      "institution": "Oracle Certified Associate, Java SE 7 Programmer",
+      "degree": "Oracle (April 2016)",
+      "duration": ""
+    }
+  ],
+  "projects": [],
+  "achievements": [
+    {
+      "title": "Kudos Award (DP World, 2023)",
+      "description": "Awarded for outstanding innovation and smart implementation of common components."
+    },
+    {
+      "title": "Star Performer (Airtel International, 2021)",
+      "description": "Recognized for consistently delivering exceptional and impactful work."
+    },
+    {
+      "title": "First Position (MLH Hackathon, 2020)",
+      "description": "Won by developing a Real-Time Certificate Generator, highlighting proficiency in innovative execution."
+    },
+    {
+      "title": "Appreciation Letter (Google, 2018)",
+      "description": "Received recognition as an early developer for Google Assistant apps, demonstrating innovation and early adoption."
+    }
+  ]
+}

@@ -2,111 +2,90 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfolio Dashboard</title>
-    <link rel="stylesheet" href="/src/style.css">
-    <style>
-      .admin-container {
-        max-width: 800px;
-        margin: 40px auto;
-        padding: 40px;
-        background: var(--card-bg);
-        border-radius: 32px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-      }
-      .form-group {
-        margin-bottom: 20px;
-        display: flex;
-        flex-direction: column;
-      }
-      .form-group label {
-        font-weight: 500;
-        margin-bottom: 8px;
-      }
-      .form-group input, .form-group textarea {
-        padding: 12px;
-        border: 1px solid var(--glass-border);
-        border-radius: 8px;
-        font-family: var(--font-body);
-        font-size: 1rem;
-      }
-      .btn-save {
-        background: var(--google-blue);
-        color: white;
-        padding: 12px 24px;
-        border: none;
-        border-radius: 8px;
-        font-size: 1rem;
-        cursor: pointer;
-        width: 100%;
-        margin-top: 20px;
-      }
-      #login-section, #dashboard-section {
-        display: none;
-      }
-      .active-section {
-        display: block !important;
-      }
-      .toast {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        padding: 16px 24px;
-        background: var(--google-green);
-        color: white;
-        border-radius: 8px;
-        display: none;
-      }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Legacy content editor | Abhishek Verma</title>
+    <link rel="icon" href="/favicon.svg" />
+    <script src="/theme-init.js"></script>
   </head>
   <body>
-    <div class="admin-container">
-      <h1>Portfolio Admin</h1>
-      
-      <div id="login-section" class="active-section">
-        <p>Please sign in with your Google Account to access the dashboard.</p>
-        <button id="login-btn" class="btn-save">Sign in with Google</button>
-      </div>
-
-      <div id="dashboard-section">
-        <p id="user-info" style="margin-bottom: 20px; color: var(--text-secondary);"></p>
-        
-        <div class="form-group">
-          <label>Name / Heading</label>
-          <input type="text" id="input-name" placeholder="Abhishek Verma">
-        </div>
-        
-        <div class="form-group">
-          <label>Headline</label>
-          <textarea id="input-headline" rows="2" placeholder="Software Development Engineer 2..."></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>About Description</label>
-          <textarea id="input-about" rows="3" placeholder="I build frontend systems that scale..."></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>Location</label>
-          <input type="text" id="input-location" placeholder="Bengaluru, Karnataka, India">
-        </div>
-
-        <div class="form-group">
-          <label>Current Experience</label>
-          <input type="text" id="input-experience" placeholder="Software Development Engineer 2 at DP World">
-        </div>
-
-        <div class="form-group">
-          <label>Resume Link URL</label>
-          <input type="text" id="input-resume" placeholder="https://drive.google.com/...">
-        </div>
-
-        <button id="save-btn" class="btn-save">Save Changes to Live Site</button>
-      </div>
-    </div>
-    
-    <div id="toast" class="toast">Saved Successfully!</div>
-
+    <main class="admin-shell">
+      <a class="wordmark" href="/">Abhishek Verma</a>
+      <h1>Legacy content editor.</h1>
+      <p class="admin-notice">
+        This editor preserves the existing Firestore workflow. It updates the
+        historical portfolio/content document. The public portfolio is published
+        from Notion; saving here does not publish the website.
+      </p>
+      <section id="login-section">
+        <p>
+          Sign in with an account carrying the portfolio_admin authorization
+          claim.
+        </p>
+        <button id="login-btn" class="button button-primary" type="button">
+          Sign in with Google
+        </button>
+      </section>
+      <section id="dashboard-section" hidden>
+        <p id="user-info"></p>
+        <form id="legacy-form">
+          <div class="form-group">
+            <label for="input-name">Name</label
+            ><input id="input-name" maxlength="200" required />
+          </div>
+          <div class="form-group">
+            <label for="input-headline">Headline</label
+            ><textarea id="input-headline" maxlength="1000" rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="input-about">About</label
+            ><textarea id="input-about" maxlength="10000" rows="4"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="input-location">Location</label
+            ><input id="input-location" maxlength="200" />
+          </div>
+          <div class="form-group">
+            <label for="input-experience">Experience</label
+            ><input id="input-experience" maxlength="1000" />
+          </div>
+          <div class="form-group">
+            <label for="input-resume">Résumé URL</label
+            ><input
+              id="input-resume"
+              type="url"
+              pattern="https://.*"
+              maxlength="2000"
+            />
+          </div>
+          <div class="admin-actions">
+            <button
+              id="save-btn"
+              class="button button-primary"
+              type="submit"
+              disabled
+            >
+              Save legacy record</button
+            ><button
+              id="logout-btn"
+              class="button button-outline"
+              type="button"
+            >
+              Sign out
+            </button>
+          </div>
+        </form>
+      </section>
+      <p
+        id="admin-status"
+        class="admin-status"
+        role="status"
+        aria-live="polite"
+      ></p>
+      <p>
+        <a href="/sync.html" class="text-link">Request a Notion rebuild →</a>
+      </p>
+    </main>
     <script type="module" src="/src/admin.js"></script>
   </body>
 </html>

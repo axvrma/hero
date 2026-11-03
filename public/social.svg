@@ -1,0 +1,10 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#101114"/>
+  <path d="M70 105h1060M70 530h1060" stroke="#34373b"/>
+  <text x="70" y="75" font-family="Arial" font-size="30" font-weight="bold" fill="#f2f0eb">Abhishek Verma</text>
+  <text x="70" y="235" font-family="Arial" font-size="72" font-weight="bold" fill="#f2f0eb">I build software that</text>
+  <text x="70" y="325" font-family="Arial" font-size="72" font-weight="bold" fill="#a0a5ae">makes complexity</text>
+  <text x="70" y="415" font-family="Arial" font-size="72" font-weight="bold" fill="#f2f0eb">feel simple<tspan fill="#a3e635">.</tspan></text>
+  <text x="70" y="580" font-family="Arial" font-size="20" fill="#a0a5ae">Software Engineer &amp; Product Builder</text>
+  <circle cx="1105" cy="570" r="8" fill="#a3e635"/>
+</svg>

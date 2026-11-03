@@ -24,3 +24,11 @@ dist-ssr
 *.sw?
 
 .env
+
+.generated/
+.research/
+.tools/
+playwright-report/
+test-results/
+.env.*
+!.env.example

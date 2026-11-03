@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-03T13:10:57.362Z",
+  "url": "http://127.0.0.1:4174/",
+  "version": "13.6.0",
+  "settings": {
+    "formFactor": "mobile",
+    "throttling": {
+      "rttMs": 150,
+      "throughputKbps": 1638.4,
+      "requestLatencyMs": 562.5,
+      "downloadThroughputKbps": 1474.5600000000002,
+      "uploadThroughputKbps": 675,
+      "cpuSlowdownMultiplier": 4
+    }
+  },
+  "categories": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "metrics": {
+    "first-contentful-paint": {
+      "value": 1202.952,
+      "display": "1.2 s"
+    },
+    "largest-contentful-paint": {
+      "value": 1202.952,
+      "display": "1.2 s"
+    },
+    "cumulative-layout-shift": {
+      "value": 0,
+      "display": "0"
+    },
+    "total-blocking-time": {
+      "value": 0,
+      "display": "0 ms"
+    },
+    "speed-index": {
+      "value": 1202.952,
+      "display": "1.2 s"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "web-xr": {
+    "retiredLiveUrl": "https://webxrio.netlify.app/",
+    "reason": "Legacy demo returned HTTP 404 during the 3 November 2026 audit. Retain the case study and repository without a broken launch action."
+  }
+}
