@@ -5,7 +5,7 @@ Executed locally on 3 November 2026 with Node 24.19.0, macOS ARM64, Chromium fro
 | Check | Result |
 | --- | --- |
 | `npm run typecheck` | Passed: TypeScript checks the centralized flagship registry against Product/CaseSection types |
-| `npm test` | 5 retained tests cover the registry, content escaping/sanitizing, URL validation, origins and preserved portfolio content |
+| `npm test` | 12 tests cover the registry, content escaping/sanitizing, URL validation, preserved content and deployment metadata validation |
 | `npm run build` | Passed: 24 public static routes, 404, assets and SEO files |
 | Build output checks | Passed: all route documents, one h1 per route, descriptions, local links/assets, fragment targets, duplicate IDs, 36 exact redirects |
 | `npm run test:e2e` | 31 passed against the production artifact with configured headers |
@@ -19,6 +19,10 @@ Executed locally on 3 November 2026 with Node 24.19.0, macOS ARM64, Chromium fro
 | `git diff --check` | Passed |
 
 The first browser pass exposed Vite preview’s SPA fallback at clean URLs. The preview now resolves real directory indexes and the real 404. A subsequent pass identified a 4.49:1 light-theme contrast ratio on architecture indices; the token was darkened and the full suite then passed. Tests do not hide those issues through broad exclusions.
+
+## Netlify build correction
+
+The production failure was reproduced with `CONTEXT=production URL=https://axvrma.netlify.app SITE_URL= npm run build`. Vite completed, but the output checker incorrectly treated every occurrence of the current Netlify hostname as stale. The checker now validates canonical and Open Graph URLs against the same resolved deployment origin used by generation, including local `.env` values. The matching production build passes across all 24 routes and 36 redirects. Seven regression checks cover the Netlify default URL, custom SITE_URL, genuinely stale metadata, preview identity, local dotenv and builds without a configured origin. No frontend code changed for this correction.
 
 ## Lighthouse
 

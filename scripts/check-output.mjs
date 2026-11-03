@@ -1,5 +1,8 @@
+import "dotenv/config";
 import { readFile, access } from "node:fs/promises";
 import { resolve } from "node:path";
+import { escape, resolveOrigin } from "./lib/content.mjs";
+const origin = resolveOrigin();
 const routes = JSON.parse(await readFile(".generated/routes.json", "utf8"));
 const redirects = JSON.parse(
   await readFile(".generated/redirects.json", "utf8"),
@@ -14,8 +17,15 @@ for (const route of routes) {
     errors.push(`${path}: expected one h1`);
   if (!html.includes('<meta name="description"'))
     errors.push(`${path}: missing description`);
-  if (html.includes("axvrma.netlify.app"))
-    errors.push(`${path}: outdated origin`);
+  const expectedUrl = origin
+    ? escape(origin + (route.path === "/" ? "/" : route.path))
+    : undefined;
+  const canonical = html.match(/<link\b[^>]*rel="canonical"[^>]*href="([^"]+)"/)?.[1];
+  const socialUrl = html.match(/<meta\b[^>]*property="og:url"[^>]*content="([^"]+)"/)?.[1];
+  if (canonical !== expectedUrl)
+    errors.push(`${path}: canonical URL does not match the configured deployment URL`);
+  if (socialUrl !== expectedUrl)
+    errors.push(`${path}: Open Graph URL does not match the configured deployment URL`);
   if (/<!-- (META|BODY|HEADER|FOOTER) -->/.test(html))
     errors.push(`${path}: unfilled template`);
   for (const match of html.matchAll(/(?:href|src)="([^"#]+)(?:#[^"]*)?"/g)) {
