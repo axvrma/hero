@@ -88,6 +88,43 @@ test("mobile navigation supports keyboard, Escape, focus restoration and destina
   await expect(page).toHaveURL(/\/engineering/);
   await expect(page.locator("h1")).toContainText("Make the complexity");
 });
+for (const { width, mobile } of [
+  { width: 1440, mobile: false },
+  { width: 320, mobile: true },
+])
+  test(`Hackathons is reachable from navigation and a direct URL at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    const proof = page.getByRole("link", {
+      name: "1st place at GitTogether · Top 8 of 450 at Paytm",
+    });
+    await expect(proof).toHaveAttribute("href", "#hackathons");
+
+    const navigation = page.getByRole("navigation", {
+      name: mobile ? "Mobile navigation" : "Main navigation",
+    });
+    const openMenu = page.getByRole("button", { name: "Open navigation" });
+    const link = navigation.getByRole("link", { name: "Hackathons", exact: true });
+    if (mobile) await openMenu.press("Enter");
+    await link.press("Enter");
+
+    const section = page.getByRole("region", { name: "Built under pressure." });
+    const heading = section.getByRole("heading", { level: 2 });
+    await expect(page).toHaveURL(/\/#hackathons$/);
+    await expect(heading).toBeInViewport();
+    if (mobile) await expect(navigation).toBeHidden();
+    await page.keyboard.press("Tab");
+    await expect(section.getByRole("link", {
+      name: "Live Demo: Excuse Generator 3000",
+    })).toBeFocused();
+
+    await page.goto("/work");
+    if (mobile) await openMenu.press("Enter");
+    await expect(link).toHaveAttribute("href", "/#hackathons");
+    await page.goto("/#hackathons");
+    await expect(heading).toBeInViewport();
+  });
 test("ecosystem links lead to corresponding case studies", async ({ page }) => {
   await page.goto("/");
   for (const id of ["atlas", "vibes", "envision", "servio", "prism"])

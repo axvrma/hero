@@ -5,17 +5,19 @@ import {
 } from "../../scripts/lib/content.mjs";
 import { arrow, diagonal, mark } from "./icons.mjs";
 import { ecosystem, visual } from "./visuals.mjs";
-const external = (url, label, cls = "text-link") =>
-  `<a class="${cls}" href="${e(safeUrl(url))}" target="_blank" rel="noopener noreferrer">${label}${diagonal}</a>`;
+import { hackathonProjects } from "../../content/hackathons.mjs";
+const external = (url, label, cls = "text-link", context = "") =>
+  `<a class="${cls}" href="${e(safeUrl(url))}" target="_blank" rel="noopener noreferrer"${context ? ` aria-label="${e(`${label}: ${context}`)}"` : ""}>${label}${diagonal}</a>`;
 export function header(path, profile) {
   const nav = [
     ["Work", "/work"],
+    ["Hackathons", path === "/" ? "#hackathons" : "/#hackathons"],
     ["About", "/about"],
     ["Experience", "/experience"],
     ["Engineering", "/engineering"],
     ["Contact", "/contact"],
   ];
-  return `<a class="skip-link" href="#main">Skip to content</a><header class="site-header"><div class="shell header-inner"><a class="wordmark" href="/" aria-label="${e(profile.name)} home">${e(profile.name)}</a><nav class="desktop-nav" aria-label="Main navigation">${nav.map(([label, url]) => `<a href="${url}" ${path === url || (url === "/work" && path.startsWith("/work/")) ? 'aria-current="page"' : ""}>${label}</a>`).join("")}</nav><div class="header-actions">${external(profile.resume, "Résumé", "resume-link")}<button class="theme-toggle" type="button" aria-label="Switch color theme" title="Switch color theme"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></button><button class="menu-toggle" type="button" aria-controls="mobile-menu" aria-expanded="false" aria-label="Open navigation"><span></span><span></span></button></div></div><nav id="mobile-menu" class="mobile-menu shell" aria-label="Mobile navigation" hidden>${nav.map(([label, url], i) => `<a href="${url}"><span class="mono">0${i + 1}</span>${label}${arrow}</a>`).join("")}${external(profile.resume, "View résumé")}</nav></header>`;
+  return `<a class="skip-link" href="#main">Skip to content</a><header class="site-header"><div class="shell header-inner"><a class="wordmark" href="/" aria-label="${e(profile.name)} home">${e(profile.name)}</a><nav class="desktop-nav" aria-label="Main navigation">${nav.map(([label, url]) => `<a href="${url}" ${path === url || (url === "/work" && path.startsWith("/work/")) ? 'aria-current="page"' : ""}>${label}</a>`).join("")}</nav><div class="header-actions">${external(profile.resume, "Résumé", "resume-link")}<button class="theme-toggle" type="button" aria-label="Switch color theme" title="Switch color theme"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></button><button class="menu-toggle" type="button" aria-controls="mobile-menu" aria-expanded="false" aria-label="Open navigation"><span></span><span></span></button></div></div><nav id="mobile-menu" class="mobile-menu shell" aria-label="Mobile navigation" hidden>${nav.map(([label, url], i) => `<a href="${url}"><span class="mono" aria-hidden="true">0${i + 1}</span>${label}${arrow}</a>`).join("")}${external(profile.resume, "View résumé")}</nav></header>`;
 }
 export function footer(profile) {
   return `<footer class="site-footer shell"><div><a class="wordmark" href="/">${e(profile.name)}</a><span class="footer-note">Independent thinking. Thoughtful software.</span></div><div class="footer-right"><span>© 2026 ${e(profile.name)}</span><a href="#top">Back to top ↑</a></div></footer>`;
@@ -25,6 +27,44 @@ export function contact(profile, standalone = false) {
 }
 export function feature(p, index) {
   return `<article class="project-feature ${p.id} ${index === 0 ? "flagship" : ""}" data-category="${e(p.category)}"><a class="visual-link" href="/work/${p.id}" aria-label="Explore the ${e(p.name)} case study">${visual(p)}</a><div class="feature-meta"><div class="feature-title"><span class="project-symbol ${p.id}">${mark(p.id, 22)}</span><h3><a href="/work/${p.id}">${p.name}</a></h3><span class="category mono">${p.category}</span><span class="project-number mono">0${index + 1}</span></div><p>${e(p.description)}</p><div class="feature-bottom"><div class="tags">${p.stack.map((t) => `<span>${e(t)}</span>`).join("")}</div><a class="case-link" href="/work/${p.id}">View case study ${arrow}</a></div><div class="product-links">${external(p.live, "Launch application")}${external(p.source, "GitHub source")}</div></div></article>`;
+}
+function hackathonCard(project) {
+  const { id, name, description, result, event, buildTime, supporting, story, live, source, preview } = project;
+  return `<article class="hackathon-card${supporting ? " hackathon-supporting" : ""}" aria-labelledby="hackathon-${e(id)}-title">
+    <div class="hackathon-summary">
+      <div class="hackathon-proof">
+        <p class="hackathon-result${supporting ? " mono" : ""}">${e(result)}</p>
+        ${buildTime ? `<span class="hackathon-build-time mono">${e(buildTime)}</span>` : ""}
+      </div>
+      ${event ? `<p class="hackathon-event mono">${e(event)}</p>` : ""}
+      <h3 id="hackathon-${e(id)}-title">${e(name)}</h3>
+      <p>${e(description)}</p>
+    </div>
+    <figure class="hackathon-preview">
+      <img src="${e(preview.src)}" alt="${e(preview.alt)}" width="${preview.width}" height="${preview.height}" loading="lazy" decoding="async">
+      <figcaption class="mono">${e(preview.caption)}</figcaption>
+    </figure>
+    <div class="hackathon-details">
+      <p>${e(story)}</p>
+      <div class="hackathon-actions">
+        ${safeUrl(live) ? external(live, "Live Demo", "button button-primary", name) : ""}
+        ${external(source, "Source Code", "button button-outline", name)}
+      </div>
+    </div>
+  </article>`;
+}
+function hackathons() {
+  const results = hackathonProjects.filter((project) => !project.supporting);
+  const prototypes = hackathonProjects.filter((project) => project.supporting);
+  return `<section class="section hackathons-section" id="hackathons" aria-labelledby="hackathons-title" tabindex="-1">
+    <div class="section-label"><span class="mono">01 / HACKATHONS</span></div>
+    <div class="section-heading">
+      <h2 id="hackathons-title">Built under pressure<span class="accent">.</span></h2>
+      <p>Three hackathon builds, with demos you can try and code you can explore.</p>
+    </div>
+    <div class="hackathon-results">${results.map(hackathonCard).join("")}</div>
+    ${prototypes.map(hackathonCard).join("")}
+  </section>`;
 }
 export const principles = [
   [
@@ -53,7 +93,7 @@ export const principles = [
   ],
 ];
 export function engineering(full = false) {
-  return `<section class="section engineering-section" id="engineering"><div class="section-label"><span class="mono">02 / THE APPROACH</span><span class="mono">THOUGHTFUL BY DEFAULT</span></div><div class="section-heading philosophy-heading"><h2>Good engineering<br>is invisible.<br><span class="muted">Until it matters.</span></h2><p>I care about what happens after the first impression. How a system grows. How a team works in it. How it behaves when things go wrong.</p></div><div class="principles">${principles
+  return `<section class="section engineering-section" id="engineering"><div class="section-label"><span class="mono">03 / THE APPROACH</span><span class="mono">THOUGHTFUL BY DEFAULT</span></div><div class="section-heading philosophy-heading"><h2>Good engineering<br>is invisible.<br><span class="muted">Until it matters.</span></h2><p>I care about what happens after the first impression. How a system grows. How a team works in it. How it behaves when things go wrong.</p></div><div class="principles">${principles
     .slice(0, full ? 6 : 3)
     .map(
       ([title, body], i) =>
@@ -64,7 +104,7 @@ export function engineering(full = false) {
     )}</div>${full ? "" : `<a class="text-link section-more" href="/engineering">Inside my engineering approach ${arrow}</a>`}</section>`;
 }
 export function experience(content, full = false) {
-  return `<section class="section experience-section" id="experience"><div class="section-label"><span class="mono">03 / EXPERIENCE</span><a class="small-link" href="/experience">The full story ${diagonal}</a></div><div class="section-heading"><h2>Built in the real world.</h2><p>Enterprise complexity. Small product details.<br>The same care, at every scale.</p></div><div class="timeline">${content.experience
+  return `<section class="section experience-section" id="experience"><div class="section-label"><span class="mono">04 / EXPERIENCE</span><a class="small-link" href="/experience">The full story ${diagonal}</a></div><div class="section-heading"><h2>Built in the real world.</h2><p>Enterprise complexity. Small product details.<br>The same care, at every scale.</p></div><div class="timeline">${content.experience
     .slice(0, full ? undefined : 2)
     .map(
       (job, i) =>
@@ -78,7 +118,7 @@ export function experience(content, full = false) {
     .join("")}</div></section>`;
 }
 export function capabilities(content) {
-  return `<section class="section" id="capabilities"><div class="section-label"><span class="mono">04 / CAPABILITIES</span><span class="mono">DEPTH OVER DECORATION</span></div><div class="section-heading"><h2>The tools change.<br><span class="muted">The thinking stays.</span></h2><p>A foundation in frontend systems, extended through hands-on product building.</p></div><div class="capability-matrix" id="skills">${content.skills.map((s, i) => `<div class="capability-row"><span class="mono">0${i + 1}</span><h3>${e(s.category)}</h3><p>${s.tags.map((t) => e(t)).join(' <span class="separator">/</span> ')}</p></div>`).join("")}<div class="capability-row"><span class="mono">04</span><h3>Backend & infrastructure</h3><p>Node.js <span class="separator">/</span> SQLite <span class="separator">/</span> Electron <span class="separator">/</span> Docker<br><small>Applied across the product ecosystem</small></p></div><div class="capability-row"><span class="mono">05</span><h3>AI & engineering practice</h3><p>AI-assisted tooling <span class="separator">/</span> Boundary validation <span class="separator">/</span> Accessible interfaces<br><small>Product evidence in Atlas, Prism and Envision</small></p></div></div></section>`;
+  return `<section class="section" id="capabilities"><div class="section-label"><span class="mono">05 / CAPABILITIES</span><span class="mono">DEPTH OVER DECORATION</span></div><div class="section-heading"><h2>The tools change.<br><span class="muted">The thinking stays.</span></h2><p>A foundation in frontend systems, extended through hands-on product building.</p></div><div class="capability-matrix" id="skills">${content.skills.map((s, i) => `<div class="capability-row"><span class="mono">0${i + 1}</span><h3>${e(s.category)}</h3><p>${s.tags.map((t) => e(t)).join(' <span class="separator">/</span> ')}</p></div>`).join("")}<div class="capability-row"><span class="mono">04</span><h3>Backend & infrastructure</h3><p>Node.js <span class="separator">/</span> SQLite <span class="separator">/</span> Electron <span class="separator">/</span> Docker<br><small>Applied across the product ecosystem</small></p></div><div class="capability-row"><span class="mono">05</span><h3>AI & engineering practice</h3><p>AI-assisted tooling <span class="separator">/</span> Boundary validation <span class="separator">/</span> Accessible interfaces<br><small>Product evidence in Atlas, Prism and Envision</small></p></div></div></section>`;
 }
 export function archiveRows(projects, limit) {
   return `<div class="archive-list">${projects
@@ -90,7 +130,7 @@ export function archiveRows(projects, limit) {
     .join("")}</div>`;
 }
 export function home(content, products, secondary) {
-  return `<div class="shell"><section class="hero"><div class="hero-copy"><div class="eyebrow"><span class="status-dot"></span> INDEPENDENT ENGINEER. PRODUCT THINKER.</div><h1>${e(content.profile.heading).replace("complexity", '<span class="muted">complexity</span>').replace("feel simple.", 'feel <span class="simple-word">simple<span class="simple-period">.</span></span>')}</h1><p class="hero-description">${e(content.profile.subtitle)}</p><div class="hero-actions"><a class="button button-primary" href="#work">Explore work ${arrow}</a><a class="button button-quiet" href="/about">About me ${diagonal}</a></div></div><div class="hero-map">${ecosystem(products, content.profile.name)}</div></section><div class="hero-foot mono"><span>${e(content.profile.location)} <span class="hero-foot-divider">/</span> BUILDING FOR THE WEB & BEYOND</span><a href="#work">SCROLL TO EXPLORE <span>↓</span></a></div><section class="section work-section" id="work"><div class="section-label"><span class="mono">01 / SELECTED WORK</span><span class="mono">IDEAS, MADE REAL</span></div><div class="section-heading"><h2>Selected work<span class="accent">.</span></h2><p>Five products. Different problems.<br>One belief: software should feel considered.</p></div><div class="project-gallery" id="projects">${products.map(feature).join("")}</div><a class="archive-action" href="/work"><span>There’s more where that came from.</span><span>Explore the complete archive ${arrow}</span></a></section>${engineering()}${experience(content)}${capabilities(content)}<section class="section secondary-section"><div class="section-label"><span class="mono">05 / THE EXPLORATIONS</span><span class="mono">ALWAYS MAKING SOMETHING</span></div><div class="section-heading"><h2>Beyond the flagship.</h2><a class="text-link" href="/work#archive">All ${secondary.length} explorations ${arrow}</a></div>${archiveRows(secondary, 4)}</section></div>${contact(content.profile)}`;
+  return `<div class="shell"><section class="hero"><div class="hero-copy"><div class="eyebrow"><span class="status-dot"></span> INDEPENDENT ENGINEER. PRODUCT THINKER.</div><h1>${e(content.profile.heading).replace("complexity", '<span class="muted">complexity</span>').replace("feel simple.", 'feel <span class="simple-word">simple<span class="simple-period">.</span></span>')}</h1><p class="hero-description">${e(content.profile.subtitle)}</p><div class="hero-actions"><a class="button button-primary" href="#work">Explore work ${arrow}</a><a class="button button-quiet" href="/about">About me ${diagonal}</a></div><a class="hero-proof" href="#hackathons"><span class="status-dot" aria-hidden="true"></span><span>1st place at GitTogether · <span class="hero-proof-finalist">Top 8 of 450 at Paytm</span></span>${arrow}</a></div><div class="hero-map">${ecosystem(products, content.profile.name)}</div></section><div class="hero-foot mono"><span>${e(content.profile.location)} <span class="hero-foot-divider">/</span> BUILDING FOR THE WEB & BEYOND</span><a href="#hackathons">SCROLL TO EXPLORE <span>↓</span></a></div>${hackathons()}<section class="section work-section" id="work"><div class="section-label"><span class="mono">02 / SELECTED WORK</span><span class="mono">IDEAS, MADE REAL</span></div><div class="section-heading"><h2>Selected work<span class="accent">.</span></h2><p>Five products. Different problems.<br>One belief: software should feel considered.</p></div><div class="project-gallery" id="projects">${products.map(feature).join("")}</div><a class="archive-action" href="/work"><span>There’s more where that came from.</span><span>Explore the complete archive ${arrow}</span></a></section>${engineering()}${experience(content)}${capabilities(content)}<section class="section secondary-section"><div class="section-label"><span class="mono">06 / THE EXPLORATIONS</span><span class="mono">ALWAYS MAKING SOMETHING</span></div><div class="section-heading"><h2>Beyond the flagship.</h2><a class="text-link" href="/work#archive">All ${secondary.length} explorations ${arrow}</a></div>${archiveRows(secondary, 4)}</section></div>${contact(content.profile)}`;
 }
 export function pageIntro(kicker, title, description) {
   return `<div class="page-intro"><div class="eyebrow">${e(kicker)}</div><h1>${title}</h1>${description ? `<p>${e(description)}</p>` : ""}</div>`;

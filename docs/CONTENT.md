@@ -25,6 +25,12 @@ Each product includes its canonical slug, brand name, category, description, tag
 
 An entry in `portfolio.json` → `projects` can override a flagship description or stack by matching its canonical or legacy slug. The registry continues to own flagship identity, URLs and order.
 
+## Hackathons
+
+`content/hackathons.mjs` owns the homepage cards and the current names, descriptions, and URLs for any matching archive entries. Competition results stay on the homepage. Only include a live URL once the deployed demo works.
+
+The previews in `public/images/hackathon-*.webp` are cropped from first-party captures of the current apps: the [Excuse Lab](https://github.com/axvrma/excuse-generator-3000/blob/6929a3b7601b0335c3e9b4c8927696e80ad65730/docs/dark.png), the [Business Shield workspace](https://github.com/axvrma/paytm-hackathon/blob/3201c926c970632ecfe78e5d873cd68d5de8db89/docs/screenshots/workspace.png), and the [PopPay merchant dashboard](https://github.com/axvrma/pop-pay/blob/fa6fc69b9ad05b107429b7a1bca7584cc98318d2/docs/screenshots/dashboard.png). The Business Shield capture uses fictional merchant data and shows the post-hackathon rebuild. Keep the image dimensions and alt text in the registry in sync with future replacements.
+
 ## Additional projects
 
 `content/legacy-projects.json` retains all sixteen original case-study bodies. Four map to flagships; twelve have dedicated secondary routes. Atlas is the new seventeenth project. Original HTML is retained under `content/legacy/` for reference and is not another executable generator.

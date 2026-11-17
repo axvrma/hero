@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
 import { products as registry } from "../content/products.mjs";
+import { hackathonProjects } from "../content/hackathons.mjs";
 import { escape as e, resolveOrigin, safeUrl } from "./lib/content.mjs";
 import * as site from "../src/components/site.mjs";
 const content = JSON.parse(await readFile("content/portfolio.json", "utf8"));
@@ -34,6 +35,10 @@ for (const p of content.projects) {
       live: p.live || previous.live,
     });
   else secondary.push(p);
+}
+for (const { id, name, description, source, live } of hackathonProjects) {
+  const archived = secondary.find((project) => project.id === id);
+  if (archived) Object.assign(archived, { name, description, source, live });
 }
 const archiveOverrides = JSON.parse(await readFile("content/archive-overrides.json", "utf8"));
 for (const project of secondary) {

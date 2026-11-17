@@ -10,5 +10,5 @@
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
-  "include": ["content/products.mjs", "content/types.ts"]
+  "include": ["content/*.mjs", "content/types.ts"]
 }
