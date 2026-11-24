@@ -249,5 +249,105 @@ export const products = [
     evidence: ["https://github.com/axvrma/prism/blob/main/README.md"],
     legacy: ["azure-devops-pr-helper", "prism"],
   },
+  {
+    id: "luminescent",
+    name: "Luminescent",
+    category: "React component library",
+    tagline: "Beautiful by default. Accessible by design.",
+    description:
+      "A typed React component library with themeable tokens, accessible interactions, and considered motion. Explore components in a documentation portal, playground, and Storybook.",
+    live: "https://axvrma-luminescent.netlify.app/",
+    liveLabel: "Explore components",
+    source: "https://github.com/axvrma/luminescent",
+    stack: ["React", "TypeScript", "Next.js", "Storybook"],
+    features: [
+      "Typed components for React 18 and 19",
+      "Light, dark and system themes with configurable accents and glow",
+      "Documentation, interactive playground and generated API references",
+      "Component behavior tests and automated accessibility checks",
+    ],
+    architecture: [
+      "Shared component contracts",
+      "Namespaced CSS tokens & theme provider",
+      "React component library",
+      "Next.js docs & Storybook",
+    ],
+    sections: [
+      {
+        title: "The problem",
+        body: "A polished component library needs more than a consistent appearance. Consumers need predictable APIs, accessible focus behavior, and themes that fit their application without changing unrelated elements.",
+      },
+      {
+        title: "The solution",
+        body: "Luminescent packages typed React components and a separate stylesheet alongside a Next.js documentation portal and Storybook. A shared provider configures theme, accent, glow, motion, and complex focus behavior.",
+      },
+      {
+        title: "Product experience",
+        body: "Browse the component catalog, explore the playground, and consult generated API references. Applications import components from luminescent and opt into its stylesheet, then configure their visual language through LuminescentProvider.",
+      },
+      {
+        title: "Engineering decisions",
+        body: "An npm workspaces monorepo keeps the library and documentation together. Namespaced CSS variables isolate themes, portalled overlays inherit local theme settings, and the stylesheet avoids resetting a consuming application's elements. Tailwind is not required.",
+      },
+      {
+        title: "Validation & trade-offs",
+        body: "Validation installs the packed library into isolated React 18 and 19 consumers, checks server rendering and package declarations, and tests CSS isolation. Browser checks cover desktop and mobile components, light and dark accessibility, and standalone Storybook stories.",
+      },
+    ],
+    limitations:
+      "Requires React 18 or 19 with matching React DOM. The repository documents unreleased changes separately from its published package version; consult the changelog before adopting an API.",
+    evidence: ["https://github.com/axvrma/luminescent/blob/main/README.md"],
+    legacy: ["luminescent"],
+  },
+  {
+    id: "auditbench",
+    name: "Auditbench",
+    category: "Performance intelligence",
+    tagline: "Measure the page. Understand the change.",
+    description:
+      "A local-first desktop workspace for real Lighthouse audits. Organize websites, audit signed-in pages, and compare performance history while reports and screenshots stay on your device.",
+    live: "https://github.com/axvrma/auditbench/releases/latest",
+    liveLabel: "Download app",
+    source: "https://github.com/axvrma/auditbench",
+    stack: ["Electron", "React", "Lighthouse", "SQLite"],
+    features: [
+      "Single-page, module and batch Lighthouse audits",
+      "Performance, Accessibility, Best Practices and SEO scores",
+      "Authenticated audits with OS-protected saved logins",
+      "Local history, category trends, screenshots and full JSON reports",
+    ],
+    architecture: [
+      "React & TypeScript workspace",
+      "Sandboxed Electron desktop",
+      "Express audit queue & Lighthouse",
+      "SQLite history & local reports",
+    ],
+    sections: [
+      {
+        title: "The problem",
+        body: "A single performance score offers little context about what changed. Developers need repeatable audits across multiple websites, access to signed-in pages, and enough history to investigate regressions.",
+      },
+      {
+        title: "The solution",
+        body: "Auditbench brings real Lighthouse runs into a local desktop workspace. Websites are organized into modules, audits share live progress, and completed reports retain diagnostic findings, screenshots, and category measurements.",
+      },
+      {
+        title: "Product experience",
+        body: "Add websites to a module, run a single audit or a batch, then compare measured scores with previous runs using matching audit profiles. Search and filter history, inspect failed attempts, and open the original Lighthouse JSON for detailed investigation.",
+      },
+      {
+        title: "Engineering decisions",
+        body: "A shared React workspace provider owns polling and completion refresh. Express runs one sequential audit queue, SQLite stores history, and Electron provides a sandboxed window, private local API access, and OS-backed credential protection.",
+      },
+      {
+        title: "Challenges & trade-offs",
+        body: "Interrupted audits become visible failures instead of disappearing. Authentication fails conservatively when a login cannot be verified. Overview averages use the latest completed run per website, while comparisons retain audit profiles and exact timestamps.",
+      },
+    ],
+    limitations:
+      "Requires an installed Chrome or configured Chromium executable. Lighthouse scores are synthetic lab measurements, not real-user monitoring. Installers are currently unsigned, and arbitrary MFA, CAPTCHA, or external SSO flows may require manual investigation. Previously named Lighthouse Agent.",
+    evidence: ["https://github.com/axvrma/auditbench/blob/main/README.md"],
+    legacy: ["lighthouse-agent", "auditbench"],
+  },
 ];
 export const flagshipIds = products.map((product) => product.id);

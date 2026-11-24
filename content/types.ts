@@ -25,6 +25,7 @@ export type Product = {
   description: string;
   tagline: string;
   live: string;
+  liveLabel?: string;
   source: string;
   stack: string[];
   features: string[];

@@ -9,6 +9,8 @@ export const marks = {
   servio:
     '<rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h1m-1 10h1m5-10h5m-5 10h5"/>',
   prism: '<path d="m12 3 9 17H3L12 3Zm0 0v17M3 20l13-10"/>',
+  luminescent: '<path d="m12 2 2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5L12 2Z"/>',
+  auditbench: '<path d="M4 20h16M6 16v-4m6 4V5m6 11V9M4 4h4"/>',
 };
 export const mark = (name, size = 24) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${marks[name] ?? marks.atlas}</svg>`;

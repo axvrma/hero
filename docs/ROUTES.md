@@ -22,8 +22,8 @@ The build emits exact forced 301 rules in `dist/_redirects`. Each old project re
 | `/project-figma-design-checker` | `/work/figma-design-checker` |
 | `/project-formflow-ai-assistant.html` | `/work/formflow-ai-assistant` |
 | `/project-formflow-ai-assistant` | `/work/formflow-ai-assistant` |
-| `/project-lighthouse-agent.html` | `/work/lighthouse-agent` |
-| `/project-lighthouse-agent` | `/work/lighthouse-agent` |
+| `/project-lighthouse-agent.html` | `/work/auditbench` |
+| `/project-lighthouse-agent` | `/work/auditbench` |
 | `/project-luminescent.html` | `/work/luminescent` |
 | `/project-luminescent` | `/work/luminescent` |
 | `/project-paytm-hackathon.html` | `/work/paytm-hackathon` |
@@ -42,3 +42,5 @@ The build emits exact forced 301 rules in `dist/_redirects`. Each old project re
 | `/project-web-xr` | `/work/web-xr` |
 
 `/resume.html` redirects to the printable `/resume`; résumé CTAs retain the original document URL. Retired admin, sync and API paths have no handlers or redirects and return the ordinary 404.
+
+Clean legacy paths `/work/vox-ar`, `/work/azure-devops-pr-helper`, and `/work/lighthouse-agent` also redirect to Envision, Prism, and Auditbench respectively.

@@ -19,9 +19,9 @@ Career content was preserved from the existing portfolio. It is now ordinary loc
 
 ## Flagship case studies
 
-`content/products.mjs` defines Atlas, Vibes, Envision, Servio and Prism. The registry is checked against the Product and CaseSection types in `content/types.ts` using `npm run typecheck`.
+`content/products.mjs` defines Atlas, Vibes, Envision, Servio, Prism, Luminescent and Auditbench. The registry is checked against the Product and CaseSection types in `content/types.ts` using `npm run typecheck`.
 
-Each product includes its canonical slug, brand name, category, description, tagline, fixed live/source URLs, stack, implemented features, architecture, case-study sections, limitations and source evidence. Preserve the requested live URLs and historical repository identities. `vox-ar` maps to Envision, and `azure-devops-pr-helper` maps to Prism.
+Each product includes its canonical slug, brand name, category, description, tagline, fixed live/source URLs, stack, implemented features, architecture, case-study sections, limitations and source evidence. The optional `liveLabel` names the destination appropriately, such as “Explore components” or “Download app”. Preserve the requested live URLs and historical repository identities. `vox-ar` maps to Envision, `azure-devops-pr-helper` maps to Prism, and `lighthouse-agent` maps to Auditbench. Luminescent retains its original slug.
 
 An entry in `portfolio.json` → `projects` can override a flagship description or stack by matching its canonical or legacy slug. The registry continues to own flagship identity, URLs and order.
 
@@ -33,11 +33,13 @@ The previews in `public/images/hackathon-*.webp` are cropped from first-party ca
 
 ## Additional projects
 
-`content/legacy-projects.json` retains all sixteen original case-study bodies. Four map to flagships; twelve have dedicated secondary routes. Atlas is the new seventeenth project. Original HTML is retained under `content/legacy/` for reference and is not another executable generator.
+`content/legacy-projects.json` retains all sixteen original case-study bodies. Six map to flagships; ten have dedicated secondary routes. Atlas is the new seventeenth project. Original HTML is retained under `content/legacy/` for reference and is not another executable generator.
 
 Secondary entries in `portfolio.json` → `projects` may override `name`, `description`, `stack`, `source` and `live` by `id`; the archived case-study body is retained. A new entry creates a new case-study page from its description and real links. Use a unique lowercase hyphenated slug. Never add placeholder destinations or unsupported claims.
 
 `content/archive-overrides.json` suppresses a specifically verified dead demo URL. A different replacement URL is allowed when supplied in local project content. Original archived data remains intact.
+
+The Auditbench preview (`public/images/auditbench-workspace.webp`) is the first-party [workspace capture](https://github.com/axvrma/auditbench/blob/main/landing/assets/workspace.webp). The Luminescent preview is a labeled illustrative component composition rendered with HTML and CSS.
 
 ## Preview and publish
 

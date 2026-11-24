@@ -13,7 +13,8 @@ const routes = [
   "/work/envision",
   "/work/servio",
   "/work/prism",
-  "/work/lighthouse-agent",
+  "/work/luminescent",
+  "/work/auditbench",
 ];
 for (const route of routes)
   test(`route ${route} is server-rendered, navigable and accessible`, async ({
@@ -127,7 +128,7 @@ for (const { width, mobile } of [
   });
 test("ecosystem links lead to corresponding case studies", async ({ page }) => {
   await page.goto("/");
-  for (const id of ["atlas", "vibes", "envision", "servio", "prism"])
+  for (const id of ["atlas", "vibes", "envision", "servio", "prism", "luminescent", "auditbench"])
     await expect(
       page.locator(`.map-node[data-product="${id}"]`),
     ).toHaveAttribute("href", `/work/${id}`);
@@ -139,13 +140,13 @@ test("project search filters results and reports empty state", async ({
 }) => {
   await page.goto("/work");
   const search = page.getByRole("searchbox");
-  await search.fill("lighthouse");
+  await search.fill("web xr");
   await expect(page.locator(".archive-row:visible")).toHaveCount(1);
   await expect(page.locator("#search-count")).toHaveText("1 project");
   await search.fill("no-such-project");
   await expect(page.locator(".search-empty")).toBeVisible();
   await search.fill("");
-  await expect(page.locator(".archive-row:visible")).toHaveCount(12);
+  await expect(page.locator(".archive-row:visible")).toHaveCount(10);
 });
 for (const width of [320, 390, 768, 1024, 1440, 1920])
   test(`responsive layout has no horizontal overflow at ${width}px`, async ({
@@ -157,6 +158,8 @@ for (const width of [320, 390, 768, 1024, 1440, 1920])
       "/work",
       "/work/atlas",
       "/work/envision",
+      "/work/luminescent",
+      "/work/auditbench",
       "/about",
       "/contact",
     ]) {

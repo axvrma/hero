@@ -6,10 +6,12 @@ import { readFile } from "node:fs/promises";
 test("flagships retain editorial order, required live URLs and original repository identities", () => {
   assert.deepEqual(
     products.map((p) => p.id),
-    ["atlas", "vibes", "envision", "servio", "prism"],
+    ["atlas", "vibes", "envision", "servio", "prism", "luminescent", "auditbench"],
   );
   for (const p of products) {
-    assert.equal(p.live, `https://${p.id}.axvrma.com`);
+    if (["atlas", "vibes", "envision", "servio", "prism"].includes(p.id))
+      assert.equal(p.live, `https://${p.id}.axvrma.com`);
+    else assert.ok(safeUrl(p.live));
     assert.ok(p.sections.length >= 5);
     assert.ok(p.architecture.length);
     assert.ok(p.evidence.length);

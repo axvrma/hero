@@ -69,7 +69,7 @@ const routes = [
   [
     "/work",
     "Selected Work & Project Archive",
-    "Explore Abhishek Verma’s product ecosystem: Atlas, Vibes, Envision, Servio, Prism, and twelve more engineering projects.",
+    `Explore Abhishek Verma’s product ecosystem: ${products.map((p) => p.name).join(", ")}, and ${secondary.length} more engineering projects.`,
     site.work(products, secondary),
   ],
   [
@@ -165,6 +165,7 @@ const redirects = [
   ["/projects", "/work"],
   ["/resume.html", "/resume"],
   ["/index.html", "/"],
+  ...registry.flatMap((p) => p.legacy.filter((id) => id !== p.id).map((id) => [`/work/${id}`, `/work/${p.id}`])),
   ...legacy.flatMap((p) => [
     [`/project-${p.id}.html`, `/work/${aliases.get(p.id) || p.id}`],
     [`/project-${p.id}`, `/work/${aliases.get(p.id) || p.id}`],

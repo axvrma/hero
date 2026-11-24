@@ -42,6 +42,8 @@
   --envision: #e4b67b;
   --servio: #a4c7ac;
   --prism: #bdade4;
+  --luminescent: #f2b8cd;
+  --auditbench: #91cde5;
 }
 :root[data-theme="light"] {
   color-scheme: light;
@@ -61,6 +63,8 @@
   --envision: #89611b;
   --servio: #3f694e;
   --prism: #75559d;
+  --luminescent: #994568;
+  --auditbench: #276e89;
 }
 *,
 *::before,
@@ -525,24 +529,38 @@ h4 {
 .prism {
   --product-color: var(--prism);
 }
+.luminescent {
+  --product-color: var(--luminescent);
+}
+.auditbench {
+  --product-color: var(--auditbench);
+}
 .node-0 {
-  top: 15%;
+  top: 14%;
   left: 50%;
 }
 .node-1 {
-  top: 37%;
+  top: 30%;
   left: 82%;
 }
 .node-2 {
-  top: 77%;
-  left: 73%;
+  top: 60%;
+  left: 83%;
 }
 .node-3 {
-  top: 77%;
-  left: 26%;
+  top: 83%;
+  left: 66%;
 }
 .node-4 {
-  top: 37%;
+  top: 83%;
+  left: 32%;
+}
+.node-5 {
+  top: 60%;
+  left: 17%;
+}
+.node-6 {
+  top: 30%;
   left: 18%;
 }
 .hero-foot {
@@ -2193,14 +2211,8 @@ h4 {
   .map-lines {
     inset: 0;
   }
-  .node-0 {
-    top: 15%;
-  }
   .node-1 {
     left: 82%;
-  }
-  .node-4 {
-    left: 17%;
   }
   .hero-foot {
     padding-block: 16px;
@@ -2929,4 +2941,150 @@ h4 {
   .header-inner .wordmark { font-size: 20px; }
   .header-actions { gap: 8px; }
   .header-actions .resume-link { display: none; }
+}
+
+.luminescent-showcase {
+  background: radial-gradient(ellipse at 75% 20%, #493144, #201c29 70%);
+  aspect-ratio: 1.36;
+  min-height: 270px;
+  padding: 65px 26px 45px;
+}
+.luminescent-showcase .showcase-label {
+  color: #f2c5d5;
+}
+.component-preview {
+  max-width: 440px;
+  margin: auto;
+  padding: clamp(16px, 3vw, 30px);
+  border: 1px solid #775267;
+  border-radius: 12px;
+  background: #25202d;
+  color: #f6e9f2;
+  box-shadow: 0 18px 60px #120c1a66;
+}
+.component-preview-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: clamp(16px, 2vw, 24px);
+  font-weight: 600;
+}
+.component-spark {
+  color: #f2b8cd;
+  font-size: 32px;
+}
+.component-swatches {
+  display: flex;
+  gap: 10px;
+  margin-block: 16px 22px;
+}
+.component-swatches i {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #f2b8cd;
+}
+.component-swatches i:nth-child(2) { background: #c4b5fd; }
+.component-swatches i:nth-child(3) { background: #91cde5; }
+.component-swatches i:nth-child(4) { background: #c2ddad; }
+.component-samples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+}
+.component-button {
+  background: #f2b8cd;
+  color: #291824;
+  border-radius: 6px;
+  padding: 11px 14px;
+  font-weight: 600;
+}
+.component-badge {
+  color: #e5d5eb;
+  border: 1px solid #775267;
+  border-radius: 20px;
+  padding: 6px 10px;
+}
+.component-field {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+  color: #e5d5eb;
+  font-size: 14px;
+}
+.component-field > span:first-child {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+.component-field > span:last-child {
+  border: 1px solid #775267;
+  border-radius: 6px;
+  padding: 12px;
+}
+.auditbench-showcase {
+  background: #162a32;
+  aspect-ratio: 1.36;
+  min-height: 270px;
+  padding: 65px 24px 40px;
+}
+.auditbench-showcase .showcase-label {
+  color: #b6dce9;
+}
+.auditbench-showcase .product-screenshot {
+  width: 100%;
+  height: auto;
+  border: 1px solid #41616e;
+  border-radius: 6px;
+}
+@media (max-width: 680px) {
+  .ecosystem {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    aspect-ratio: auto;
+  }
+  .ecosystem .map-top,
+  .ecosystem .map-bottom {
+    position: static;
+    grid-column: 1 / -1;
+    margin-block: 8px;
+  }
+  .ecosystem .map-center,
+  .ecosystem .map-lines {
+    display: none;
+  }
+  .ecosystem .map-node {
+    position: static;
+    transform: none;
+    min-width: 0;
+    min-height: 50px;
+    padding: 12px;
+    border-color: var(--border);
+    font-size: 13px;
+  }
+  .ecosystem .node-kind {
+    display: none;
+  }
+  .ecosystem .node-6 {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+  .luminescent-showcase,
+  .auditbench-showcase {
+    aspect-ratio: auto;
+    padding: 60px 18px 38px;
+  }
+  .case-intro h1:has(.luminescent),
+  .case-intro h1:has(.auditbench) {
+    font-size: clamp(36px, 10vw, 64px);
+  }
+  .next-project > div {
+    min-width: 0;
+  }
+  .next-project h2 {
+    overflow-wrap: anywhere;
+  }
 }

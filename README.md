@@ -1,6 +1,6 @@
 # Abhishek Verma
 
-An engineering portfolio and entry point to Atlas, Vibes, Envision, Servio, and Prism. Built with Vite 8, vanilla JavaScript, complete static HTML pages, and repository-managed content.
+An engineering portfolio and entry point to Atlas, Vibes, Envision, Servio, Prism, Luminescent, and Auditbench. Built with Vite 8, vanilla JavaScript, complete static HTML pages, and repository-managed content.
 
 **No API keys, CMS account, database, backend, or authentication setup is required.**
 
@@ -20,7 +20,7 @@ Open the URL Vite prints, normally `http://127.0.0.1:5173`. Generation runs auto
 
 - [`content/portfolio.json`](content/portfolio.json): name, profile copy, contact links, experience, skills, education, recognition, and optional project editorial overrides.
 - [`content/products.mjs`](content/products.mjs): typed flagship registry, case studies, fixed URLs, ordering, and legacy identity mappings.
-- [`content/legacy-projects.json`](content/legacy-projects.json): the twelve secondary projects and preserved original case-study bodies.
+- [`content/legacy-projects.json`](content/legacy-projects.json): the ten secondary projects and preserved original case-study bodies.
 - [`content/archive-overrides.json`](content/archive-overrides.json): suppression of a verified retired demo URL.
 
 Edit the files, review the changes, and rebuild. The local content is the source of truth. See [content editing](docs/CONTENT.md) and [architecture](docs/ARCHITECTURE.md).
@@ -36,7 +36,7 @@ npm run preview        # Static artifact, Netlify headers and legacy redirects; 
 AUDIT_URL=http://127.0.0.1:4173/ npm run lighthouse
 ```
 
-The build produces `dist/` with **24 public pages**, seventeen case studies (five flagships and twelve additional projects), a 404 page, assets, **36 exact legacy redirects**, robots and sitemap. It does not generate administrative pages or API functions. All sixteen original case studies are preserved; four map to current flagships and Atlas is the additional flagship.
+The build produces `dist/` with **24 public pages**, seventeen case studies (seven flagships and ten additional projects), a 404 page, assets, **39 exact legacy redirects**, robots and sitemap. It does not generate administrative pages or API functions. All sixteen original case studies are preserved; six map to current flagships and Atlas is the additional flagship.
 
 Shared rendering lives in [`src/components`](src/components). [`index.html`](index.html) is the shared source document; [`scripts/generate.mjs`](scripts/generate.mjs) writes disposable inputs under `.generated/`, and Vite bundles them into `dist/`. The public browser code handles theme preferences, mobile navigation, archive search and résumé printing.
 
