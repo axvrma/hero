@@ -9,6 +9,7 @@ const redirects = JSON.parse(
 );
 const routePaths = new Set(routes.map((r) => r.path));
 const errors = [];
+if (routePaths.size !== routes.length) errors.push("Duplicate canonical routes");
 for (const route of routes) {
   const path =
     route.path === "/" ? "dist/index.html" : `dist${route.path}/index.html`;
@@ -28,8 +29,10 @@ for (const route of routes) {
     errors.push(`${path}: Open Graph URL does not match the configured deployment URL`);
   if (/<!-- (META|BODY|HEADER|FOOTER) -->/.test(html))
     errors.push(`${path}: unfilled template`);
-  for (const match of html.matchAll(/(?:href|src)="([^"#]+)(?:#[^"]*)?"/g)) {
-    const url = match[1];
+  const links = [...html.matchAll(/(?:href|src)="([^"#]+)(?:#[^"]*)?"/g)].map(([, url]) => url);
+  const candidates = [...html.matchAll(/srcset="([^"]+)"/g)].flatMap(([, srcset]) =>
+    srcset.split(",").map((entry) => entry.trim().split(/\s+/)[0]));
+  for (const url of [...links, ...candidates]) {
     if (!url.startsWith("/")) continue;
     const pathname = url.split("?")[0];
     if (routePaths.has(pathname)) continue;
@@ -52,9 +55,12 @@ for (const [path, html] of htmlByRoute) {
     if (id && !htmlByRoute.get(url.pathname).includes(`id="${id}"`)) errors.push(`${path}: missing anchor ${href}`);
   }
 }
-for (const [from, to] of redirects)
-  if (!routePaths.has(to))
-    errors.push(`Redirect ${from} has no canonical target: ${to}`);
+const redirectSources = new Set();
+for (const [from, to] of redirects) {
+  if (!routePaths.has(to)) errors.push(`Redirect ${from} has no canonical target: ${to}`);
+  if (routePaths.has(from) || redirectSources.has(from)) errors.push(`Conflicting redirect source: ${from}`);
+  redirectSources.add(from);
+}
 if (errors.length) throw Error(errors.join("\n"));
 console.log(
   `Output check: ${routes.length} routes, ${redirects.length} redirects, local links and asset references passed.`,

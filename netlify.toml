@@ -5,6 +5,9 @@
 [build.environment]
   NODE_VERSION = "24"
 
+[context.production.environment]
+  SITE_URL = "https://axvrma.com"
+
 [dev]
   command = "npm run dev"
   targetPort = 5173

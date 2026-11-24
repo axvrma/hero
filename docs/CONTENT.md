@@ -1,51 +1,27 @@
 # Content editing
 
-All content is maintained in the repository. There is no external CMS or API-key requirement.
+Edit repository sources, then run `npm run typecheck` and `npm run verify`. Sign off on the rendered page and its factual claims before publishing. Keep pending evidence and restricted material outside this public repository.
 
 ## Profile and career
 
-Edit `content/portfolio.json`:
+Edit profile and verified contact destinations in `content/portfolio.json`. Employment entries need a unique slug-like `id`, company, duration and factual contributions. A current role derives its title from the ordered `progression` entries under a single employer. Update the job there to keep the homepage, résumé and structured data consistent.
 
-| Key | Content |
-| --- | --- |
-| `profile` | Name, role, location, hero heading/subtitle, contact heading and verified contact/résumé links |
-| `experience` | Company, role, duration and responsibility bullets |
-| `skills` | Capability categories and technology tags |
-| `education` | Institution, degree/certification and duration |
-| `achievements` | Existing recognition titles and descriptions |
-| `projects` | Optional project editorial overrides or additional projects |
+Add a chapter in `content/editorial.mjs` with a unique `id`, a theme, a headline and a first-person summary. Refer to a job by its ID for dates and employer, or provide a `period` for nonemployment chapters. Link the chapter from `storyChapters` where appropriate. The experience page renders the complete timeline. Homepage curation lives in the renderer’s compact journey selection.
 
-Career content was preserved from the existing portfolio. It is now ordinary local source data, rather than a fallback for a remote service. Update dates and responsibilities directly here as they change.
+## Enterprise case studies and principles
 
-## Flagship case studies
+Add an entry to `content/enterprise.mjs` with a unique `id`, organization, summary, team and individual roles, constraints, decisions, trade-offs, outcome and lesson. The generator creates `/experience/<id>` and includes it in the sitemap. Point to existing principle identifiers. Label generic trade-offs and public illustrations in the copy. Use fictional examples and avoid proprietary implementation details. A new case appears in the Experience index automatically.
 
-`content/products.mjs` defines Atlas, Vibes, Envision, Servio, Prism, Luminescent and Auditbench. The registry is checked against the Product and CaseSection types in `content/types.ts` using `npm run typecheck`.
+## Product and archive edits
 
-Each product includes its canonical slug, brand name, category, description, tagline, fixed live/source URLs, stack, implemented features, architecture, case-study sections, limitations and source evidence. The optional `liveLabel` names the destination appropriately, such as “Explore components” or “Download app”. Preserve the requested live URLs and historical repository identities. `vox-ar` maps to Envision, `azure-devops-pr-helper` maps to Prism, and `lighthouse-agent` maps to Auditbench. Luminescent retains its original slug.
+Edit the flagship identity, fixed destinations, evidence, architecture, limitations and ordering in `content/products.mjs`. Add matching editorial framing in `motivations` in `content/editorial.mjs`. A new flagship needs an intentionally designed showcase in `src/components/visuals.mjs` and updates to registry tests. Preserve legacy aliases and canonical names when editing.
 
-An entry in `portfolio.json` → `projects` can override a flagship description or stack by matching its canonical or legacy slug. The registry continues to own flagship identity, URLs and order.
+The archive comes from `content/legacy-projects.json` plus any new entries in the `projects` array of `portfolio.json`. The generator sanitizes preserved HTML. Mark a retired demo by exact URL in `content/archive-overrides.json` while retaining its project page and source. Edit event copy and public screenshots in `content/hackathons.mjs`.
 
-## Hackathons
+## Metric approval
 
-`content/hackathons.mjs` owns the homepage cards and the current names, descriptions, and URLs for any matching archive entries. Competition results stay on the homepage. Only include a live URL once the deployed demo works.
+Keep pending values, baselines, outcomes and evidence outside Git. The public register assigns a non-sensitive ID and case ID to each claim. Once disclosure and public evidence are verified, record the approved value, unit, label, scope, baseline, outcome, team attribution, and evidence reference. Set `verification: "verified"` and `publication: "approved"`. The build rejects incomplete approved entries and adds complete approved figures to the impact section and related case. Check generated HTML and review the attribution before release.
 
-The previews in `public/images/hackathon-*.webp` are cropped from first-party captures of the current apps: the [Excuse Lab](https://github.com/axvrma/excuse-generator-3000/blob/6929a3b7601b0335c3e9b4c8927696e80ad65730/docs/dark.png), the [Business Shield workspace](https://github.com/axvrma/paytm-hackathon/blob/3201c926c970632ecfe78e5d873cd68d5de8db89/docs/screenshots/workspace.png), and the [PopPay merchant dashboard](https://github.com/axvrma/pop-pay/blob/fa6fc69b9ad05b107429b7a1bca7584cc98318d2/docs/screenshots/dashboard.png). The Business Shield capture uses fictional merchant data and shows the post-hackathon rebuild. Keep the image dimensions and alt text in the registry in sync with future replacements.
+## Lab experiments and photography
 
-## Additional projects
-
-`content/legacy-projects.json` retains all sixteen original case-study bodies. Six map to flagships; ten have dedicated secondary routes. Atlas is the new seventeenth project. Original HTML is retained under `content/legacy/` for reference and is not another executable generator.
-
-Secondary entries in `portfolio.json` → `projects` may override `name`, `description`, `stack`, `source` and `live` by `id`; the archived case-study body is retained. A new entry creates a new case-study page from its description and real links. Use a unique lowercase hyphenated slug. Never add placeholder destinations or unsupported claims.
-
-`content/archive-overrides.json` suppresses a specifically verified dead demo URL. A different replacement URL is allowed when supplied in local project content. Original archived data remains intact.
-
-The Auditbench preview (`public/images/auditbench-workspace.webp`) is the first-party [workspace capture](https://github.com/axvrma/auditbench/blob/main/landing/assets/workspace.webp). The Luminescent preview is a labeled illustrative component composition rendered with HTML and CSS.
-
-## Preview and publish
-
-1. Edit the appropriate file.
-2. Run `npm run generate` during development, or `npm run build` for a production artifact.
-3. Run `npm run verify` and review the affected pages locally.
-4. Commit the change and use Netlify's regular Git-triggered build or dashboard workflow to publish.
-
-Builds do not mutate local content or external services. Text and attributes are HTML-escaped; preserved rich HTML is sanitized. Local development requires no environment variables. The optional SITE_URL setting supplies a verified production origin for canonical URLs and sitemap entries; Netlify's production URL is the fallback and deploy previews use their own origin with noindex.
+Add Lab experiments in `content/editorial.mjs` with their actual status and purpose. Publish external links only after confirming the destination and identity. See [asset placement](ASSETS.md) for photography and [content review](CONTENT-REVIEW.md) for pending items.

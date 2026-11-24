@@ -1,31 +1,21 @@
 # Architecture
 
-## Rendering
+Repository content flows through `scripts/generate.mjs` and shared renderers into complete HTML under `.generated/site`. Vite 8 bundles CSS and browser modules, copies public assets, and writes deployable files to `dist`. All public navigation uses normal links and directory indexes. The generator also writes the route manifest, exact redirects, robots metadata and sitemap. Both output directories are disposable.
 
-One pipeline: local content files → shared HTML renderer → Vite production assets → `dist/` → Netlify static hosting. Every route contains its complete content in the HTML response. Navigation uses ordinary links, without hydration, a client router, or an SPA catch-all.
+## Content and rendering
 
-`content/portfolio.json` is the editable source for profile, experience, skills, education, recognition and project overrides. `content/products.mjs` is the typed flagship registry. `content/legacy-projects.json` preserves the existing project documentation. No remote content fetch or generated-content snapshot is needed.
+- `content/portfolio.json` owns public profile information, employment, progression, education, recognition, and optional legacy editorial overrides. The generator derives the current title from the last entry in the current job’s progression.
+- `content/editorial.mjs` defines career chapters linked to employment IDs, story chapters, influences, principles, motivations and Lab experiments. `content/enterprise.mjs` owns six detailed professional cases.
+- `content/publication.mjs` contains the metric approval register and editorial photography manifest. Build-time helpers validate keys and references, filter metrics and check whether approved images exist.
+- `content/products.mjs`, `content/legacy-projects.json`, `content/archive-overrides.json` and `content/hackathons.mjs` preserve product identities, destinations, evidence, and original archive bodies.
+- `src/components/site.mjs` composes primary pages and product detail templates. `editorial.mjs` renders career, story, enterprise cases, impact, principles and optional photography. `ui.mjs` provides introductions, breadcrumbs and safe external links. `visuals.mjs` and `editorial-art.mjs` provide static art.
 
-The source `index.html` is a document template. `scripts/generate.mjs` reads those local files and writes only `.generated/site` plus route/redirect manifests. Vite uses that generated directory as its root and resolves `/src` to browser source. The build plugin copies redirects, robots and sitemap into `dist/`. Source templates and content are never overwritten by a build. Identical inputs produce deterministic output.
+## Browser behavior
 
-## Components and interactions
+The common module enhances theme switching, the mobile navigation disclosure, archive search and printing. Story and enterprise demos import their shared browser module when the corresponding disclosure opens. The photograph dialog imports only on pages containing approved expandable images. Text summaries, native details and links work without that code. The source includes no client framework, CMS integration, API handler, analytics integration, or runtime content request.
 
-`src/components/site.mjs` composes pages and shared sections. `visuals.mjs` contains the ecosystem and distinct product showcases. `src/main.js` handles theme preferences, mobile navigation, archive search and résumé printing. Native links and complete static content remain useful without JavaScript.
+Theme preference is stored locally. Calculators and demo fields use in-memory browser state. The Netlify artifact preview applies repository headers and serves the generated redirects and real 404 to support browser tests.
 
-The mobile navigation is a nonmodal disclosure with announced expanded state, keyboard activation, first-link focus, Escape focus restoration, outside-click closing and desktop-breakpoint cleanup. Existing `theme` preferences survive navigation; blocked local storage still allows switching. Responsive styles include reduced-motion and print behavior.
+## Deployment configuration
 
-## Data ownership
-
-The flagship registry owns canonical identities, fixed live/source URLs, intended ordering and technical case-study evidence. Optional local project descriptions/tags can override those editorial fields by slug without changing flagship identity or order. New local project entries join the archive. Existing project documentation remains available for backlinks. See `docs/CONTENT.md` for editing details.
-
-## Deployment and dependencies
-
-The entire website is static. There are no CMS adapters, serverless API endpoints, administrative pages, Firebase imports, authentication flows, analytics or remote fonts. The former editor did not drive public portfolio content, so its local source/configuration and SDK were removed alongside the unused CMS and rebuild integration. No external service was modified.
-
-`dotenv` loads the optional SITE_URL setting for local builds. `sanitize-html` sanitizes preserved case-study HTML at build time. Both are development/build dependencies. Browser code has no external runtime dependency. Remaining transitive overrides patch glob/minimatch in the Lighthouse development toolchain.
-
-The production-artifact preview server serves directory indexes, exact legacy redirects, Netlify security headers and the real 404. It does not provide APIs. Netlify handles builds and publication through its standard Git/dashboard workflow.
-
-## Assets
-
-Geist and Geist Mono are self-hosted WOFF2 with their OFL notices. Atlas, Servio and Envision visuals are WebP versions of real product screenshots at 720/1440 widths. Vibes uses original CC0 demo artwork in a labeled illustrative player. Prism uses a labeled SVG branch-plan illustration. Images reserve layout space and load lazily below the fold. The social preview has an editable SVG source.
+Node.js 24 and Vite 8 are pinned by the repository setup and lockfile. Build tooling uses `sanitize-html` for legacy bodies and `dotenv` for optional local origin configuration. Production’s canonical origin comes from its `SITE_URL` setting. A preview build uses Netlify’s preview URL and emits noindex and robots restrictions. Equivalent input content, assets and environment produce reproducible build output.

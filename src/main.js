@@ -1,4 +1,5 @@
 import "./style.css";
+import "./editorial.css";
 const root = document.documentElement;
 const themeButtons = document.querySelectorAll(".theme-toggle");
 function updateThemeButtons() {
@@ -35,6 +36,8 @@ matchMedia("(prefers-color-scheme: light)").addEventListener(
 );
 const menuButton = document.querySelector(".menu-toggle");
 const menu = document.querySelector("#mobile-menu");
+if (menu) menu.hidden = true;
+root.classList.add("js-ready");
 function closeMenu(returnFocus = false) {
   if (!menu || !menuButton) return;
   menu.hidden = true;
@@ -66,6 +69,7 @@ matchMedia("(min-width: 901px)").addEventListener("change", (event) => {
   if (event.matches) closeMenu();
 });
 const search = document.querySelector("#project-search");
+if (search) search.closest(".archive-tools").hidden = false;
 search?.addEventListener("input", () => {
   const query = search.value.trim().toLowerCase();
   const rows = document.querySelectorAll(".archive-list .archive-row");
@@ -78,6 +82,28 @@ search?.addEventListener("input", () => {
     `${count} project${count === 1 ? "" : "s"}`;
   document.querySelector(".search-empty").hidden = count !== 0;
 });
-document
-  .querySelector(".print-resume")
-  ?.addEventListener("click", () => window.print());
+const print = document.querySelector(".print-resume");
+if (print) {
+  print.hidden = false;
+  print.addEventListener("click", () => window.print());
+}
+
+for (const element of document.querySelectorAll("[data-demo]")) {
+  const activate = async () => {
+    if (!element.open || element.dataset.mounted) return;
+    element.dataset.mounted = "loading";
+    try {
+      const { mountDemo } = await import("./demos.js");
+      mountDemo(element);
+      element.dataset.mounted = "true";
+    } catch {
+      delete element.dataset.mounted;
+    }
+  };
+  element.addEventListener("toggle", activate);
+  activate();
+}
+
+if (document.querySelector("[data-photo]") && typeof HTMLDialogElement !== "undefined") {
+  import("./photos.js").then(({ enablePhotos }) => enablePhotos()).catch(() => {});
+}

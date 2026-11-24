@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-03T13:10:57.362Z",
-  "url": "http://127.0.0.1:4174/",
+  "date": "2026-11-24T13:02:48.597Z",
+  "url": "http://127.0.0.1:4173/",
   "version": "13.6.0",
   "settings": {
     "formFactor": "mobile",
@@ -21,12 +21,12 @@
   },
   "metrics": {
     "first-contentful-paint": {
-      "value": 1202.952,
-      "display": "1.2 s"
+      "value": 1352.838,
+      "display": "1.4 s"
     },
     "largest-contentful-paint": {
-      "value": 1202.952,
-      "display": "1.2 s"
+      "value": 1352.838,
+      "display": "1.4 s"
     },
     "cumulative-layout-shift": {
       "value": 0,
@@ -37,8 +37,8 @@
       "display": "0 ms"
     },
     "speed-index": {
-      "value": 1202.952,
-      "display": "1.2 s"
+      "value": 1352.838,
+      "display": "1.4 s"
     }
   }
 }

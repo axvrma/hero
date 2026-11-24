@@ -1,12 +1,12 @@
-# Abhishek Verma
+# Abhishek Verma · Beyond the Code
 
-An engineering portfolio and entry point to Atlas, Vibes, Envision, Servio, Prism, Luminescent, and Auditbench. Built with Vite 8, vanilla JavaScript, complete static HTML pages, and repository-managed content.
+Abhishek Verma’s engineering portfolio. It introduces his work as a Senior Software Engineer at DP World, documents how teams solved enterprise problems, and connects his independent products to the questions that started them.
 
-**No API keys, CMS account, database, backend, or authentication setup is required.**
+The repository builds 32 public pages, including six enterprise case studies and 17 independent project case studies. It also builds a real 404, a sitemap, robots.txt and 39 exact legacy redirects.
 
 ## Develop
 
-Use Node **24**:
+Use Node.js 24.
 
 ```sh
 nvm use
@@ -14,41 +14,30 @@ npm ci
 npm run dev
 ```
 
-Open the URL Vite prints, normally `http://127.0.0.1:5173`. Generation runs automatically before development and production builds. After editing content or templates, run `npm run generate` to refresh the pages; CSS and browser scripts use Vite HMR.
+Vite prints a local address, usually `http://127.0.0.1:5173`. Generation runs before development and production builds. Rerun `npm run generate` after editing content or a server-rendered template to refresh the development HTML.
 
-## Edit content
+## Edit and review
 
-- [`content/portfolio.json`](content/portfolio.json): name, profile copy, contact links, experience, skills, education, recognition, and optional project editorial overrides.
-- [`content/products.mjs`](content/products.mjs): typed flagship registry, case studies, fixed URLs, ordering, and legacy identity mappings.
-- [`content/legacy-projects.json`](content/legacy-projects.json): the ten secondary projects and preserved original case-study bodies.
-- [`content/archive-overrides.json`](content/archive-overrides.json): suppression of a verified retired demo URL.
+- [Content editing](docs/CONTENT.md) explains editing the profile, career, enterprise cases and product registry.
+- [Design system](docs/DESIGN-SYSTEM.md) and [storytelling](docs/STORYTELLING.md) describe the visual language and page hierarchy.
+- [Asset placement](docs/ASSETS.md) lists the exact paths and approval steps for photography.
+- [Content review](docs/CONTENT-REVIEW.md) tracks owner approvals and open factual questions.
 
-Edit the files, review the changes, and rebuild. The local content is the source of truth. See [content editing](docs/CONTENT.md) and [architecture](docs/ARCHITECTURE.md).
-
-## Verify and preview
+## Verify and deploy
 
 ```sh
-npm run verify          # Typed registry, content/security tests, build, route/link checks
+npm run generate
+npm run typecheck
+npm test
+SITE_URL=https://axvrma.com npm run build
+SITE_URL=https://axvrma.com npm run verify
 npx playwright install chromium
-npm run test:e2e        # Production-artifact browser and accessibility checks
-npm run preview        # Static artifact, Netlify headers and legacy redirects; port 4173
-# While preview runs, in another terminal:
-AUDIT_URL=http://127.0.0.1:4173/ npm run lighthouse
+npm run test:e2e
+npm run preview
 ```
 
-The build produces `dist/` with **24 public pages**, seventeen case studies (seven flagships and ten additional projects), a 404 page, assets, **39 exact legacy redirects**, robots and sitemap. It does not generate administrative pages or API functions. All sixteen original case studies are preserved; six map to current flagships and Atlas is the additional flagship.
+With the production preview running, run `AUDIT_URL=http://127.0.0.1:4173/ npm run lighthouse` in another shell. See [verification](docs/VERIFICATION.md) and [performance](docs/PERFORMANCE.md) for the audit conditions.
 
-Shared rendering lives in [`src/components`](src/components). [`index.html`](index.html) is the shared source document; [`scripts/generate.mjs`](scripts/generate.mjs) writes disposable inputs under `.generated/`, and Vite bundles them into `dist/`. The public browser code handles theme preferences, mobile navigation, archive search and résumé printing.
+Netlify uses Node.js 24, `npm run build`, and `dist` from the checked-in configuration. The production context uses `https://axvrma.com` for canonical URLs. Deploy previews use their own origin with noindex. Use the existing Git-triggered Netlify workflow to publish after review.
 
-## Netlify deployment
-
-1. Connect the repository to the intended Netlify site.
-2. Use **Node 24**, build command **`npm run build`**, and publish directory **`dist`**, as configured in `netlify.toml`.
-3. Optionally set **`SITE_URL` to the verified portfolio origin** for canonical URLs and sitemap entries. Netlify supplies its production `URL` automatically; previews use `DEPLOY_PRIME_URL` with `noindex`. Local development needs no environment file. See [.env.example](.env.example).
-4. Review the preview’s homepage, case studies, legacy redirects and missing-path 404 before publishing through the normal authorized workflow.
-
-Updates publish through a normal Git-triggered Netlify build or Netlify’s dashboard. There is no in-site rebuild action. The unused CMS integration, rebuild endpoints, disconnected Firestore editor and their credentials/configuration have been removed locally. No remote service or stored record was changed, and no deployment has been performed.
-
-[Route mappings](docs/ROUTES.md) · [Security](docs/SECURITY.md) · [Verification](docs/VERIFICATION.md)
-
-The supplied Servio URL remains unchanged; its certificate had a hostname mismatch during the original audit. The old Web XR demo returned 404, so its launch action is suppressed while its case study and repository remain available.
+[Architecture](docs/ARCHITECTURE.md) · [Routes](docs/ROUTES.md) · [Security](docs/SECURITY.md)

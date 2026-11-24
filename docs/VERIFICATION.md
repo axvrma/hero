@@ -1,53 +1,32 @@
-# Executed verification
+# Verification
 
-Executed locally on 3 November 2026 with Node 24.19.0, macOS ARM64, Chromium from Playwright, and Vite 8.3.5. No remote publish or infrastructure mutation was performed.
+Validated on November 24, 2026 on Apple Silicon macOS with Node.js 24.19.0, Vite 8.3.5, Playwright 1.64.1 and Chromium 156. The production artifact used `SITE_URL=https://axvrma.com`.
 
-| Check | Result |
-| --- | --- |
-| `npm run typecheck` | Passed: TypeScript checks the centralized flagship registry against Product/CaseSection types |
-| `npm test` | 12 tests cover the registry, content escaping/sanitizing, URL validation, preserved content and deployment metadata validation |
-| `npm run build` | Passed: 24 public static routes, 404, assets and SEO files |
-| Build output checks | Passed: all route documents, one h1 per route, descriptions, local links/assets, fragment targets, duplicate IDs, 36 exact redirects |
-| `npm run test:e2e` | 31 passed against the production artifact with configured headers |
-| Browser accessibility | No axe WCAG 2 A/AA and 2.1 AA violations in tested public pages, dark/light home, and expanded mobile navigation |
-| Responsive layout | No horizontal overflow at 320, 390, 768, 1024, 1440 and 1920 px on home, archive, Atlas/Envision case studies, about and contact |
-| Interactions | Theme persistence and blocked-storage fallback; mobile keyboard open/Escape/focus restoration/navigation; product-map navigation; archive filtering; reduced motion |
-| Static delivery | Content works without JavaScript; unknown paths produce 404; exact legacy 301 responses; no failed local resources or browser errors across representative routes |
-| Dependency audit | `npm audit` and `npm audit --omit=dev`: zero known vulnerabilities after removing unused runtime SDK dependencies and retaining patched development-tool overrides |
-| Determinism and SEO environments | Same generated files have identical SHA256 across repeated runs; 24-entry configured-origin sitemap, exact canonical and preview noindex/preview-origin verified |
-| Visual review | Viewed desktop dark/light home, mobile home, and the Atlas case study capture; original screenshots and illustrations reserve their space |
-| `git diff --check` | Passed |
+## Results
 
-The first browser pass exposed Vite preview’s SPA fallback at clean URLs. The preview now resolves real directory indexes and the real 404. A subsequent pass identified a 4.49:1 light-theme contrast ratio on architecture indices; the token was darkened and the full suite then passed. Tests do not hide those issues through broad exclusions.
+- `npm ci` installed from the lockfile and reported zero known dependency vulnerabilities. It noted that the optional `fsevents` install script is outside npm’s allowlist. Build and preview worked on this host.
+- `npm run generate` and `npm run typecheck` passed. Generation emitted 32 complete static pages and one 404.
+- `npm test` passed all 17 tests. Coverage includes content and URL handling, canonical origins, registry identity, employment progression, approval gating, missing photos, arithmetic and calendar dates.
+- `npm run build` and `npm run verify` passed. The checker resolved route, asset, responsive image, fragment and redirect references. Two isolated production builds had identical artifact checksums. A simulated Netlify deploy preview used its preview origin and emitted noindex and robots restrictions.
+- `npx playwright install chromium` completed and `npm run test:e2e` passed all 71 tests. The suite verified every public route, all 39 redirects, the real 404, key contact and résumé links, and the production CSP in artifact preview. It exercised search, keyboard navigation, theme persistence, photograph focus with a fixture, no-JavaScript reading and navigation, reduced motion, and all five interactive demos.
+- Direct HTTPS requests returned HTTP 200 for all seven preserved flagship live and source destinations and all three preserved hackathon live and source destinations. This checks reachability at the time of the run.
 
-## Netlify build correction
+## Accessibility and responsive coverage
 
-The production failure was reproduced with `CONTEXT=production URL=https://axvrma.netlify.app SITE_URL= npm run build`. Vite completed, but the output checker incorrectly treated every occurrence of the current Netlify hostname as stale. The checker now validates canonical and Open Graph URLs against the same resolved deployment origin used by generation, including local `.env` values. The matching production build passes across all 24 routes and 36 redirects. Seven regression checks cover the Netlify default URL, custom SITE_URL, genuinely stale metadata, preview identity, local dotenv and builds without a configured origin. No frontend code changed for this correction.
+Axe checks covered all 32 public routes, the expanded mobile menu, both homepage themes, and the expanded interactive demos in both themes. The initial run found undersized targets in the enterprise table of contents. The targets were increased and the final checks reported zero violations. Keyboard checks exercised skip navigation, native disclosures, form errors, menus and dialog dismissal with focus restoration. Reflow checks ran from 320px to 1920px in both themes, plus a 640px CSS viewport to represent 200% zoom from 1280px in key flows.
 
-## Lighthouse
+Playwright captures in the local `.tools/axvrma-3/` directory cover the homepage in light and dark, the work and invoice pages, the selected product section, and desktop and mobile story layouts. Screenshots were inspected for visible layout issues. Real approved photography is still pending, so the photo dialog was verified with a local fixture.
 
-The prior local mobile Lighthouse 13.6.0 result (recorded before the integration cleanup) is retained in [`lighthouse-summary.json`](lighthouse-summary.json). The run used simulated mobile throttling: 150 ms RTT, approximately 1.6 Mbps throughput, and 4× CPU slowdown.
+Chromium and Axe results provide automated evidence toward WCAG 2.2 AA. Full conformance, assistive-technology coverage and behavior on the deployed domain remain outside this local run.
 
-| Category / metric | Measured result |
-| --- | --- |
-| Performance | 100 |
-| Accessibility | 100 |
-| Best Practices | 100 |
-| SEO | 100 |
-| LCP | 1.2 s |
-| CLS | 0 |
-| Total blocking time | 0 ms |
+## Repeat the checks
 
-This is one local homepage lab measurement, not a production field guarantee. It does not measure INP or prove every page/device meets the same score. Re-run using `npm run preview` and `AUDIT_URL=http://127.0.0.1:4173/ npm run lighthouse`. Detailed HTML/JSON audit artifacts and browser screenshots live under ignored `.tools/`; the compact measurement summary is committed.
+```sh
+npm ci
+SITE_URL=https://axvrma.com npm run verify
+npx playwright install chromium
+npm run test:e2e
+npm run preview
+```
 
-## Remaining external verification
-
-- Content is now built directly from local repository files; no external integration or API key is needed.
-- The deployment origin is intentionally unconfigured. `axvrma.com` returned 403; set the verified SITE_URL before production. The SEO environment test used reserved example domains solely as fixtures, then restored a local no-origin build.
-- Atlas, Vibes, Envision and Prism public application URLs returned 200. The fixed Servio URL had a TLS hostname mismatch and needs a hosting-side correction. It is intentionally retained exactly as requested.
-- Production domain routing and hosting headers require an authorized deployment preview; no backend functions remain.
-- Browser automation covers Chromium. Safari/Firefox, assistive-technology review, physical devices and field INP remain unmeasured.
-
-The existing résumé, LinkedIn and Pop Pay demo URLs returned 200. The old Web XR demo returned 404, so its launch action is suppressed with an explicit metadata override; its case study and source remain.
-
-All sixteen original repository URLs returned HTTP 200, following the GitHub redirects for renamed repositories. Legacy project identities retain their original source URLs.
+With the preview running, use `AUDIT_URL=http://127.0.0.1:4173/ npm run lighthouse`. See [performance](PERFORMANCE.md) for the measurement and baseline. A live deployment would also need the usual smoke check on its public origin.

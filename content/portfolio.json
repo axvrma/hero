@@ -1,60 +1,84 @@
 {
   "profile": {
     "name": "Abhishek Verma",
-    "role": "Software Engineer & Product Builder",
     "location": "Bengaluru, India",
     "email": "abhishekverma.iitg@gmail.com",
     "github": "https://github.com/axvrma",
     "linkedin": "https://linkedin.com/in/axvrma",
     "resume": "https://drive.google.com/file/d/1VK5y-OIx-8EKoSX0bx1INsAJrqr0qX_-/view",
-    "heading": "I build software that makes complexity feel simple.",
-    "subtitle": "I'm Abhishek Verma, a software engineer building thoughtful digital products, scalable interfaces, and developer tools.",
-    "contactHeading": "Have something worth building?",
     "instagram": "https://instagram.com/axvrma",
     "x": "https://x.com/axvrma",
-    "phone": "+919630511305"
+    "phone": "+919630511305",
+    "experienceLabel": "8+ years of engineering experience"
   },
   "experience": [
     {
       "company": "DP World",
-      "role": "Senior Software Engineer",
-      "duration": "March 2022 - Present",
+      "duration": "March 2022 – Present",
       "details": [
+        "Led the intelligent invoice processing initiative, helping the team deliver extraction and downstream posting under a strict deadline.",
         "Spearheaded the end-to-end frontend development of the Workflow Management module, translating complex, legacy email-driven processes into a streamlined, system-led UI.",
         "Engineered a custom, event-driven field highlighting engine capable of processing inputs across multiple Micro Frontends (MFEs) using a dynamic spotlight overlay.",
         "Scaled and maintained the Unified Design System (UDS), engineering reusable UI components to enforce design consistency across agile teams.",
         "Developed Runner Environment Manager, a Chrome extension automating environment switching to streamline developer workflows and enhance team efficiency.",
         "Drove UI implementation for Cargoes Runner utilizing Angular and React to optimize rendering performance and overall system scalability."
+      ],
+      "id": "dp-world",
+      "progression": [
+        {
+          "date": "March 2022",
+          "role": "SDE II"
+        },
+        {
+          "date": "September 2023",
+          "role": "Group SDE II"
+        },
+        {
+          "date": "November 2025",
+          "role": "Senior Software Engineer"
+        }
       ]
     },
     {
       "company": "Airtel Africa",
-      "role": "Software Developer",
-      "duration": "December 2020 - March 2022",
+      "role": "Software Developer (SDE-1)",
+      "duration": "December 2020 – March 2022",
       "details": [
         "Architected and developed a core enterprise Intranet Portal from the ground up, establishing the initial frontend structure and improving internal operational efficiency.",
         "Built a highly configurable, backend-controlled UI framework (Dynamic UI Automation) that bypassed traditional frontend cycles, empowering QA to configure business requirements directly.",
         "Engineered high-traffic B2B modules for Airtel Business Care and Airtel Business Gateway, optimizing user flows for enterprise clients.",
         "Developed secure data-fetching modules for a localized law enforcement integration portal, ensuring strict performance and data privacy standards."
-      ]
+      ],
+      "id": "airtel"
     },
     {
       "company": "IRIS Worldwide",
       "role": "Frontend Developer",
-      "duration": "April 2020 - November 2020",
+      "duration": "March 2020 – November 2020",
       "details": [
         "Delivered cross-platform client solutions for major brands (including Zaxby's) utilizing Angular, React, and Ionic, ensuring consistent UI delivery across web and mobile platforms."
-      ]
+      ],
+      "id": "iris"
     },
     {
       "company": "Nurtr",
       "role": "Frontend Developer",
-      "duration": "May 2018 - Mar 2020",
+      "duration": "January 2018 – March 2020",
       "details": [
         "Spearheaded the migration of the core platform to a Progressive Web Application (PWA), implementing web performance optimization standards and advanced Angular concepts to maximize scalability.",
         "Designed a modular component architecture to maintain high code readability, drastically minimizing technical debt during rapid platform scaling.",
         "Collaborated cross-functionally to optimize the in-house CRM, introducing future-ready features that improved internal operational workflows.",
         "Optimized legacy UI components across the core web application, significantly lowering page load times and enhancement iterations."
+      ],
+      "id": "nurtr"
+    },
+    {
+      "company": "UrStyleCoach",
+      "role": "Design internship",
+      "duration": "June 2017 – October 2017",
+      "id": "urstylecoach",
+      "details": [
+        "Designed flyers, standees, and social media posts and stories."
       ]
     }
   ],

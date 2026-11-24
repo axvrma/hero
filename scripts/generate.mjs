@@ -4,7 +4,19 @@ import { products as registry } from "../content/products.mjs";
 import { hackathonProjects } from "../content/hackathons.mjs";
 import { escape as e, resolveOrigin, safeUrl } from "./lib/content.mjs";
 import * as site from "../src/components/site.mjs";
+import { enterprisePage, enterprisePath, labPage, storyPage } from "../src/components/editorial.mjs";
+import { career, motivations, narrative, principles } from "../content/editorial.mjs";
+import { enterpriseCases } from "../content/enterprise.mjs";
+import { editorialAssets, impactMetrics } from "../content/publication.mjs";
+import { availableAssets, publishedMetrics, validateEditorial } from "./lib/publication.mjs";
 const content = JSON.parse(await readFile("content/portfolio.json", "utf8"));
+content.currentJob = validateEditorial(content, career, enterpriseCases, principles, impactMetrics);
+content.profile.role = content.currentJob.progression.at(-1).role;
+content.metrics = publishedMetrics(impactMetrics);
+content.assets = await availableAssets(editorialAssets);
+for (const { id } of registry) {
+  if (!motivations[id]) throw Error(`Missing product motivation: ${id}`);
+}
 const legacy = JSON.parse(
   await readFile("content/legacy-projects.json", "utf8"),
 );
@@ -59,24 +71,38 @@ const projectSchema = (p) => ({
   ...(p.live ? { url: p.live } : {}),
   author: { "@type": "Person", name: content.profile.name },
 });
+const person = {
+  "@type": "Person",
+  name: content.profile.name,
+  jobTitle: content.profile.role,
+  worksFor: { "@type": "Organization", name: content.currentJob.company },
+  alumniOf: content.education.slice(0, 2).map(({ institution }) => ({
+    "@type": "EducationalOrganization", name: institution,
+  })),
+  ...(origin ? { url: `${origin}/` } : {}),
+  sameAs: [content.profile.github, content.profile.linkedin].filter((url) => safeUrl(url)),
+};
+const profileSchema = { "@context": "https://schema.org", "@type": "ProfilePage", mainEntity: person };
 const routes = [
   [
     "/",
-    "Software Engineer & Product Builder",
-    content.profile.subtitle,
-    site.home(content, products, secondary),
+    `${content.profile.role} at ${content.currentJob.company}`,
+    `${content.profile.name} is a ${content.profile.role} at ${content.currentJob.company}. Enterprise workflows and independent products. ${narrative.educationLabel}.`,
+    site.home(content, products),
+    profileSchema,
   ],
   [
     "/work",
     "Selected Work & Project Archive",
     `Explore Abhishek Verma’s product ecosystem: ${products.map((p) => p.name).join(", ")}, and ${secondary.length} more engineering projects.`,
-    site.work(products, secondary),
+    site.work(products, secondary, content.profile.name),
   ],
   [
     "/about",
     "About Abhishek Verma",
     "About Abhishek Verma. Frontend systems, product engineering, and independent tools built with care.",
     site.about(content),
+    profileSchema,
   ],
   [
     "/experience",
@@ -102,6 +128,24 @@ const routes = [
     "A print-ready résumé with experience, capabilities, education and certifications.",
     site.resume(content),
   ],
+  [
+    "/story",
+    "It all started with a question",
+    "Abhishek Verma’s story, from early experiments in computing and design to enterprise engineering.",
+    storyPage(content),
+  ],
+  [
+    "/lab",
+    "The Workshop",
+    "Explore Abhishek Verma’s side experiments with hardware, self-hosting, simulations and hackathon prototypes.",
+    labPage(content, site.hackathons(content)),
+  ],
+  ...enterpriseCases.map((item) => [
+    enterprisePath(item.id),
+    `${item.title} — ${item.organization}`,
+    item.summary,
+    enterprisePage(item, content),
+  ]),
   ...products.map((p) => [
     `/work/${p.id}`,
     `${p.name} — ${p.category}`,
@@ -131,7 +175,7 @@ for (const [path, title, description, body, schema] of [
   const canonical = origin ? origin + (path === "/" ? "/" : path) : "";
   const noindex =
     path === "/404" ||
-    (process.env.CONTEXT && process.env.CONTEXT !== "production");
+    !origin || (process.env.CONTEXT && process.env.CONTEXT !== "production");
   const pageTitle = title.includes(content.profile.name) ? title : `${title} | ${content.profile.name}`;
   const meta = `<title>${e(pageTitle)}</title>
 <meta name="description" content="${e(description)}">
@@ -142,15 +186,16 @@ ${canonical && path !== "/404" ? `<link rel="canonical" href="${e(canonical)}">`
 <meta property="og:title" content="${e(pageTitle)}">
 <meta property="og:description" content="${e(description)}">
 ${canonical ? `<meta property="og:url" content="${e(canonical)}">` : ""}
-<meta property="og:image" content="${origin}/social.png">
+<meta property="og:image" content="${e(origin)}/social.png">
+<meta property="og:image:alt" content="${e(`${content.profile.name}, ${content.profile.role} at ${content.currentJob.company}, with an orbit illustration.`)}">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-${schema ? `<script type="application/ld+json">${JSON.stringify(schema).replace(/</g, "\\u003c")}</script>` : path === "/" ? `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@type": "Person", name: content.profile.name, jobTitle: content.profile.role, ...(origin ? { url: origin } : {}), sameAs: [content.profile.github, content.profile.linkedin].filter((v) => safeUrl(v)) }).replace(/</g, "\\u003c")}</script>` : ""}`;
-  let html = shell
-    .replace("<!-- META -->", meta)
-    .replace("<!-- HEADER -->", site.header(path, content.profile))
-    .replace("<!-- BODY -->", body)
-    .replace("<!-- FOOTER -->", site.footer(content.profile));
+${schema ? `<script type="application/ld+json">${JSON.stringify(schema).replace(/</g, "\\u003c")}</script>` : ""}`;
+  const html = shell
+    .replace("<!-- META -->", () => meta)
+    .replace("<!-- HEADER -->", () => site.header(path, content.profile))
+    .replace("<!-- BODY -->", () => body)
+    .replace("<!-- FOOTER -->", () => site.footer(content.profile));
   const file =
     path === "/404"
       ? ".generated/site/404.html"
@@ -189,7 +234,7 @@ await writeFile(
 );
 await writeFile(
   ".generated/site/robots.txt",
-  `User-agent: *\n${process.env.CONTEXT && process.env.CONTEXT !== "production" ? "Disallow: /" : "Allow: /"}\n${origin ? `Sitemap: ${origin}/sitemap.xml\n` : ""}`,
+  `User-agent: *\n${!origin || (process.env.CONTEXT && process.env.CONTEXT !== "production") ? "Disallow: /" : "Allow: /"}\n${origin ? `Sitemap: ${origin}/sitemap.xml\n` : ""}`,
 );
 await writeFile(
   ".generated/site/sitemap.xml",
