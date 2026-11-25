@@ -49,6 +49,8 @@ export type EnterpriseCase = {
   id: string;
   title: string;
   organization: string;
+  subtitle?: string;
+  highlight?: string;
   summary: string;
   context: string;
   problem: string;
@@ -70,13 +72,19 @@ export type ImpactMetric = {
   unit: string | null;
   label: string | null;
   project: string;
+  employer: string;
+  organization: string;
+  approximate?: boolean;
+  comparison?: { before: number; after: number };
+  derivedFrom?: string;
   scope: string | null;
   baseline: string | null;
   outcome: string | null;
   attribution: string | null;
-  verification: "pending" | "verified";
+  verification: "pending" | "owner-reported" | "verified" | "independently-audited" | "derived";
   publication: "pending" | "approved";
   evidence: string | null;
+  clearance: string | null;
 };
 export type EditorialAsset = {
   id: string;
@@ -87,8 +95,9 @@ export type EditorialAsset = {
   height: number;
   focalPoint: "center" | "top" | "left" | "right";
   attribution: string | null;
-  provenance: "ai-assisted-portrait" | "owner-supplied-photo" | "certificate-derivative";
+  provenance: "ai-assisted-portrait" | "owner-supplied-photo" | "certificate-derivative" | "owner-supplied-logo";
   redaction?: "visually-verified";
+  ownerApproval?: "granted";
   variants?: { path: string; width: number }[];
   publication: "pending" | "approved";
   rights: "pending" | "cleared";

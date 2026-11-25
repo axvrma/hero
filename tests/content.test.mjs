@@ -66,7 +66,11 @@ test("all sixteen legacy case studies are preserved with exact identity", async 
 });
 test("original career recognition and contact channels remain in local portfolio content", async () => {
   const snapshot = JSON.parse(await readFile("content/portfolio.json", "utf8"));
-  assert.equal(snapshot.achievements.length, 4);
+  const recognition = snapshot.achievements.map(({ title }) => title);
+  for (const priorTitle of ["Kudos Award (DP World, 2023)", "Star Performer (Airtel International, 2021)",
+    "First Position (MLH Hackathon, 2020)", "Appreciation Letter (Google, 2018)"]) {
+    assert.ok(recognition.includes(priorTitle), priorTitle);
+  }
   assert.ok(snapshot.profile.instagram);
   assert.ok(snapshot.profile.phone);
 });

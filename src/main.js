@@ -104,8 +104,19 @@ for (const element of document.querySelectorAll("[data-demo]")) {
   activate();
 }
 
-if (document.querySelector("[data-photo]") && typeof HTMLDialogElement !== "undefined") {
-  import("./photos.js").then(({ enablePhotos }) => enablePhotos()).catch(() => {});
+if (document.querySelector("[data-photo]") && typeof HTMLDialogElement !== "undefined" &&
+    typeof HTMLDialogElement.prototype.showModal === "function") {
+  document.addEventListener("click", async (event) => {
+    const link = event.target.closest("[data-photo]");
+    if (!link || event.defaultPrevented || event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    try {
+      const { openPhoto } = await import("./photos.js");
+      openPhoto(link);
+    } catch {
+      window.location.assign(link.href);
+    }
+  });
 }
 
 const marquee = document.querySelector("[data-marquee]");

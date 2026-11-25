@@ -3,16 +3,20 @@
  * @type {import('./types.js').ImpactMetric[]}
  */
 export const impactMetrics = [
-  ["invoice-processing-time", "intelligent-invoice-processing"],
-  ["invoice-processing-reduction", "intelligent-invoice-processing"],
-  ["invoice-client-staffing", "intelligent-invoice-processing"],
-  ["invoice-annual-business-benefit", "intelligent-invoice-processing"],
-  ["shipment-operational-effort", "dynamic-shipment-workflows"],
-  ["nurtr-global-reach", "bridging-design-and-engineering"],
-  ["nurtr-sales", "bridging-design-and-engineering"],
-].map(([id, project]) => ({
-  id, project, value: null, unit: null, label: null, scope: null, baseline: null,
-  outcome: null, attribution: null, verification: "pending", publication: "pending", evidence: null,
+  ["invoice-processing-time", "Time per invoice", "minutes", "dp-world", "intelligent-invoice-processing"],
+  ["invoice-processing-reduction", "Reduction in invoice processing time", "%", "dp-world", "intelligent-invoice-processing"],
+  ["invoice-client-staffing", "Reduction in staffing requirements", "%", "dp-world", "intelligent-invoice-processing"],
+  ["invoice-annual-business-benefit", "Annual cost savings", "USD", "dp-world", "intelligent-invoice-processing"],
+  ["shipment-operational-effort", "Reduction in operational effort", "%", "dp-world", "dynamic-shipment-workflows"],
+  ["nurtr-global-reach", "Global product reach", "countries", "nurtr", "bridging-design-and-engineering"],
+  ["nurtr-sales", "Startup sales milestone", "USD", "nurtr", "bridging-design-and-engineering"],
+].map(([id, label, unit, employer, project]) => ({
+  id, label, unit, employer, project, organization: employer === "nurtr" ? "Nurtr" : "DP World",
+  value: null, scope: null, baseline: null, outcome: null, attribution: null, evidence: null, clearance: null,
+  verification: id === "invoice-processing-reduction" ? "derived" : "owner-reported",
+  publication: "pending",
+  ...(id === "invoice-processing-reduction" ? { derivedFrom: "invoice-processing-time" } : {}),
+  ...(id === "invoice-annual-business-benefit" || id === "invoice-client-staffing" ? { approximate: true } : {}),
 }));
 
 /** @type {import('./types.js').EditorialAsset[]} */
@@ -43,15 +47,15 @@ export const editorialAssets = [
   {
     id: "dp-world-kudos-2023", path: "/images/recognition/dp-world-kudos-2023.webp", width: 1320, height: 875,
     variants: variants("recognition/dp-world-kudos-2023", [640, 960]),
-    alt: "Abhishek accepting a certificate at the DP World awards ceremony", caption: "Kudos Award · 2023",
-    focalPoint: "center", attribution: null, provenance: "owner-supplied-photo", publication: "pending", rights: "pending",
+    alt: "Abhishek accepting a certificate at the DP World awards ceremony", caption: "DP World · Kudos Award · 2023",
+    focalPoint: "center", attribution: null, provenance: "owner-supplied-photo", ownerApproval: "granted", publication: "pending", rights: "pending",
   },
   {
     id: "iit-guwahati-certificate", path: "/images/recognition/iit-guwahati-ai-ml-2026-redacted.webp", width: 1684, height: 1191,
     variants: variants("recognition/iit-guwahati-ai-ml-2026-redacted", [480, 800]),
     alt: "Redacted certificate of completion from Electronics & ICT Academy, IIT Guwahati, and Emeritus",
-    caption: "Postgraduate certification in AI & ML · 2026", focalPoint: "center", attribution: null,
-    provenance: "certificate-derivative", redaction: "visually-verified", publication: "pending", rights: "pending",
+    caption: "PG Certification in Artificial Intelligence and Machine Learning · 2026", focalPoint: "center", attribution: null,
+    provenance: "certificate-derivative", redaction: "visually-verified", ownerApproval: "granted", publication: "approved", rights: "cleared",
   },
   {
     id: "workshop-hardware", path: "/images/workshop/homelab.webp", width: 1080, height: 1440,
@@ -69,7 +73,20 @@ export const editorialAssets = [
     alt: null, caption: null, focalPoint: "center", attribution: null,
     provenance: "owner-supplied-photo", publication: "pending", rights: "pending",
   },
+  employerLogo("dp-world", "DP World", 187, 116),
+  employerLogo("airtel", "Airtel Africa", 115, 116, "airtel-africa"),
+  employerLogo("iris", "IRIS Worldwide", 91, 84),
+  employerLogo("nurtr", "Nurtr", 240, 42),
 ];
+
+/** @returns {import('./types.js').EditorialAsset} @param {string} id @param {string} name @param {number} width @param {number} height @param {string} [filename] */
+function employerLogo(id, name, width, height, filename = id) {
+  return {
+    id: `logo-${id}`, path: `/images/brands/${filename}.webp`, width, height, alt: name, caption: null,
+    focalPoint: "center", attribution: null, provenance: "owner-supplied-logo", ownerApproval: "granted",
+    publication: "pending", rights: "pending",
+  };
+}
 
 /** @param {string} stem @param {number[]} widths */
 function variants(stem, widths) {

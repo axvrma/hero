@@ -1,7 +1,7 @@
 import { lstat, readdir } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
-const editorialDirectories = ["portraits", "journey", "recognition", "workshop"];
+const editorialDirectories = ["portraits", "journey", "recognition", "workshop", "brands"];
 const imagePath = /^\/images\/(?:[a-z0-9-]+\/)*[a-z0-9-]+\.(?:webp|avif|jpg|png)$/;
 
 async function optionalFile(path) {
@@ -13,15 +13,35 @@ async function optionalFile(path) {
 }
 
 export function publishedMetrics(metrics) {
-  return metrics.filter((metric) => {
-    if (metric.publication !== "approved") return false;
-    const required = [metric.unit, metric.label, metric.scope, metric.baseline,
-      metric.outcome, metric.attribution, metric.evidence];
-    if (metric.verification !== "verified" || !Number.isFinite(metric.value) ||
-        !required.every((value) => typeof value === "string" && value.trim())) {
+  const approved = metrics.filter(({ publication }) => publication === "approved");
+  const byId = new Map(approved.map((metric) => [metric.id, metric]));
+
+  return approved.map((metric) => {
+    const required = [metric.unit, metric.label, metric.scope, metric.baseline, metric.outcome,
+      metric.organization, metric.attribution, metric.evidence, metric.clearance];
+    if (!required.every((value) => typeof value === "string" && value.trim())) {
       throw Error(`Incomplete public metric: ${metric.id}`);
     }
-    return true;
+    if (metric.verification === "derived") {
+      const source = byId.get(metric.derivedFrom);
+      if (!source?.comparison || source.project !== metric.project || source.employer !== metric.employer ||
+          source.verification === "derived" || metric.unit !== "%") {
+        throw Error(`Derived metric requires approved source inputs: ${metric.id}`);
+      }
+      const { before, after } = source.comparison;
+      return { ...metric, value: Math.round((1 - after / before) * 1000) / 10, sourceVerification: source.verification };
+    }
+    if (!["verified", "owner-reported", "independently-audited"].includes(metric.verification) || !Number.isFinite(metric.value) || metric.value < 0) {
+      throw Error(`Incomplete public metric: ${metric.id}`);
+    }
+    if (metric.comparison) {
+      const { before, after } = metric.comparison;
+      if (!Number.isFinite(before) || before <= 0 || !Number.isFinite(after) ||
+          after < 0 || after > before || metric.value !== after || metric.unit !== "minutes") {
+        throw Error(`Invalid approved time comparison: ${metric.id}`);
+      }
+    }
+    return metric;
   });
 }
 
@@ -44,7 +64,7 @@ export async function availableAssets(assets, root = "public") {
     }
     const present = await Promise.all(candidates.map(({ path }) => optionalFile(resolve(root, `.${path}`))));
     if (!present.some(Boolean)) continue;
-    if (asset.publication !== "approved" || asset.rights !== "cleared") throw Error(`Unapproved photo in public assets: ${asset.id}`);
+    if (asset.publication !== "approved" || asset.rights !== "cleared") throw Error(`Unapproved editorial asset in public assets: ${asset.id}`);
     if (asset.provenance === "certificate-derivative" &&
         (asset.redaction !== "visually-verified" || candidates.some(({ path }) => !/-redacted(?:-\d+)?\./.test(path)))) {
       throw Error(`Certificate requires verified redaction: ${asset.id}`);
@@ -91,6 +111,13 @@ export function validateEditorial(content, career, cases, principles, metrics) {
   }
   for (const metric of metrics) {
     if (!cases.some(({ id }) => id === metric.project)) throw Error(`Unknown metric project: ${metric.id}`);
+    const employer = content.experience.find(({ id }) => id === metric.employer);
+    if (employer?.company !== metric.organization) throw Error(`Metric employer does not match career: ${metric.id}`);
+    if (metric.publication !== "approved" &&
+        [metric.value, metric.comparison, metric.scope, metric.baseline, metric.outcome,
+          metric.attribution, metric.evidence, metric.clearance].some((value) => value != null)) {
+      throw Error(`Pending metric details belong outside public content: ${metric.id}`);
+    }
   }
   const current = content.experience.filter(({ duration }) => duration.endsWith("Present"));
   if (current.length !== 1 || !current[0].progression?.length ||

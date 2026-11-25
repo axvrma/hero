@@ -20,11 +20,11 @@ export const hackathonProjects = [
   {
     id: "paytm-hackathon",
     name: "Business Shield",
-    result: "Top 8 of 450",
+    result: "Top 8 of about 450",
     buildTime: "Built in 8 hours",
     event: "Paytm Hackathon, Track 2",
     description: "An AI-assisted decision-support prototype that turns simulated business signals into inventory and marketing recommendations with fallback plans for small merchants.",
-    story: "Built in eight hours, Business Shield reached the final eight out of 450 projects and received appreciation from Paytm’s senior technology leadership.",
+    story: "Built in eight hours, Business Shield reached the final eight out of about 450 projects and received appreciation from Paytm’s senior technology leadership.",
     live: "https://business-shield.axvrma.com",
     source: "https://github.com/axvrma/paytm-hackathon",
     preview: {

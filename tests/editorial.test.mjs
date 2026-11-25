@@ -7,7 +7,10 @@ import { career, principles } from "../content/editorial.mjs";
 import { enterpriseCases } from "../content/enterprise.mjs";
 import { editorialAssets, impactMetrics } from "../content/publication.mjs";
 import { availableAssets, publishedMetrics, validateEditorial } from "../scripts/lib/publication.mjs";
-import { impact, photography, selectedImpact } from "../src/components/editorial.mjs";
+import { careerJourney, enterprisePage, impact, photography } from "../src/components/editorial.mjs";
+import { businessImpact, invoiceComparison } from "../src/components/impact.mjs";
+import { brandMarquee } from "../src/components/homepage.mjs";
+import { resume } from "../src/components/site.mjs";
 import { calculateExpression, elapsedTime } from "../src/calculations.mjs";
 
 test("career chapters reference employment once with a single ordered DP World progression", async () => {
@@ -20,22 +23,54 @@ test("career chapters reference employment once with a single ordered DP World p
   assert.throws(() => validateEditorial(content, career.slice(0, 4), enterpriseCases, principles, impactMetrics), /disagree/);
 });
 
-test("only verified and approved complete metrics reach the renderer", () => {
+const disclosure = {
+  scope: "Fictional sample", baseline: "Sample baseline", outcome: "Sample outcome",
+  attribution: "Fixture team", evidence: "Fixture evidence", clearance: "Fixture release",
+  publication: "approved",
+};
+
+test("owner evidence and disclosure clearance are distinct requirements for public metrics", () => {
   assert.deepEqual(publishedMetrics(impactMetrics), []);
   assert.ok(impactMetrics.every(({ value }) => value === null));
-  const fixture = {
-    ...impactMetrics[0], value: 1234, unit: "test units", label: "Test metric",
-    scope: "Fictional inputs", baseline: "Fixture baseline", outcome: "Fixture outcome",
-    attribution: "Fixture team", evidence: "Fixture public evidence",
-  };
-  const output = impact({ metrics: publishedMetrics([fixture]) });
-  assert.doesNotMatch(output, /1234|Test metric|Fixture/);
-  assert.doesNotMatch(selectedImpact({ metrics: publishedMetrics([fixture]) }), /1234|Test metric|Fixture/);
-  assert.match(output, /Less manual invoice processing/);
-  assert.throws(() => publishedMetrics([{ ...fixture, publication: "approved" }]), /Incomplete public metric/);
-  const approved = publishedMetrics([{ ...fixture, publication: "approved", verification: "verified" }]);
-  assert.match(impact({ metrics: approved }), /1234 test units/);
-  assert.match(selectedImpact({ metrics: approved }), /1234 test units/);
+  const fixture = { ...impactMetrics[3], ...disclosure, value: 2400000 };
+  const absent = publishedMetrics([{ ...fixture, publication: "pending" }]);
+  assert.doesNotMatch(impact({ metrics: absent }), /Fixture|2.4M/);
+  assert.doesNotMatch(businessImpact(absent), /Fixture|2.4M/);
+  assert.match(businessImpact(absent), /Automated invoice processing/);
+  assert.throws(() => publishedMetrics([{ ...fixture, clearance: null }]), /Incomplete public metric/);
+  assert.throws(() => publishedMetrics([{ ...fixture, verification: "pending" }]), /Incomplete public metric/);
+  const approved = publishedMetrics([fixture]);
+  assert.match(impact({ metrics: approved }), /≈\$2.4M/);
+  assert.match(businessImpact(approved), /Annual cost savings/);
+  assert.match(businessImpact(approved), /Fixture team · Owner-reported/);
+});
+
+test("the time reduction is derived only from approved times and bars use the same ratio", () => {
+  const source = { ...impactMetrics[0], ...disclosure, value: 4, comparison: { before: 16, after: 4 } };
+  const derived = { ...impactMetrics[1], ...disclosure };
+  assert.throws(() => publishedMetrics([derived, { ...source, publication: "pending" }]), /approved source inputs/);
+  assert.throws(() => publishedMetrics([{ ...source, comparison: { before: 0, after: 4 } }]), /Invalid approved time comparison/);
+  const metrics = publishedMetrics([source, derived]);
+  assert.equal(metrics[1].value, 75);
+  assert.match(invoiceComparison(metrics), /y="24" width="50"/);
+  assert.match(businessImpact(metrics), /75%/);
+  assert.match(businessImpact(metrics), /Calculated from owner-reported times/);
+  assert.doesNotMatch(businessImpact(publishedMetrics([source])), /75%/);
+});
+
+test("approved company metrics feed the corresponding career, case and printable résumé", async () => {
+  const content = JSON.parse(await readFile("content/portfolio.json", "utf8"));
+  const fixture = { ...impactMetrics.at(-1), ...disclosure, value: 240000, attribution: "Nurtr company sales" };
+  content.currentJob = validateEditorial(content, career, enterpriseCases, principles, impactMetrics);
+  content.assets = new Map();
+  const caseStudy = enterpriseCases.find(({ id }) => id === fixture.project);
+  assert.throws(() => validateEditorial(content, career, enterpriseCases, principles, [{ ...fixture, publication: "pending" }]), /Pending metric details/);
+  content.metrics = publishedMetrics([fixture]);
+  for (const output of [businessImpact(content.metrics), careerJourney(content), enterprisePage(caseStudy, content), resume(content)]) {
+    assert.match(output, /\$240K/);
+    assert.match(output, /Nurtr company sales/);
+  }
+  assert.doesNotMatch(enterprisePage(enterpriseCases[0], content), /\$240K/);
 });
 
 test("missing approved photos are omitted and present approved photos escape user-facing fields", async () => {
@@ -49,7 +84,7 @@ test("missing approved photos are omitted and present approved photos escape use
     const available = await availableAssets([asset], root);
     assert.match(photography(available, asset.id), /Portrait &quot;sample&quot;/);
     assert.doesNotMatch(photography(available, asset.id), /srcset=/);
-    await assert.rejects(availableAssets([{ ...asset, publication: "pending" }], root), /Unapproved photo/);
+    await assert.rejects(availableAssets([{ ...asset, publication: "pending" }], root), /Unapproved editorial asset/);
     await writeFile(join(root, "." + asset.variants[0].path), "test fixture variant");
     const responsive = await availableAssets([asset], root);
     const image = photography(responsive, asset.id, { priority: true, sizes: "90vw" });
@@ -63,7 +98,7 @@ test("missing approved photos are omitted and present approved photos escape use
 
 test("the editorial manifest publishes supplied cleared derivatives and keeps pending assets out", async () => {
   const available = await availableAssets(editorialAssets);
-  assert.deepEqual([...available.keys()], ["professional-portrait", "casual-portrait", "san-francisco-portrait", "google-assistant-2018", "workshop-hardware"]);
+  assert.deepEqual([...available.keys()], ["professional-portrait", "casual-portrait", "san-francisco-portrait", "google-assistant-2018", "iit-guwahati-certificate", "workshop-hardware"]);
   assert.equal(available.get("professional-portrait").provenance, "ai-assisted-portrait");
   assert.match(photography(available, "professional-portrait"), /<figcaption>AI-assisted portrait<\/figcaption>/);
   assert.equal(available.get("san-francisco-portrait").width, 420);
@@ -80,7 +115,7 @@ test("certificate derivatives require both approval and reviewed redaction, incl
     assert.equal(asset.redaction, "visually-verified");
     assert.equal(photography(await availableAssets([asset], root), asset.id), "");
     await fixture(asset.variants[0].path);
-    await assert.rejects(availableAssets([asset], root), /Unapproved photo/);
+    await assert.rejects(availableAssets([{ ...asset, rights: "pending" }], root), /Unapproved editorial asset/);
     const approved = { ...asset, publication: "approved", rights: "cleared" };
     await assert.rejects(availableAssets([approved], root), /Invalid editorial asset/);
     await fixture(asset.path);
@@ -88,6 +123,32 @@ test("certificate derivatives require both approval and reviewed redaction, incl
     assert.match(photography(await availableAssets([approved], root), asset.id, { expandable: true }), /aria-label="Expand certificate"/);
     await writeFile(join(folder, "original-certificate.pdf"), "fixture");
     await assert.rejects(availableAssets([approved], root), /Unregistered editorial file/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("pending owner-supplied logos require individual clearance and use employer-name fallbacks", async () => {
+  const root = await mkdtemp(join(tmpdir(), "axvrma-brands-"));
+  const logos = editorialAssets.filter(({ provenance }) => provenance === "owner-supplied-logo");
+  const [asset] = logos;
+  const content = JSON.parse(await readFile("content/portfolio.json", "utf8"));
+  content.currentJob = content.experience[0];
+  try {
+    assert.equal(logos.length, 4);
+    assert.ok(logos.every(({ ownerApproval, rights }) => ownerApproval === "granted" && rights === "pending"));
+    content.assets = await availableAssets(logos, root);
+    assert.match(brandMarquee(content), /<strong>DP World<\/strong>/);
+    assert.doesNotMatch(brandMarquee(content), /<img/);
+    await mkdir(join(root, "images/brands"), { recursive: true });
+    await writeFile(join(root, "." + asset.path), "logo fixture");
+    await assert.rejects(availableAssets(logos, root), /Unapproved editorial asset/);
+    const approved = { ...asset, publication: "approved", rights: "cleared" };
+    await assert.rejects(availableAssets([{ ...approved, width: 0 }], root), /Invalid editorial image width/);
+    content.assets = await availableAssets([approved, ...logos.slice(1)], root);
+    assert.match(brandMarquee(content), /alt="" width="187" height="116" loading="lazy"/);
+    assert.match(brandMarquee(content), /class="sr-only">DP World/);
+    assert.match(brandMarquee(content), /<strong>IRIS Worldwide<\/strong>/);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

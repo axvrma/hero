@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { chromium } from "@playwright/test";
 
 const origin = process.env.VISUAL_URL || "http://127.0.0.1:4173";
-const output = process.env.VISUAL_DIR || ".tools/axvrma-3.1/public";
+const output = process.env.VISUAL_DIR || ".tools/axvrma-3.2/public";
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch();
 
@@ -55,7 +55,7 @@ try {
     await capture(desktop, "marquee", ".brand-section");
     await desktop.emulateMedia({ reducedMotion: "reduce" });
   }
-  for (const [name, selector] of [["visual-proof", ".visual-proof"], ["featured-products", "#products"]]) {
+  for (const [name, selector] of [["business-impact", ".business-impact"], ["visual-proof", ".visual-proof"], ["featured-products", "#products"]]) {
     if (await desktop.locator(selector).count()) await capture(desktop, name, selector);
   }
   if (await desktop.getByRole("link", { name: "Expand certificate" }).count()) {
@@ -65,9 +65,20 @@ try {
     await desktop.keyboard.press("Escape");
   }
 
+  await desktop.goto(new URL("/experience", origin).href);
+  await prepareFullPage(desktop);
+  for (const id of ["dp-world", "nurtr"]) await desktop.locator(`#chapter-${id} summary`).click();
+  await capture(desktop, "professional-journey", ".journey-section");
+  for (const [name, slug] of [["invoice-case", "intelligent-invoice-processing"], ["shipment-case", "dynamic-shipment-workflows"]]) {
+    await desktop.goto(new URL(`/experience/${slug}`, origin).href);
+    await fullPage(desktop, name);
+  }
+
   const dark = await browser.newPage({ viewport: { width: 1440, height: 1000 }, reducedMotion: "reduce", colorScheme: "dark" });
   await dark.goto(origin);
+  await capture(dark, "home-desktop-dark-first-view");
   await fullPage(dark, "home-desktop-dark");
+  if (await dark.locator(".business-impact").count()) await capture(dark, "business-impact-dark", ".business-impact");
   await dark.goto(new URL("/story", origin).href);
   await fullPage(dark, "story-desktop");
   await dark.goto(new URL("/lab", origin).href);
@@ -93,6 +104,15 @@ try {
   await fullPage(mobile, "story-mobile");
   await mobile.goto(new URL("/lab", origin).href);
   await fullPage(mobile, "workshop-mobile");
+
+  const mobileDark = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, reducedMotion: "reduce", colorScheme: "dark", isMobile: true, hasTouch: true });
+  await mobileDark.goto(origin);
+  await fullPage(mobileDark, "home-mobile-dark");
+  if (await mobileDark.getByRole("link", { name: "Expand certificate" }).count()) {
+    await mobileDark.getByRole("link", { name: "Expand certificate" }).first().press("Enter");
+    await mobileDark.locator(".photo-dialog img").evaluate((image) => image.decode());
+    await capture(mobileDark, "certificate-expanded-mobile-dark");
+  }
 
   await writeFile(join(output, "page-metrics.json"), JSON.stringify(metrics, null, 2) + "\n");
   console.log(metrics);

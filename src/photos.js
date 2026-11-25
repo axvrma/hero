@@ -1,4 +1,11 @@
-export function enablePhotos() {
+let showPhoto;
+
+export function openPhoto(link) {
+  showPhoto ??= createPhotoViewer();
+  showPhoto(link);
+}
+
+function createPhotoViewer() {
   const dialog = document.createElement("dialog");
   dialog.className = "photo-dialog";
   dialog.setAttribute("aria-label", "Expanded photograph");
@@ -20,30 +27,25 @@ export function enablePhotos() {
   const caption = document.createElement("figcaption");
   const figure = document.createElement("figure");
   figure.append(picture, caption);
-  dialog.append(actions);
-  document.body.append(dialog);
+  dialog.append(actions, figure);
 
   let trigger;
   close.addEventListener("click", () => dialog.close());
   dialog.addEventListener("close", () => trigger?.focus());
 
-  for (const link of document.querySelectorAll("[data-photo]")) {
-    link.addEventListener("click", (event) => {
-      if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      event.preventDefault();
-      trigger = link;
-      const thumbnail = link.querySelector("img");
-      picture.alt = thumbnail.alt;
-      picture.width = Number(thumbnail.getAttribute("width"));
-      picture.height = Number(thumbnail.getAttribute("height"));
-      picture.src = link.href;
-      original.href = link.href;
-      const sourceCaption = link.closest("figure")?.querySelector("figcaption");
-      caption.textContent = (sourceCaption?.querySelector("p") ?? sourceCaption)?.textContent.trim() || "";
-      caption.hidden = !caption.textContent;
-      if (!figure.isConnected) dialog.append(figure);
-      dialog.showModal();
-      close.focus();
-    });
-  }
+  return (link) => {
+    trigger = link;
+    const thumbnail = link.querySelector("img");
+    picture.alt = thumbnail.alt;
+    picture.width = Number(thumbnail.getAttribute("width"));
+    picture.height = Number(thumbnail.getAttribute("height"));
+    picture.src = link.href;
+    original.href = link.href;
+    const sourceCaption = link.closest("figure")?.querySelector("figcaption");
+    caption.textContent = (sourceCaption?.querySelector("p") ?? sourceCaption)?.textContent.trim() || "";
+    caption.hidden = !caption.textContent;
+    if (!dialog.isConnected) document.body.append(dialog);
+    dialog.showModal();
+    close.focus();
+  };
 }

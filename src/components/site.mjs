@@ -13,6 +13,7 @@ import {
   educationDetails, enterpriseList, hero, impact, photography, selectedImpact,
 } from "./editorial.mjs";
 import { brandMarquee, personalTeaser, productArchive, visualProof } from "./homepage.mjs";
+import { businessImpact } from "./impact.mjs";
 export { pageIntro } from "./ui.mjs";
 export function header(path, profile) {
   const nav = [
@@ -99,9 +100,10 @@ export function home(content, products) {
   const featured = ["atlas", "envision"].map((id) => products.find((product) => product.id === id));
   return `<div class="shell home-edition">
     ${hero(content)}
-    ${brandMarquee()}
+    ${brandMarquee(content)}
+    ${businessImpact(content.metrics)}
     ${visualProof(content)}
-    ${selectedImpact(content)}
+    ${selectedImpact()}
     <section class="editorial-section product-section" id="products">
       ${sectionIntro("Independent products", "Built from curiosity.")}
       <div class="editorial-product-gallery home-product-gallery">${featured.map((product) => feature(product, true)).join("")}</div>

@@ -1,27 +1,23 @@
 import { escape as e } from "../../scripts/lib/content.mjs";
 import { hackathonProjects } from "../../content/hackathons.mjs";
 import { diagonal, mark } from "./icons.mjs";
-import { photoImage } from "./editorial.mjs";
+import { companyLogo, photoImage } from "./editorial.mjs";
 import { external, sectionIntro } from "./ui.mjs";
 
-const associations = [
-  ["DP World", "Current employer"],
-  ["Airtel Africa", "Former employer"],
-  ["IIT Guwahati", "Certification programme"],
-  ["Google Assistant", "Developer recognition"],
-  ["Microsoft GitTogether", "Hackathon winner"],
-  ["Paytm", "Hackathon finalist"],
-  ["Emeritus", "Programme partner"],
-];
+const employerIds = ["dp-world", "airtel", "iris", "nurtr", "urstylecoach"];
 
-export function brandMarquee() {
-  const items = (tag) => associations.map(([name, relationship]) =>
-    `<${tag} class="brand-item"><strong>${e(name)}</strong><span>${e(relationship)}</span></${tag}>`).join("");
+export function brandMarquee(content) {
+  const employers = employerIds.map((id) => content.experience.find((job) => job.id === id));
+  const items = (tag) => employers.map(({ id, company }) => {
+    const logo = companyLogo(content.assets, id);
+    const relationship = id === content.currentJob.id ? "Current employer" : id === "urstylecoach" ? "Design internship" : "Former employer";
+    return `<${tag} class="brand-item">${logo}<strong${logo ? ' class="sr-only"' : ""}>${e(company)}</strong><span class="brand-relation">${relationship}</span></${tag}>`;
+  }).join("");
   return `<section class="brand-section" aria-labelledby="brand-title" data-marquee>
-    <div class="brand-heading"><h2 id="brand-title">Experience. Recognition. Learning.</h2>
+    <div class="brand-heading"><h2 id="brand-title"><a href="/experience#journey">My professional journey.</a></h2>
       <button class="brand-toggle" type="button" aria-controls="brand-window" hidden>Pause marquee</button>
     </div>
-    <div class="brand-window" id="brand-window" role="region" aria-label="Professional and academic associations" tabindex="0">
+    <div class="brand-window" id="brand-window" role="region" aria-label="Employment history" tabindex="0">
       <div class="brand-track">
         <ul class="brand-list" role="list">${items("li")}</ul>
         <div class="brand-list brand-copy" aria-hidden="true" inert>${items("div")}</div>
@@ -31,7 +27,7 @@ export function brandMarquee() {
 }
 
 const milestones = [
-  { id: "dp-world-kudos-2023", layout: "award", title: "Recognised at DP World.", caption: "Kudos Award · 2023", href: "/experience#achievements", sizes: "(max-width: 720px) 90vw, (max-width: 1440px) 50vw, 725px" },
+  { id: "dp-world-kudos-2023", layout: "award", title: "Recognition for engineering excellence.", caption: "DP World · Kudos Award · 2023", href: "/experience#achievements", sizes: "(max-width: 720px) 90vw, (max-width: 1440px) 50vw, 725px" },
   { id: "google-assistant-2018", layout: "google", title: "An early milestone.", caption: "Google Assistant developer recognition · 2018", href: "/story#story-recognition", sizes: "(max-width: 480px) 90vw, (max-width: 720px) 46vw, (max-width: 1440px) 37vw, 530px" },
   { id: "iit-guwahati-certificate", layout: "credential", title: "Back to being a student.", href: "/experience#education", sizes: "(max-width: 480px) 82vw, (max-width: 720px) 42vw, (max-width: 1440px) 31vw, 450px" },
   { id: "san-francisco-portrait", layout: "personal", title: "Beyond the code.", caption: "Engineer. Builder. Explorer.", href: "/story#story-beyond" },
@@ -66,14 +62,19 @@ export function visualProof(content) {
         ${artwork ? `<div class="proof-media">${artwork}</div>` : ""}
         <figcaption class="proof-caption">
           <h3><a href="${href}">${e(title)} ${diagonal}</a></h3>
-          ${credential ? (photo ? `<p>${e(qualification.shortInstitution)} · ${e(qualification.shortDegree)} · 2026</p><p>Explainable AI · Cybersecurity</p>` : "") : `<p>${e(caption)}</p>`}
+          ${credential ? (photo ? `<p>${e(asset.caption)}</p><p>${e(qualification.shortInstitution)} · Explainable AI · Cybersecurity</p>` : "") : `<p>${e(caption)}</p>`}
         </figcaption>
       </figure>`;
     }).join("")}</div>
-    <div class="proof-more">
-      <a class="text-link editorial-more" href="/experience#journey">Full career timeline</a>
-      <a class="text-link" href="/experience#achievements">Airtel Star Performer · 2021 <span aria-hidden="true">↗</span></a>
-      <a class="text-link" href="/experience#achievements">Major League Hacking winner · 2020 <span aria-hidden="true">↗</span></a>
+    <div class="recognition-associations">
+      <h3>Recognition and learning</h3>
+      <ul role="list">
+        <li><a href="/experience#achievements">Airtel Star Performer · 2021</a></li>
+        <li><a href="/experience#achievements">Major League Hacking winner · 2020</a></li>
+        <li><a href="/lab#hackathons">Microsoft GitTogether · Winner</a></li>
+        <li><a href="/lab#hackathons">Paytm Hackathon · Finalist</a></li>
+        <li><a href="/experience#education">Emeritus · Programme partner</a></li>
+      </ul>
     </div>
   </section>`;
 }

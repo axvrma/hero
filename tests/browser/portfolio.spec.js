@@ -325,7 +325,7 @@ test("an approved image can expand with keyboard focus and Escape restores it", 
   });
   await page.goto("/about");
   const dialog = page.getByRole("dialog", { name: "Expanded photograph", includeHidden: true });
-  await expect(dialog).toHaveCount(1);
+  await expect(dialog).toHaveCount(0);
   const photo = page.getByRole("link", { name: "Atlas test fixture" });
   await photo.press("Enter");
   await expect(page.getByRole("button", { name: "Close image" })).toBeFocused();

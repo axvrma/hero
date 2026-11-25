@@ -16,7 +16,7 @@
       "company": "DP World",
       "duration": "March 2022 – Present",
       "details": [
-        "Led the intelligent invoice processing initiative, helping the team deliver extraction and downstream posting under a strict deadline.",
+        "Led the intelligent invoice processing initiative, helping the team deliver OCR extraction and real-time downstream posting under a strict deadline.",
         "Spearheaded the end-to-end frontend development of the Workflow Management module, translating complex, legacy email-driven processes into a streamlined, system-led UI.",
         "Engineered a custom, event-driven field highlighting engine capable of processing inputs across multiple Micro Frontends (MFEs) using a dynamic spotlight overlay.",
         "Scaled and maintained the Unified Design System (UDS), engineering reusable UI components to enforce design consistency across agile teams.",
@@ -65,6 +65,7 @@
       "role": "Frontend Developer",
       "duration": "January 2018 – March 2020",
       "details": [
+        "Helped build and scale Nurtr’s product as it reached a global audience.",
         "Spearheaded the migration of the core platform to a Progressive Web Application (PWA), implementing web performance optimization standards and advanced Angular concepts to maximize scalability.",
         "Designed a modular component architecture to maintain high code readability, drastically minimizing technical debt during rapid platform scaling.",
         "Collaborated cross-functionally to optimize the in-house CRM, introducing future-ready features that improved internal operational workflows.",
@@ -145,6 +146,10 @@
     {
       "title": "Kudos Award (DP World, 2023)",
       "description": "Awarded for outstanding innovation and smart implementation of common components."
+    },
+    {
+      "title": "Kudos Award (DP World, 2026)",
+      "description": "Owner-reported recognition. The award citation and supporting documentation are pending."
     },
     {
       "title": "Star Performer (Airtel International, 2021)",

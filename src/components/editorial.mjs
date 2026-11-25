@@ -4,6 +4,7 @@ import { enterpriseCases } from "../../content/enterprise.mjs";
 import { breadcrumb, external, pageIntro, sectionIntro } from "./ui.mjs";
 import { careerArt, heroArt, homelabArt, moonshotArt, principleArt } from "./editorial-art.mjs";
 import { demo } from "./demos.mjs";
+import { employmentImpact, invoiceComparison, metricList } from "./impact.mjs";
 
 export const enterprisePath = (id) => `/experience/${id}`;
 const caseById = new Map(enterpriseCases.map((item) => [item.id, item]));
@@ -25,18 +26,23 @@ export function heroPreload(assets) {
     : `<link rel="preload" as="image" href="${e(asset.path)}" fetchpriority="high">`;
 }
 
-export function photoImage(asset, { priority = false, expandable = false, sizes = "90vw" } = {}) {
+export function photoImage(asset, { priority = false, expandable = false, sizes = "90vw", decorative = false } = {}) {
   const sources = imageSources(asset);
   const responsive = sources ? ` srcset="${sources}" sizes="${e(sizes)}"` : "";
-  const image = `<img class="asset-focus-${e(asset.focalPoint)}" src="${e(asset.path)}"${responsive} alt="${e(asset.alt)}" width="${asset.width}" height="${asset.height}"${priority ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"'} decoding="async">`;
+  const image = `<img class="asset-focus-${e(asset.focalPoint)}" src="${e(asset.path)}"${responsive} alt="${decorative ? "" : e(asset.alt)}" width="${asset.width}" height="${asset.height}"${priority ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"'} decoding="async">`;
   return expandable ? `<a data-photo href="${e(asset.path)}" aria-label="${asset.provenance === "certificate-derivative" ? "Expand certificate" : `Expand photo: ${e(asset.alt)}`}">${image}<span class="photo-expand" aria-hidden="true">↗</span></a>` : image;
+}
+
+export function companyLogo(assets, id) {
+  const asset = assets.get(`logo-${id}`);
+  return asset ? `<span class="company-logo">${photoImage(asset, { decorative: true })}</span>` : "";
 }
 
 export function photography(assets, id, options) {
   const asset = assets.get(id);
   if (!asset) return "";
   const credit = [asset.caption, asset.attribution].filter(Boolean).map(e).join(" · ");
-  return `<figure class="editorial-photo">${photoImage(asset, options)}${credit ? `<figcaption>${credit}</figcaption>` : ""}</figure>`;
+  return `<figure class="editorial-photo${asset.provenance === "certificate-derivative" ? " certificate-photo" : ""}">${photoImage(asset, options)}${credit ? `<figcaption>${credit}</figcaption>` : ""}</figure>`;
 }
 
 export function hero(content) {
@@ -54,14 +60,6 @@ export function hero(content) {
   </section>`;
 }
 
-function metricList(metrics) {
-  if (!metrics.length) return "";
-  return `<dl class="impact-metrics">${metrics.map((metric) => `<div>
-    <dt>${e(metric.label)}</dt>
-    <dd><strong>${e(metric.value)} ${e(metric.unit)}</strong><p>${e(metric.scope)} · ${e(metric.baseline)} → ${e(metric.outcome)}</p><p>${e(metric.attribution)}</p></dd>
-  </div>`).join("")}</dl>`;
-}
-
 export function impact(content) {
   const outcomes = [
     ["intelligent-invoice-processing", "Less manual invoice processing", "Our team automated extraction and downstream posting so invoice data could move into processing as it was read."],
@@ -75,21 +73,20 @@ export function impact(content) {
   </section>`;
 }
 
-export function selectedImpact(content) {
+export function selectedImpact() {
   const initiatives = [
-    ["intelligent-invoice-processing", "Invoices needed manual entry.", "Automated extraction and posting reduced manual processing."],
-    ["dynamic-shipment-workflows", "Fixed checklists missed shipment-specific tasks.", "Role-based tasks gave operators a guided filing process."],
-    ["micro-frontend-communication", "Separate modules shared a single workflow.", "Explicit handoffs kept behavior coordinated across modules."],
+    ["intelligent-invoice-processing", "OCR inference and real-time posting."],
+    ["dynamic-shipment-workflows", "Configurable task plans and role assignments."],
+    ["micro-frontend-communication", "Explicit handoffs across frontend modules."],
   ];
   return `<section class="editorial-section selected-impact" id="impact">
-    <div id="work">${sectionIntro("Selected enterprise work", "Engineering that moves the needle.", "Conceptual diagrams show how invoice data, shipment tasks and frontend modules move through each workflow.")}</div>
-    ${metricList(content.metrics)}
-    <div class="initiative-grid">${initiatives.map(([id, problem, outcome]) => {
+    <div id="work">${sectionIntro("Selected enterprise work", "Engineering that moves the needle.")}</div>
+    <div class="initiative-grid">${initiatives.map(([id, focus]) => {
       const item = caseById.get(id);
       return `<article class="initiative">
         ${flowDiagram(item, true)}
         <h3>${e(item.title)}</h3>
-        <p>${e(problem)} ${e(outcome)}</p>
+        <p>${e(focus)}</p>
         <a class="text-link" href="${enterprisePath(id)}" aria-label="Read case study: ${e(item.title)}">Read case study <span aria-hidden="true">↗</span></a>
       </article>`;
     }).join("")}</div>
@@ -107,6 +104,14 @@ function progression(job) {
   return `<ol class="role-progression">${job.progression.map(({ date, role }) => `<li><span>${e(date)}</span><strong>${e(role)}</strong></li>`).join("")}</ol>`;
 }
 
+const careerLinks = {
+  "dp-world": ["/experience/intelligent-invoice-processing", "Intelligent Invoice Processing"],
+  airtel: ["/experience/configuration-driven-ui", "Configuration-Driven Enterprise UI"],
+  nurtr: ["/experience/bridging-design-and-engineering", "Bridging Design and Engineering"],
+  iris: ["#role-iris", "IRIS Worldwide responsibilities"],
+  urstylecoach: ["/story#story-urstylecoach", "Design meets engineering"],
+};
+
 export function careerJourney(content) {
   return `<section class="editorial-section journey-section" id="journey">
     ${sectionIntro("Career journey", "Different chapters. The same curiosity.", "From the first computer to enterprise systems, each chapter changed what I paid attention to.")}
@@ -114,7 +119,22 @@ export function careerJourney(content) {
       const job = content.experience.find(({ id }) => id === chapter.job);
       const date = job?.duration || chapter.period;
       const place = job?.company || chapter.place || chapter.theme;
-      return `<details id="chapter-${chapter.id}"><summary><span class="journey-period">${e(date)}</span><span class="journey-title"><small>${e(place)}</small><strong>${e(chapter.headline)}</strong></span></summary><div class="journey-detail"><p>${e(chapter.summary)}</p>${progression(job)}${chapter.id === "dp-world" ? photography(content.assets, "dp-world-office", { expandable: true }) : ""}</div></details>`;
+      const logo = job ? companyLogo(content.assets, job.id) : "";
+      const link = careerLinks[chapter.id];
+      const dpWorldPhotos = chapter.id === "dp-world" ? ["dp-world-kudos-2023", "dp-world-office"].map((id) =>
+        photography(content.assets, id, { expandable: true, sizes: "(max-width: 680px) 90vw, 600px" })).join("") : "";
+      const metrics = content.metrics.filter(({ employer }) => employer === job?.id);
+      return `<details id="chapter-${chapter.id}">
+        <summary><span class="journey-period">${e(date)}</span><span class="journey-title">
+          <small class="journey-company">${logo}${e(place)}</small>
+          <strong>${e(chapter.headline)}</strong>
+          ${job ? `<span class="journey-role">${e(job.progression?.at(-1).role || job.role)}</span>` : ""}
+        </span></summary>
+        <div class="journey-detail"><p>${e(chapter.summary)}</p>${progression(job)}${metricList(metrics)}
+          ${link ? `<a class="text-link journey-link" href="${link[0]}">${e(link[1])} <span aria-hidden="true">↗</span></a>` : ""}
+          ${dpWorldPhotos ? `<div class="journey-recognition"><h3>DP World recognition</h3>${dpWorldPhotos}</div>` : ""}
+        </div>
+      </details>`;
     }).join("")}</div>
     <a class="text-link editorial-more" href="/story">Read the story behind the chapters</a>
   </section>`;
@@ -123,7 +143,7 @@ export function careerJourney(content) {
 export function employment(content) {
   return `<section class="editorial-section employment-section" id="experience">
     ${sectionIntro("Employment", "Roles and contributions.")}
-    ${content.experience.map((job) => `<article class="employment-entry"><div><p class="eyebrow">${e(job.duration)}</p><h3>${e(job.company)}</h3><p>${e(job.progression?.at(-1).role || job.role)}</p></div><div>${progression(job)}<ul>${job.details.map((detail) => `<li>${e(detail)}</li>`).join("")}</ul></div></article>`).join("")}
+    ${content.experience.map((job) => `<article class="employment-entry" id="role-${e(job.id)}"><div><p class="eyebrow">${e(job.duration)}</p><h3>${e(job.company)}</h3><p>${e(job.progression?.at(-1).role || job.role)}</p></div><div>${progression(job)}<ul>${job.details.map((detail) => `<li>${e(detail)}</li>`).join("")}${employmentImpact(content.metrics.filter(({ employer }) => employer === job.id))}</ul></div></article>`).join("")}
   </section>`;
 }
 
@@ -231,13 +251,16 @@ export function enterprisePage(item, content) {
     ["decisions", "Decisions"], ["tradeoffs", "Trade-offs"], ["outcome", "Outcome"], ["lesson", "What I took away"],
   ];
   const metrics = content.metrics.filter(({ project }) => project === item.id);
+  const comparison = invoiceComparison(metrics);
+  const outcomes = metricList(comparison ? metrics.filter(({ id }) => id !== "invoice-processing-time") : metrics);
   return `<div class="shell">
     ${breadcrumb("Experience", "/experience", item.title)}
-    ${pageIntro(item.organization, e(item.title), item.summary)}
+    ${pageIntro(item.organization, e(item.title) + (item.subtitle ? ` <span class="case-subtitle">${e(item.subtitle)}</span>` : ""), item.summary)}
     ${flowDiagram(item)}
+    ${item.highlight ? `<aside class="case-highlight" aria-label="Business outcome"><p class="eyebrow">Business outcome</p><p class="case-highlight-lead">${e(item.highlight)}</p>${outcomes}${comparison}</aside>` : ""}
     <div class="case-body editorial-case">
       <nav class="case-toc" aria-label="Case study sections">${headings.map(([key, heading]) => `<a href="#${key}">${heading}</a>`).join("")}</nav>
-      <div class="case-prose">${headings.map(([key, heading]) => `<section id="${key}"><h2>${heading}</h2><p>${e(item[key])}</p>${key === "approach" && item.example ? demo(item.example) : ""}${key === "outcome" ? metricList(metrics) : ""}</section>`).join("")}
+      <div class="case-prose">${headings.map(([key, heading]) => `<section id="${key}"><h2>${heading}</h2><p>${e(item[key])}</p>${key === "approach" && item.example ? demo(item.example) : ""}${key === "outcome" && !item.highlight ? outcomes : ""}</section>`).join("")}
         <section><h2>Principles in practice</h2><ul>${item.principles.map((id) => `<li><a class="text-link" href="/engineering#engineering">${e(principles.find((principle) => principle.id === id).title)}</a></li>`).join("")}</ul></section>
       </div>
     </div>

@@ -1,28 +1,30 @@
-# Photography and public assets
+# Photography and brand assets
 
-The owner-supplied originals are staged under `.asset-inbox/axvrma-visual-assets/`. Git ignores that directory. `content/publication.mjs` records the approved derivative paths, intrinsic dimensions, responsive candidates, focal points, captions, alternative text, provenance and rights status.
+The owner-supplied originals are in the Git-ignored `.asset-inbox/` directory. `content/publication.mjs` records the approved derivative paths, intrinsic sizes, responsive candidates, provenance and rights status. The build admits each original and its variants independently of other assets and rejects unregistered files in the reserved image directories.
 
-## Supplied assets in the public build
+## Released images
 
-- **Professional portrait** at `public/images/portraits/hero-portrait.webp` with 480px, 640px, 768px and 1080px widths. It appears in the hero and the social preview. The portrait was generated with AI using the owner’s reference photographs. Both placements say “AI-assisted portrait.”
-- **Casual portrait** at `public/images/portraits/portrait-casual.webp` with 480px and 768px widths. The owner’s photograph appears in Story.
-- **San Francisco portrait** at `public/images/portraits/portrait-san-francisco.webp`. The 420 × 420 original appears in a compact homepage tile and in Story.
-- **Google Assistant recognition** at `public/images/recognition/google-assistant-2018.webp` with 480px, 768px and 1320px widths. The owner’s photograph appears in the homepage milestones, Story and Experience. The caption identifies developer recognition in 2018.
-- **Workshop laptop** at `public/images/workshop/homelab.webp` with 480px, 768px and 1080px widths. The owner’s photograph appears in the homepage milestones and on Lab. The paired ecosystem illustration is conceptual.
+- **Professional portrait** at `public/images/portraits/hero-portrait.webp` with 480px, 640px, 768px and 1080px widths. The hero and social preview disclose that the portrait is AI-assisted.
+- **Casual and San Francisco portraits** in `public/images/portraits/`. The 420px San Francisco original appears in a compact homepage tile and in Story. The casual portrait uses 480px and 768px widths on Story.
+- **Google Assistant recognition** at `public/images/recognition/google-assistant-2018.webp` with 480px, 768px and 1320px widths. The caption identifies developer recognition in 2018.
+- **IIT Guwahati certificate** at `public/images/recognition/iit-guwahati-ai-ml-2026-redacted.webp` with 480px and 800px previews and the exact supplied 1684 × 1191 redacted WebP for expansion. The owner explicitly approved portfolio use. Visual review confirmed the certificate identifier and handwritten signatures remain obscured. The full document fits in the credential tile, education section and Story, with a keyboard-accessible full-resolution viewer.
+- **Workshop laptop** at `public/images/workshop/homelab.webp` with 480px, 768px and 1080px widths. It appears in the milestones and Workshop beside a conceptual ecosystem illustration.
 
-## Supplied assets awaiting publication clearance
+## Supplied photographs awaiting third-party clearance
 
-- **DP World 2023 Kudos Award** is registered as `public/images/recognition/dp-world-kudos-2023.webp`, with planned 640px, 960px and 1320px widths. Obtain consent for the participants and verify employer policy. The homepage currently shows a typographic milestone, and Experience retains the award citation. Once cleared, the photo appears in the milestones, Story and Experience. The homepage image uses containment so both participants and the award presentation stay visible.
-- **IIT Guwahati certificate** is registered as `public/images/recognition/iit-guwahati-ai-ml-2026-redacted.webp`, with planned 480px, 800px and 1684px widths. Visual review at 1684 × 1191 confirmed that the certificate identifier and signatures are obscured. Issue information, typed names and the qualification details remain legible. The derivative is a flattened WebP. The factual claim is verified, and image publication has its own approval. Once cleared, the rendered thumbnail will preserve the full document, and the keyboard-accessible viewer will link to the full-resolution redacted image.
+The owner approved portfolio use of `dp-world-kudos-2023.webp`. The photo remains staged pending consent from the other identifiable participant and DP World’s publication clearance. The release build uses the typographic 2023 milestone. Once cleared, the photo appears in the milestones, Story, and Experience’s career and recognition sections. Its 640px, 960px and 1320px versions preserve both participants, the award and the branding. The 2026 recognition has its own entry.
 
-The DP World office and Paytm event photographs remain optional pending entries. Existing hackathon product screenshots remain in use. See [owner review](CONTENT-REVIEW.md) for release conditions.
+The optional DP World office and Paytm event photographs have yet to be supplied. Existing product screenshots cover the hackathon results. See [owner review](CONTENT-REVIEW.md).
 
-## Prepare and approve derivatives
+## Supplied employer logos
 
-Export at original resolution or smaller, preserve aspect ratio, and strip EXIF, XMP and location data. The full certificate derivative preserves the supplied document pixels. Use explicit intrinsic dimensions and validate each responsive candidate. The build rejects pending files or variants, orphaned variants, and unregistered files in the four editorial image directories. Certificates also require the recorded visual redaction review and a redacted filename. Add the optimised files and mark approval and rights clearance in the manifest together.
+All four originals were supplied for intended portfolio use in `.asset-inbox/axvrma-brand-assets/`. Optimised WebP derivatives in the ignored `prepared/` subdirectory trim excess padding and preserve the source colors and proportions. IRIS retains its original neutral background. Logo slots use containment and a neutral backplate in both themes. Each entry has a text fallback, which is the current public treatment.
 
-Product imagery uses the existing screenshots and concept art. Keep the archive’s image licensing and the distinction between screenshot and illustration. `public/social.svg` references the local portrait and is the editable source for the 1200 × 630 `public/social.png` used in social metadata.
+- **DP World** · `dp-world.png` (960 × 713) → `dp-world.webp` (187 × 116, 9,496 bytes). Obtain approval covering portfolio use from the brand rights holder. [DP World terms](https://www.dpworld.com/en/terms-conditions) · [Dubai Trade guidance for customer and affiliate logo use](https://www.dubaitrade.ae/en/news-announcements/show-tags/ip)
+- **Airtel Africa** · `airtel-africa.webp` (960 × 966) → 115 × 116, 6,036 bytes. Airtel Africa’s terms reserve rights in site artwork and describe permission for republication. [Airtel Africa terms](https://www.airtel.africa/terms-use)
+- **IRIS Worldwide** · `iris.png` (254 × 120) → `iris.webp` (91 × 84, 2,514 bytes). IRIS’s terms reserve rights in its site logo artwork and describe written permission for republication. [IRIS terms](https://www.iris-worldwide.com/terms-of-use/)
+- **Nurtr** · `nurtr.webp` (597 × 201) → 240 × 42, 8,794 bytes. Nurtr’s terms reserve rights in its site logo artwork and describe written consent for reuse. [Nurtr terms](https://www.nurtr.com/terms-of-service)
 
-## Organisation names
+Move only cleared derivatives into the matching `public/images/brands/` paths and update each asset’s approval and rights status together. The owner’s instruction is recorded separately from rights clearance. Local verification used the supplied derivatives in an isolated loopback build. The public artifact carries no remote logo requests.
 
-The homepage marquee uses locally rendered typography for DP World, Airtel Africa, IIT Guwahati, Google Assistant, Microsoft GitTogether, Paytm and Emeritus. Relationship labels come from the employment, recognition, hackathon and qualification records. No official logo files were added. Any future official logo needs a documented source and usage permission before it replaces a name.
+Product imagery keeps its existing screenshots, concept art and licensing. `public/social.svg` is the editable source for the local PNG used by social metadata.

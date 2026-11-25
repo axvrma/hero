@@ -14,6 +14,12 @@ Main navigation switches at 900px. The home hero and product features stack at 7
 
 The orbit remains the AXVRMA wordmark motif and the fallback hero art. The enterprise previews use high-level process diagrams. The three engineering principles use original diagrams for cause tracing, simplification and execution. Story uses small illustrations of its interactive chapters. The Workshop pairs real laptop photography with a conceptual map of six activity areas. Product features use labelled product captures and existing labelled concept art.
 
+## Impact and employer identity
+
+The first impact feature uses the larger scale and an invoice-to-structured-data illustration. Nurtr gets a second editorial panel. A supporting strip pairs each outcome with its organisation. Cleared values use tabular numerals and adjacent attribution. The case comparison uses proportionate SVG bars with visible text. The printable résumé uses the same approved data in compact achievement lines.
+
+The marquee is employment-only. Cleared logos use contained imagery and neutral backplates. Names stay accessible and provide the visual fallback when a logo is absent. Recognition and education are presented in the milestones and a compact linked list.
+
 ## Motion and controls
 
 The marquee uses a slow CSS transform with two equal-length groups, edge masks and a visible pause or resume button. Hover or keyboard focus inside the lane pauses movement. The semantic list appears once, and the duplicate group is inert and hidden from assistive technology. The reduced-motion and no-JavaScript versions show the same names and relationships in a horizontal scrolling list. The remaining motion is limited to short hover transitions and small editorial entrances.

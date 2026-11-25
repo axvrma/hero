@@ -20,7 +20,7 @@ The archive comes from `content/legacy-projects.json` plus any new entries in th
 
 ## Metric approval
 
-Keep pending values, baselines, outcomes and evidence outside Git. The public register assigns a non-sensitive ID and case ID to each claim. Once disclosure and public evidence are verified, record the approved value, unit, label, scope, baseline, outcome, team attribution, and evidence reference. Set `verification: "verified"` and `publication: "approved"`. The build rejects incomplete approved entries and adds complete approved figures to the impact section and related case. Check generated HTML and review the attribution before release.
+Keep pending values, baselines, outcomes and evidence outside Git. The public register assigns a non-sensitive ID and case ID to each claim. Once disclosure and public evidence are verified, record the approved value, unit, label, scope, baseline, outcome, team attribution, and evidence reference. Record the evidence status and the organisation, employer and case identifiers. Add non-sensitive references to evidence and the distinct clearance record and set `publication: "approved"` only after disclosure approval. The build rejects incomplete approved entries and adds complete approved figures to the impact section, related case, relevant career chapter and printable résumé. A derived time reduction requires separately cleared source times. Check generated HTML and review the attribution before release.
 
 ## Lab experiments and photography
 
