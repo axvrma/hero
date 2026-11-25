@@ -24,7 +24,7 @@ export const editorialAssets = [
   {
     id: "professional-portrait", path: "/images/portraits/hero-portrait.webp", width: 1080, height: 1440,
     variants: variants("portraits/hero-portrait", [480, 640, 768]),
-    alt: "Abhishek Verma in glasses and a dark sweater", caption: "AI-assisted portrait",
+    alt: "Abhishek Verma in glasses and a dark sweater", caption: null,
     focalPoint: "top", attribution: null, provenance: "ai-assisted-portrait", publication: "approved", rights: "cleared",
   },
   {

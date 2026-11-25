@@ -1,29 +1,30 @@
-import { mark } from "./icons.mjs";
 import { escape as e } from "../../scripts/lib/content.mjs";
-export function ecosystem(products, name) {
-  return `<div class="ecosystem" aria-label="Explore the ${products.length}-product ecosystem">
-    <div class="map-top mono"><span><i class="status-dot"></i> THE PRODUCT ECOSYSTEM</span><span>${products.length} PRODUCTS</span></div>
-    <svg class="map-lines" viewBox="0 0 540 400" fill="none" aria-hidden="true"><circle cx="270" cy="200" r="154" stroke="currentColor" stroke-dasharray="2 7"/><circle cx="270" cy="200" r="93" stroke="currentColor"/><path d="M270 200 270 56M270 200 443 120M270 200 448 240M270 200 356 332M270 200 173 332M270 200 92 240M270 200 97 120" stroke="currentColor"/><circle cx="270" cy="200" r="42" stroke="currentColor"/></svg>
-    <a class="map-center" href="/about" aria-label="About ${e(name)}"><span class="center-mark">a<span>↗</span></span></a>
-    ${products.map((p, i) => `<a class="map-node node-${i} ${p.id}" href="/work/${p.id}" data-product="${p.id}"><span class="node-symbol">${mark(p.id)}</span><span>${p.name}</span><span class="node-kind">${e(p.category)}</span></a>`).join("")}
-    <div class="map-bottom mono"><span>INDEPENDENT IDEAS. CONNECTED THINKING.</span><span>SELECT A PRODUCT ↗</span></div>
-  </div>`;
+import { prismArt } from "./illustrations.mjs";
+
+function screenshot(name, alt, height, sizes = "(max-width: 760px) 90vw, (max-width: 1330px) 58vw, 770px") {
+  return `<img src="/images/${name}-1440.webp" srcset="/images/${name}-720.webp 720w, /images/${name}-1440.webp 1440w" sizes="${e(sizes)}" width="1440" height="${height}" loading="lazy" decoding="async" alt="${e(alt)}">`;
 }
-function picture(name, alt, height, sizes = "(max-width: 680px) 90vw, (max-width: 1000px) 80vw, 960px") {
-  return `<img class="product-screenshot" src="/images/${name}-1440.webp" srcset="/images/${name}-720.webp 720w, /images/${name}-1440.webp 1440w" sizes="${e(sizes)}" width="1440" height="${height}" loading="lazy" decoding="async" alt="${e(alt)}">`;
-}
-export function visual(p, sizes) {
-  if (p.id === "luminescent")
-    return `<div class="showcase luminescent-showcase"><div class="showcase-label mono">${mark("luminescent", 16)} LUMINESCENT<span>REACT / DESIGN SYSTEM</span></div><div class="component-preview" aria-hidden="true"><div class="component-preview-heading"><span class="component-spark">✧</span><span>Crafted to compose.</span></div><div class="component-swatches"><i></i><i></i><i></i><i></i></div><div class="component-samples"><span class="component-button">Create something</span><span class="component-badge">React + TypeScript</span></div><div class="component-field"><span>YOUR NEXT IDEA</span><span>A little more luminous.</span></div></div><span class="visual-index mono">ILLUSTRATIVE COMPONENT COMPOSITION</span></div>`;
-  if (p.id === "auditbench")
-    return `<div class="showcase auditbench-showcase"><div class="showcase-label mono">${mark("auditbench", 16)} AUDITBENCH<span>LOCAL-FIRST / LIGHTHOUSE</span></div><img class="product-screenshot" src="/images/auditbench-workspace.webp" width="1440" height="1040" loading="lazy" decoding="async" alt="Auditbench workspace showing website audit scores and performance history"><span class="visual-index mono">ELECTRON DESKTOP / REAL PRODUCT CAPTURE</span></div>`;
-  if (p.id === "atlas")
-    return `<div class="showcase atlas-showcase"><div class="showcase-label mono">${mark("atlas", 16)} ATLAS STUDIO<span>MAKE LOGIC VISIBLE</span></div><div class="atlas-window"><div class="window-bar"><span class="window-dots">● ● ●</span><span class="mono">Support triage / Workflow editor</span><span class="window-status">LOCAL WORKSPACE</span></div>${picture("atlas", "Actual Atlas workflow editor with connected nodes and configuration inspector", 1100, sizes)}</div><span class="visual-index mono">WORKFLOW EDITOR / REAL PRODUCT CAPTURE</span></div>`;
-  if (p.id === "vibes")
-    return `<div class="showcase vibes-showcase"><div class="vibes-type" aria-hidden="true">your feed.<br><span>your rules.</span></div><div class="phone"><div class="phone-top mono">9:41 <span>••• ▰</span></div><img src="/images/vibes-alpine.webp" alt="Original alpine sample artwork from the Vibes product website" width="540" height="960" loading="lazy" decoding="async"><div class="phone-ui"><span class="mono">YOUR LIBRARY</span><strong>A little further<br>from the noise.</strong><div><span>vibes.</span><span>♡ &nbsp; ⋯</span></div></div></div><span class="visual-index mono">ILLUSTRATIVE PLAYER / ORIGINAL DEMO MEDIA</span></div>`;
-  if (p.id === "envision")
-    return `<div class="showcase envision-showcase"><div class="showcase-label mono">${mark("envision", 16)} SPEAK IT. SEE IT.<span>THREE.JS / WEBXR</span></div>${picture("envision", "Actual Envision studio with a procedural 3D object and object inspector", 1000, sizes)}<div class="command-caption mono"><span class="command-dot"></span> “gold rocket”<span>→ A NEW PERSPECTIVE</span></div></div>`;
-  if (p.id === "servio")
-    return `<div class="showcase servio-showcase"><div class="showcase-label mono">${mark("servio", 16)} YOUR LOCAL COMMAND CENTER</div>${picture("servio", "Actual Servio desktop workspace showing local processes and lifecycle controls", 1089)}<span class="visual-index mono">ELECTRON DESKTOP / REAL PRODUCT CAPTURE</span></div>`;
-  return `<div class="showcase prism-showcase"><div class="showcase-label mono">${mark("prism", 16)} BRANCH FLOW<span>INSIDE VS CODE</span></div><svg class="branch-lines" viewBox="0 0 540 240" fill="none" aria-hidden="true"><path d="M55 57h400" stroke="#72b4a2"/><path d="M115 57c35 0 15 90 60 90h180c45 0 20-90 65-90" stroke="#b39ae8"/><path d="M225 147c35 0 15 62 55 62h80" stroke="#d8b572"/><g fill="#1d1e25" stroke-width="3"><circle cx="75" cy="57" r="6" stroke="#72b4a2"/><circle cx="115" cy="57" r="6" stroke="#72b4a2"/><circle cx="420" cy="57" r="6" stroke="#72b4a2"/><circle cx="185" cy="147" r="6" stroke="#b39ae8"/><circle cx="355" cy="147" r="6" stroke="#b39ae8"/><circle cx="305" cy="209" r="6" stroke="#d8b572"/></g><g fill="#c9c7d5" font-size="12" font-family="monospace"><text x="55" y="29">main</text><text x="180" y="121">feature / next</text><text x="310" y="188">review</text></g></svg><div class="prism-caption"><span class="prism-evidence"><i></i> Plan → analyze → review</span><span class="mono">INTENT ≠ EVIDENCE</span></div><span class="visual-index mono">INTERFACE-INSPIRED / ILLUSTRATIVE BRANCH PLAN</span></div>`;
+
+const visuals = {
+  atlas: () => `<figure class="product-visual atlas-visual" data-reveal>
+    ${screenshot("atlas", "Atlas workflow editor showing connected nodes and the configuration inspector", 1100)}
+    <figcaption>Atlas Studio / Workflow editor</figcaption>
+  </figure>`,
+  prism: () => prismArt,
+  envision: () => `<figure class="product-visual envision-visual" data-reveal>
+    ${screenshot("envision", "Envision studio with a procedural gold rocket and object inspector", 1000)}
+    <figcaption>Envision / Browser studio</figcaption>
+  </figure>`,
+  vibes: () => `<figure class="product-visual vibes-visual" data-reveal>
+    <div class="vibes-word" aria-hidden="true">vibes<span>.</span></div>
+    <div class="vibes-player"><img src="/images/vibes-alpine.webp" alt="Original alpine sample artwork from Vibes" width="540" height="960" loading="lazy" decoding="async"><div aria-hidden="true"><span>YOUR LIBRARY</span><strong>Alpine</strong><span>▶ &nbsp; ━━━━━</span></div></div>
+    <figcaption>Vibes / Illustrative player with original demo media</figcaption>
+  </figure>`,
+  servio: () => `<figure class="product-visual" data-reveal>${screenshot("servio", "Servio desktop workspace showing local processes and lifecycle controls", 1089)}<figcaption>Servio / Local processes</figcaption></figure>`,
+  auditbench: () => `<figure class="product-visual" data-reveal><img src="/images/auditbench-workspace.webp" width="1440" height="1040" loading="lazy" decoding="async" alt="Auditbench workspace showing website audit scores and performance history"><figcaption>Auditbench / Audit workspace</figcaption></figure>`,
+  luminescent: () => `<figure class="product-visual luminescent-visual" data-reveal><div aria-hidden="true"><span>✧</span><strong>Luminescent</strong><div><i></i><i></i><i></i><i></i></div></div><figcaption>Illustrative component composition</figcaption></figure>`,
+};
+
+export function productVisual({ id }) {
+  return visuals[id]();
 }

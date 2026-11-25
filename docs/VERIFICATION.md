@@ -1,27 +1,28 @@
-# Verification
+# AXVRMA 4.0 verification
 
-AXVRMA 3.2 was checked on November 25, 2026 on Apple Silicon macOS using Node.js 24.19.0, Vite 8.3.5, Playwright 1.64.1 and Chromium 156. The production artifact used `SITE_URL=https://axvrma.com`. The reproduced baseline was commit `1fcbbd1`, which matched the remote HEAD at the start of the audit.
+Verified the production-configured artifact on 26 November 2026 in local time. The comparison checkout is `8c5621a` from `origin/main`, labelled AXVRMA 3.2 in its README.
 
-## Results
+## Build and routes
 
-- `npm ci`, `npm run generate`, `npm run typecheck`, `npm test`, `npm run build`, `npm run verify` and `npm run test:e2e` passed.
-- The baseline had 19 unit and 78 browser tests. The release checks passed 22 unit and 80 browser tests. Coverage includes individual asset approval, logo fallbacks and ratio, employer and recognition roles, metric disclosure and evidence status, derived reduction calculations, cross-page attribution, certificate rendering and keyboard access.
-- Route and redirect manifests matched the baseline byte for byte. The artifact retains 32 public routes, six enterprise case studies, 17 independent case studies, seven flagships, 39 exact redirects, the 404, robots and sitemap. All five original interactive demos and the strict CSP were exercised.
-- The production artifact scan confirmed the four pending logo derivatives, 2023 DP World group photo, original certificate PDF and restricted numerical claims are absent. The full redacted certificate matched the approved source bytes.
+- `npm ci`, `npm run generate`, `npm run typecheck`, `npm test`, `npm run build`, `npm run verify` and `npm run test:e2e` completed on Node.js 24.19.0. The unit suite passed 24 tests. The Chromium browser suite passed 23 tests. npm audit reported zero vulnerabilities.
+- The production output is three canonical documents and a real 404. All 72 HTTP redirects passed the local status and Location checks. The generated manifest covers all 32 former canonical addresses and 39 pre-existing aliases. Netlify’s redirect parser 14.4.0 read all 72 rules and preserved the target fragments.
+- The browser exercised the keyboard skip link, section navigation, auto-opened deep links, disclosures, image dialog and print CSS. All five retained demos were checked, including the retro desktop, arithmetic, elapsed time, fictional regional configuration and fictional shipment workflow.
+- Local browser tests found zero failed resources, page errors or CSP violations. They checked the actual preview headers and 404s for unknown and retired server paths. The no-JavaScript and WebGL-disabled cases passed. A motion test checked the hero and both section backgrounds, their offscreen state, reduced motion and the keyboard pause across navigation.
 
-## Visual and accessibility review
+## Accessibility and reflow
 
-Chromium and Axe checks covered all public routes, both homepage themes, the mobile menu, original interactive demos and the photo viewer. Reflow checks cover 320, 375, 390, 768, 1024, 1280, 1440 and 1920 CSS pixels in both themes. The employer marquee supports pause, resume, hover, keyboard focus, reduced motion and static no-JavaScript browsing. The modal opens on first interaction and Escape restores focus. Lighthouse flagged a premature viewer link before this change. The final SEO audit passed.
+Axe recorded zero violations on Home, Work and About at 390px and 1440px. Expanded demos and the photograph dialog also passed Axe. Manual and automated checks covered keyboard focus, Escape and focus restoration, native summaries, a labelled paused marquee, reduced motion, readable static content and diagram descriptions. Reflow passed at 320, 375, 390, 640, 768, 1024, 1440 and 1920 CSS pixels, including expanded examples and archive entries. Lighthouse returned 100 accessibility on all three pages. These checks provide automated and interaction evidence for the WCAG 2.2 AA target.
 
-Public screenshots under `.tools/axvrma-3.2/public/` cover desktop and mobile in both themes, the hero, marquee, impact section, milestones, full certificate view, career timeline, flagship cases and products. A separate loopback build exercised the prepared logos, award photo and numeric layouts with fictional metric fixtures. The screenshots are under `.tools/axvrma-3.2/private-review/`. The image review checked containment of both award participants and the full certificate. The private build also passed layout and modal Axe checks at 320, 390, 768 and 1440 CSS pixels in both themes. The private mock release did not change the public approval records.
+A supplemental WebKit 27.2 iPhone 13 smoke check used a local HTTPS connection to exercise the strict CSP. All three pages reflowed at 390px, and certificate expansion and the Lighthouse Agent redirect worked. The regional and shipment demos use native radio groups for two-choice inputs.
 
-## Repeat the checks
+## Screenshots and reading effort
 
-```sh
-npm ci
-SITE_URL=https://axvrma.com npm run verify
-npm run test:e2e
-npm run preview
-```
+The Playwright capture script saves full desktop and mobile screenshots of Home, Work and About under `.tools/axvrma-minimal/public/`. It also captures the hero, employer marquee, engineering impact, career, featured products, principles, recognition, closing, assembled optical state and expanded certificate. The desktop viewport was 1440 × 1000 and the mobile viewport was 390 × 844. The motion revision’s recording and desktop and mobile stills are in `.tools/axvrma-motion/`. The reference captures are in `.tools/axvrma-4/reference/`.
 
-Run `node scripts/capture-visuals.mjs` for captures and `AUDIT_URL=http://127.0.0.1:4173/ npm run lighthouse` for the production-artifact audit. See [performance](PERFORMANCE.md) and [owner review](CONTENT-REVIEW.md).
+Using the same browser word count at 1440px, the minimal revision before the motion pass had **126 primary words**, down from **302** in the initial 4.0 edition and **391** in the previous checkout. The broader visible-main count fell from 475 to 191. The rendered homepage fell from 10,769 px to 4,316 px at the desktop test width. The 390px version has 126 primary words and 3,813 px of rendered main content. Counts omit navigation, captions, annotations, metadata and closed disclosures. The capture script records the measurements and responsive hero bytes.
+
+## External links and deployment
+
+All 52 emitted external destinations were checked. The Business Shield custom host returned a certificate-name error in one concurrent probe. Direct HTTPS retries succeeded, including checks against both DNS endpoints. The existing live URL remains in place. The verified archived uSpec link required GET after its server rejected HEAD. Two inherited archive references now display as plain text, preserving the attribution for the placeholder cargoes-runner URL and the generic Figma Community link that returned a blocked response.
+
+The local build is ready for the existing Netlify configuration. Deployment requires the owner’s explicit authorization. Live CDN headers, canonical behavior and redirect execution await that deployment. The staged employer marks, 2023 DP World award photograph and business figures remain gated by their outstanding approvals. [Publication status](CONTENT-REVIEW.md) · [Performance results](PERFORMANCE.md)

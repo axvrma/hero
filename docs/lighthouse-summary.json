@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-25T11:36:06.670Z",
-  "url": "http://127.0.0.1:4173/",
+  "date": "2026-11-25T19:06:22.665Z",
+  "url": "http://127.0.0.1:4174/",
   "version": "13.6.0",
   "settings": {
     "formFactor": "mobile",
@@ -14,19 +14,19 @@
     }
   },
   "categories": {
-    "performance": 98,
+    "performance": 99,
     "accessibility": 100,
     "best-practices": 100,
     "seo": 100
   },
   "metrics": {
     "first-contentful-paint": {
-      "value": 1354.374,
-      "display": "1.4 s"
+      "value": 1203.364,
+      "display": "1.2 s"
     },
     "largest-contentful-paint": {
-      "value": 2256.5609999999997,
-      "display": "2.3 s"
+      "value": 2105.0460000000003,
+      "display": "2.1 s"
     },
     "cumulative-layout-shift": {
       "value": 0,
@@ -37,8 +37,8 @@
       "display": "0 ms"
     },
     "speed-index": {
-      "value": 1354.374,
-      "display": "1.4 s"
+      "value": 1203.364,
+      "display": "1.2 s"
     }
   }
 }

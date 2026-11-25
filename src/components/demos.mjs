@@ -24,8 +24,11 @@ const life = `
 
 const regions = `
   <div class="demo-form" data-regions>
-    <label for="region-select">Fictional service region</label>
-    <select id="region-select"><option value="coast">Coast</option><option value="highlands">Highlands</option></select>
+    <fieldset class="demo-options">
+      <legend>Fictional service region</legend>
+      <label><input type="radio" name="region" value="coast" checked> Coast</label>
+      <label><input type="radio" name="region" value="highlands"> Highlands</label>
+    </fieldset>
     <div class="demo-columns">
       <div><h3>Configuration</h3><pre data-config></pre></div>
       <div><h3>Rendered fields</h3><div class="demo-fields" data-fields></div></div>
@@ -35,8 +38,11 @@ const regions = `
 
 const shipment = `
   <div class="demo-form" data-shipment>
-    <label for="shipment-select">Example shipment</label>
-    <select id="shipment-select"><option value="standard">Standard freight</option><option value="cooled">Temperature-controlled freight</option></select>
+    <fieldset class="demo-options">
+      <legend>Example shipment</legend>
+      <label><input type="radio" name="shipment" value="standard" checked> Standard freight</label>
+      <label><input type="radio" name="shipment" value="cooled"> Temperature-controlled freight</label>
+    </fieldset>
     <ol class="shipment-tasks" data-tasks></ol>
     <p role="status" class="demo-status"></p>
   </div>`;

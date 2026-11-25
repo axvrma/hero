@@ -1,59 +1,53 @@
-# Legacy route migration
+# Route migration
 
-The build emits exact forced 301 rules in `dist/_redirects`. Each old project retains its own relevant canonical page; no project is sent to the homepage. Netlify serves generated directory indexes for canonical clean routes, without an SPA fallback.
+Home (`/`), Work (`/work`) and About (`/about`) are the three canonical pages in the production sitemap. The résumé prints from `/about#resume`. Unknown addresses serve the 404 document with an HTTP 404 status. The build also provides robots.txt and sitemap.xml.
 
-| Old URL | Canonical URL |
-| --- | --- |
-| `/projects.html` | `/work` |
-| `/projects` | `/work` |
-| `/resume.html` | `/resume` |
-| `/index.html` | `/` |
-| `/project-azure-devops-pr-helper.html` | `/work/prism` |
-| `/project-azure-devops-pr-helper` | `/work/prism` |
-| `/project-claude-code-predictor.html` | `/work/claude-code-predictor` |
-| `/project-claude-code-predictor` | `/work/claude-code-predictor` |
-| `/project-design-spec-generator.html` | `/work/design-spec-generator` |
-| `/project-design-spec-generator` | `/work/design-spec-generator` |
-| `/project-environment-sync.html` | `/work/environment-sync` |
-| `/project-environment-sync` | `/work/environment-sync` |
-| `/project-figma-compliance-checker.html` | `/work/figma-compliance-checker` |
-| `/project-figma-compliance-checker` | `/work/figma-compliance-checker` |
-| `/project-figma-design-checker.html` | `/work/figma-design-checker` |
-| `/project-figma-design-checker` | `/work/figma-design-checker` |
-| `/project-formflow-ai-assistant.html` | `/work/formflow-ai-assistant` |
-| `/project-formflow-ai-assistant` | `/work/formflow-ai-assistant` |
-| `/project-lighthouse-agent.html` | `/work/auditbench` |
-| `/project-lighthouse-agent` | `/work/auditbench` |
-| `/project-luminescent.html` | `/work/luminescent` |
-| `/project-luminescent` | `/work/luminescent` |
-| `/project-paytm-hackathon.html` | `/work/paytm-hackathon` |
-| `/project-paytm-hackathon` | `/work/paytm-hackathon` |
-| `/project-pop-pay.html` | `/work/pop-pay` |
-| `/project-pop-pay` | `/work/pop-pay` |
-| `/project-reels.html` | `/work/reels` |
-| `/project-reels` | `/work/reels` |
-| `/project-servio.html` | `/work/servio` |
-| `/project-servio` | `/work/servio` |
-| `/project-vibes.html` | `/work/vibes` |
-| `/project-vibes` | `/work/vibes` |
-| `/project-vox-ar.html` | `/work/envision` |
-| `/project-vox-ar` | `/work/envision` |
-| `/project-web-xr.html` | `/work/web-xr` |
-| `/project-web-xr` | `/work/web-xr` |
+The migration covers the 32 previous canonical addresses and all 39 existing alias addresses. Three canonicals remain unchanged. The other 29, the 39 aliases, and four Work and About filename variants map directly to a canonical page or section using a permanent 301. The generated rules ship as `dist/_redirects`. The production artifact check validates every target and fragment, and Playwright checks the HTTP status and Location of every rule.
 
-`/resume.html` redirects to the printable `/resume`; résumé CTAs retain the original document URL. Retired admin, sync and API paths have no handlers or redirects and return the ordinary 404.
+Netlify currently redirects the production addresses `/work` and `/about` to trailing-slash directory URLs. The redesign emits `work.html` and `about.html` as flat files so Netlify can serve the requested slashless canonical addresses directly. The local artifact server verifies a 200 at both destinations and normalizes trailing-slash variants. [Netlify’s flat-file and trailing-slash guidance](https://answers.netlify.com/t/support-guide-how-can-i-alter-trailing-slash-behaviour-in-my-urls-will-enabling-pretty-urls-help/31191)
 
-Clean legacy paths `/work/vox-ar`, `/work/azure-devops-pr-helper`, and `/work/lighthouse-agent` also redirect to Envision, Prism, and Auditbench respectively.
+## Former primary pages and common aliases
 
-## Beyond the Code pages
+- `/projects.html` → `/work`
+- `/projects` → `/work`
+- `/index.html` → `/`
+- `/work/index.html`, `/work.html` → `/work`
+- `/about/index.html`, `/about.html` → `/about`
+- `/experience` → `/#journey`
+- `/engineering` → `/#principles`
+- `/contact` → `/#contact`
+- `/resume` → `/about#resume`
+- `/resume.html` → `/about#resume`
+- `/story` → `/about#story`
+- `/lab` → `/about#workshop`
 
-The 24 existing public routes stay canonical. The generator adds `/story`, `/lab`, and these six experience case studies.
+## Enterprise cases
 
-- `/experience/intelligent-invoice-processing`
-- `/experience/dynamic-shipment-workflows`
-- `/experience/micro-frontend-communication`
-- `/experience/configuration-driven-ui`
-- `/experience/bridging-design-and-engineering`
-- `/experience/life-calculator`
+- `/experience/intelligent-invoice-processing` → `/work#intelligent-invoice-processing`
+- `/experience/dynamic-shipment-workflows` → `/work#dynamic-shipment-workflows`
+- `/experience/micro-frontend-communication` → `/work#micro-frontend-communication`
+- `/experience/configuration-driven-ui` → `/work#configuration-driven-ui`
+- `/experience/bridging-design-and-engineering` → `/work#bridging-design-and-engineering`
+- `/experience/life-calculator` → `/work#life-calculator`
 
-`/experience#work` is the professional case index. `/work` remains the independent product and project index, `/work#archive` opens the secondary archive, and `/#hackathons` remains linkable. `/about`, `/engineering`, `/resume`, and `/contact` remain distinct public destinations. The sitemap has 32 entries for a production build, plus the 404 document served outside the sitemap. All 39 exact legacy redirects remain in place.
+## Products, archive and legacy names
+
+- `/work/atlas` → `/work#atlas`
+- `/work/vibes`, `/project-vibes.html`, `/project-vibes` → `/work#vibes`
+- `/work/envision`, `/work/vox-ar`, `/project-vox-ar.html`, `/project-vox-ar` → `/work#envision`
+- `/work/servio`, `/project-servio.html`, `/project-servio` → `/work#servio`
+- `/work/prism`, `/work/azure-devops-pr-helper`, `/project-azure-devops-pr-helper.html`, `/project-azure-devops-pr-helper` → `/work#prism`
+- `/work/luminescent`, `/project-luminescent.html`, `/project-luminescent` → `/work#luminescent`
+- `/work/auditbench`, `/work/lighthouse-agent`, `/project-lighthouse-agent.html`, `/project-lighthouse-agent` → `/work#auditbench`
+- `/work/claude-code-predictor`, `/project-claude-code-predictor.html`, `/project-claude-code-predictor` → `/work#claude-code-predictor`
+- `/work/design-spec-generator`, `/project-design-spec-generator.html`, `/project-design-spec-generator` → `/work#design-spec-generator`
+- `/work/environment-sync`, `/project-environment-sync.html`, `/project-environment-sync` → `/work#environment-sync`
+- `/work/figma-compliance-checker`, `/project-figma-compliance-checker.html`, `/project-figma-compliance-checker` → `/work#figma-compliance-checker`
+- `/work/figma-design-checker`, `/project-figma-design-checker.html`, `/project-figma-design-checker` → `/work#figma-design-checker`
+- `/work/formflow-ai-assistant`, `/project-formflow-ai-assistant.html`, `/project-formflow-ai-assistant` → `/work#formflow-ai-assistant`
+- `/work/paytm-hackathon`, `/project-paytm-hackathon.html`, `/project-paytm-hackathon` → `/work#paytm-hackathon`
+- `/work/pop-pay`, `/project-pop-pay.html`, `/project-pop-pay` → `/work#pop-pay`
+- `/work/reels`, `/project-reels.html`, `/project-reels` → `/work#reels`
+- `/work/web-xr`, `/project-web-xr.html`, `/project-web-xr` → `/work#web-xr`
+
+Project fragment links focus the relevant entry and open its first technical disclosure when JavaScript is enabled. The visible case summary and native disclosure are present in the document. Existing Home fragment names including `#journey`, `#impact`, `#work`, `#products`, `#engineering`, `#achievements`, `#hackathons` and `#contact` still resolve. A fragment on an old page address is client-side, so the redirect uses the best destination for that page. The public Netlify CDN's redirect behavior awaits an authorized deployment.

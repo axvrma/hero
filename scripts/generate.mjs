@@ -4,7 +4,7 @@ import { products as registry } from "../content/products.mjs";
 import { hackathonProjects } from "../content/hackathons.mjs";
 import { escape as e, resolveOrigin, safeUrl } from "./lib/content.mjs";
 import * as site from "../src/components/site.mjs";
-import { enterprisePage, enterprisePath, heroPreload, labPage, storyPage } from "../src/components/editorial.mjs";
+import { heroPreload } from "../src/components/photography.mjs";
 import { career, motivations, principles } from "../content/editorial.mjs";
 import { enterpriseCases } from "../content/enterprise.mjs";
 import { editorialAssets, impactMetrics } from "../content/publication.mjs";
@@ -92,82 +92,12 @@ const person = {
 };
 const profileSchema = { "@context": "https://schema.org", "@type": "ProfilePage", mainEntity: person };
 const routes = [
-  [
-    "/",
-    `${content.profile.role} at ${content.currentJob.company}`,
-    `${content.profile.name} is a ${content.profile.role} at ${content.currentJob.company}. Enterprise engineering, independent products and ${qualification.shortDegree} from ${qualification.shortInstitution}.`,
-    site.home(content, products),
-    profileSchema,
-  ],
-  [
-    "/work",
-    "Selected Work & Project Archive",
-    `Explore Abhishek Verma’s product ecosystem: ${products.map((p) => p.name).join(", ")}, and ${secondary.length} more engineering projects.`,
-    site.work(products, secondary, content.profile.name),
-  ],
-  [
-    "/about",
-    "About Abhishek Verma",
-    "About Abhishek Verma. Frontend systems, product engineering, and independent tools built with care.",
-    site.about(content),
-    profileSchema,
-  ],
-  [
-    "/experience",
-    "Professional Experience",
-    "Professional experience in enterprise UI, micro-frontends, design systems, and workflow engineering.",
-    site.experiencePage(content),
-  ],
-  [
-    "/engineering",
-    "Engineering Philosophy",
-    "An approach to architecture, performance, reliability, developer experience, and accountable AI-assisted engineering.",
-    site.engineeringPage(content),
-  ],
-  [
-    "/contact",
-    "Contact Abhishek Verma",
-    "Have something worth building? Connect with Abhishek Verma by email, GitHub or LinkedIn.",
-    site.contact(content.profile, true),
-  ],
-  [
-    "/resume",
-    "Résumé — Abhishek Verma",
-    "A print-ready résumé with experience, capabilities, education and certifications.",
-    site.resume(content),
-  ],
-  [
-    "/story",
-    "It all started with a question",
-    "Abhishek Verma’s story, from early experiments in computing and design to enterprise engineering.",
-    storyPage(content),
-  ],
-  [
-    "/lab",
-    "The Workshop",
-    "Explore Abhishek Verma’s side experiments with hardware, self-hosting, simulations and hackathon prototypes.",
-    labPage(content, site.hackathons(content)),
-  ],
-  ...enterpriseCases.map((item) => [
-    enterprisePath(item.id),
-    `${item.title} — ${item.organization}`,
-    item.summary,
-    enterprisePage(item, content),
-  ]),
-  ...products.map((p) => [
-    `/work/${p.id}`,
-    `${p.name} — ${p.category}`,
-    p.description,
-    site.caseStudy(p, products),
-    projectSchema(p),
-  ]),
-  ...secondary.map((p) => [
-    `/work/${p.id}`,
-    `${p.name} — Project Archive`,
-    p.description,
-    site.secondaryCase(p),
-    projectSchema(p),
-  ]),
+  ["/", "The Anatomy of Curiosity", `${content.profile.name} is a ${content.profile.role} at ${content.currentJob.company}, building enterprise systems and independent products.`, site.home(content, products), profileSchema],
+  ["/work", "Enterprise work and independent products", "Engineering case studies, seven independent products, and experiments by Abhishek Verma.", site.work(content, products, secondary),
+    { "@context": "https://schema.org", "@type": "ItemList", itemListElement: products.map((p, index) => ({
+      "@type": "ListItem", position: index + 1, item: { ...projectSchema(p), ...(origin ? { "@id": `${origin}/work#${p.id}` } : {}) },
+    })) }],
+  ["/about", "About Abhishek Verma", "From a first home computer to enterprise engineering, AI and a personal workshop. The story and résumé of Abhishek Verma.", site.about(content), profileSchema],
 ];
 await rm(".generated/site", { recursive: true, force: true });
 await mkdir(".generated/site", { recursive: true });
@@ -177,7 +107,7 @@ for (const [path, title, description, body, schema] of [
     "/404",
     "Page not found",
     "The page you’re looking for isn’t here.",
-    `<div class="shell not-found">${site.pageIntro("404 / A SMALL DETOUR", 'Nothing here.<br><span class="muted">Plenty to explore.</span>', "The page may have moved. The complete project archive is a good place to start.")}<a class="button button-primary" href="/work">Explore the work →</a></div>`,
+    `<section class="page-top not-found"><div class="shell">${site.pageIntro("404", "A small <em>detour.</em>", "This address doesn’t lead to a page. You can still explore the work or return home.")}<div class="actions"><a class="button button-primary" href="/work">Explore the work</a><a class="button button-outline" href="/">Back home</a></div></div></section>`,
   ],
 ]) {
   const canonical = origin ? origin + (path === "/" ? "/" : path) : "";
@@ -205,24 +135,31 @@ ${schema ? `<script type="application/ld+json">${JSON.stringify(schema).replace(
     .replace("<!-- HEADER -->", () => site.header(path, content.profile))
     .replace("<!-- BODY -->", () => body)
     .replace("<!-- FOOTER -->", () => site.footer(content.profile));
-  const file =
-    path === "/404"
-      ? ".generated/site/404.html"
-      : path === "/"
-        ? ".generated/site/index.html"
-        : `.generated/site${path}/index.html`;
-  await mkdir(file.slice(0, file.lastIndexOf("/")), { recursive: true });
-  await writeFile(file, html);
+  const file = path === "/" ? "index.html" : `${path.slice(1)}.html`;
+  await writeFile(`.generated/site/${file}`, html);
 }
 const redirects = [
   ["/projects.html", "/work"],
   ["/projects", "/work"],
-  ["/resume.html", "/resume"],
   ["/index.html", "/"],
-  ...registry.flatMap((p) => p.legacy.filter((id) => id !== p.id).map((id) => [`/work/${id}`, `/work/${p.id}`])),
-  ...legacy.flatMap((p) => [
-    [`/project-${p.id}.html`, `/work/${aliases.get(p.id) || p.id}`],
-    [`/project-${p.id}`, `/work/${aliases.get(p.id) || p.id}`],
+  ["/work/index.html", "/work"],
+  ["/about/index.html", "/about"],
+  ["/work.html", "/work"],
+  ["/about.html", "/about"],
+  ["/experience", "/#journey"],
+  ["/engineering", "/#principles"],
+  ["/contact", "/#contact"],
+  ["/resume", "/about#resume"],
+  ["/resume.html", "/about#resume"],
+  ["/story", "/about#story"],
+  ["/lab", "/about#workshop"],
+  ...enterpriseCases.map(({ id }) => [`/experience/${id}`, `/work#${id}`]),
+  ...products.map(({ id }) => [`/work/${id}`, `/work#${id}`]),
+  ...secondary.map(({ id }) => [`/work/${id}`, `/work#${id}`]),
+  ...registry.flatMap((p) => p.legacy.filter((id) => id !== p.id).map((id) => [`/work/${id}`, `/work#${p.id}`])),
+  ...legacy.flatMap(({ id }) => [
+    [`/project-${id}.html`, `/work#${aliases.get(id) || id}`],
+    [`/project-${id}`, `/work#${aliases.get(id) || id}`],
   ]),
 ];
 await writeFile(

@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { readFile, access } from "node:fs/promises";
+import { readFile, access, readdir } from "node:fs/promises";
 import { resolve } from "node:path";
 import { escape, resolveOrigin } from "./lib/content.mjs";
 const origin = resolveOrigin();
@@ -9,11 +9,18 @@ const redirects = JSON.parse(
 );
 const routePaths = new Set(routes.map((r) => r.path));
 const errors = [];
-if (routePaths.size !== routes.length) errors.push("Duplicate canonical routes");
+if (routePaths.size !== 3 || !["/", "/work", "/about"].every((path) => routePaths.has(path))) {
+  errors.push("Expected exactly three canonical pages");
+}
+const emitted = (await readdir("dist", { recursive: true })).filter((file) => file.endsWith(".html")).sort();
+if (emitted.join() !== ["404.html", "about.html", "index.html", "work.html"].join()) {
+  errors.push(`Unexpected HTML output: ${emitted.join(", ")}`);
+}
+const htmlByRoute = new Map();
 for (const route of routes) {
-  const path =
-    route.path === "/" ? "dist/index.html" : `dist${route.path}/index.html`;
+  const path = route.path === "/" ? "dist/index.html" : `dist${route.path}.html`;
   const html = await readFile(path, "utf8");
+  htmlByRoute.set(route.path, html);
   if ((html.match(/<h1\b/g) || []).length !== 1)
     errors.push(`${path}: expected one h1`);
   if (!html.includes('<meta name="description"'))
@@ -44,7 +51,6 @@ for (const route of routes) {
   }
 }
 // Resolve fragment targets too, so section links cannot silently outlive their headings.
-const htmlByRoute = new Map(await Promise.all(routes.map(async ({path}) => [path, await readFile(path === "/" ? "dist/index.html" : `dist${path}/index.html`, "utf8")])));
 for (const [path, html] of htmlByRoute) {
   const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
   if (ids.length !== new Set(ids).size) errors.push(`${path}: duplicate element IDs`);
@@ -57,7 +63,9 @@ for (const [path, html] of htmlByRoute) {
 }
 const redirectSources = new Set();
 for (const [from, to] of redirects) {
-  if (!routePaths.has(to)) errors.push(`Redirect ${from} has no canonical target: ${to}`);
+  const [path, id] = to.split("#");
+  if (!routePaths.has(path)) errors.push(`Redirect ${from} has no canonical target: ${to}`);
+  else if (id && !htmlByRoute.get(path).includes(`id="${id}"`)) errors.push(`Redirect ${from} has no fragment target: ${to}`);
   if (routePaths.has(from) || redirectSources.has(from)) errors.push(`Conflicting redirect source: ${from}`);
   redirectSources.add(from);
 }

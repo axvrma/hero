@@ -1,27 +1,22 @@
 # Design system
 
-AXVRMA uses warm paper, charcoal and vermilion. Light mode uses deep terracotta with warm stone dividers. Dark mode uses coral and muted charcoal surfaces. Geist and Geist Mono remain self-hosted. Product colors stay within the product presentations.
+AXVRMA uses warm ivory text on a muted brown-black ground. Copper illumination is concentrated in the opening, documentation panels and closing. Regular-weight Geist carries the titles and body. Geist Mono marks the occasional chapter number and caption. Both are self-hosted. Fine rules define the content width and a seeded grain softens the gradients.
 
-## Type and layout
+The original optical field draws 126 tapered contours around the portrait and copper assembly. The assembly appears again in the optional engineering-principles disclosure. The closing converges around the AXVRMA monogram. Text links, compact project rows and native disclosures keep the main story sparse.
 
-Geist carries headlines and body copy. Geist Mono labels technical diagrams, editorial section headings and image credits. The portrait and the headline share the hero on desktop. The mobile reading order starts with name, role, tenure, headline and actions, then presents the portrait. The image keeps the face and shoulders in view, with an accessible AI-assisted caption.
+## Original illustrations
 
-The shell caps content with `--content-width` and uses responsive `--space` gutters. `--section` sets the default vertical rhythm and `--gap` aligns columns. Photography and case-study panels use small corner radii and restrained dividers. The five milestone tiles use a 12-column desktop grid, two columns on mid-size screens, and full-width recognition and education features at phone widths. The smaller San Francisco and Workshop images pair beneath them. Product features alternate image and text on wider screens and lead with the screenshot on phones.
-
-Main navigation switches at 900px. The home hero and product features stack at 760px. Milestone and Workshop layouts change at 720px. Most shared editorial layouts stack at 680px. Keep the navigation CSS and browser breakpoint in sync.
-
-## Artwork
-
-The orbit remains the AXVRMA wordmark motif and the fallback hero art. The enterprise previews use high-level process diagrams. The three engineering principles use original diagrams for cause tracing, simplification and execution. Story uses small illustrations of its interactive chapters. The Workshop pairs real laptop photography with a conceptual map of six activity areas. Product features use labelled product captures and existing labelled concept art.
-
-## Impact and employer identity
-
-The first impact feature uses the larger scale and an invoice-to-structured-data illustration. Nurtr gets a second editorial panel. A supporting strip pairs each outcome with its organisation. Cleared values use tabular numerals and adjacent attribution. The case comparison uses proportionate SVG bars with visible text. The printable résumé uses the same approved data in compact achievement lines.
-
-The marquee is employment-only. Cleared logos use contained imagery and neutral backplates. Names stay accessible and provide the visual fallback when a logo is absent. Recognition and education are presented in the milestones and a compact linked list.
+- **Opening and closing** use an original optical field, layered plates, warm illumination and an A/V monogram.
+- **Engineering outcomes** show invoice input and field extraction, shipment configuration and role branches, and a product connecting to a conceptual globe. The geography represents worldwide access.
+- **Work cases** add frontend modules exchanging information, shared configuration rendering regional forms, and elapsed-time calculation. Case copy describes published contributions. Each diagram has a text equivalent.
+- **Principles** trace a symptom through a network, funnel inputs into one clear path and make the optical assembly inspectable.
+- **Products** use a custom branch-flow drawing for Prism and original Vibes sample artwork inside an illustrative player. Atlas, Envision, Servio and Auditbench show application captures. The Luminescent composition illustrates component styling.
+- **About** uses a retro computer, three abstract influence vignettes, the laptop and its conceptual personal ecosystem, and an abstract optical assembly for the future hardware/software ambition.
 
 ## Motion and controls
 
-The marquee uses a slow CSS transform with two equal-length groups, edge masks and a visible pause or resume button. Hover or keyboard focus inside the lane pauses movement. The semantic list appears once, and the duplicate group is inert and hidden from assistive technology. The reduced-motion and no-JavaScript versions show the same names and relationships in a horizontal scrolling list. The remaining motion is limited to short hover transitions and small editorial entrances.
+CSS transitions and keyframes animate the hero’s optical field and floating lens assembly. Drifting copper light illuminates a circuit pattern behind Enterprise Work and orbit lines behind Independent Projects. The same backdrops introduce those sections on Work. Data traces, chapter entrances and the closing assembly use the shared motion system. IntersectionObserver limits repeat motion to visible scenes. Fine pointers move the foreground assembly slightly using an event-driven animation frame. Browser visibility pauses repeating animation. The background-motion control freezes the live layers on Home and Work and remembers the setting for the current tab session. The employer strip pauses by button, hover or focus. The assembly control supports mouse, touch and keyboard. Reduced-motion settings suppress scroll easing and decorative motion while retaining the controls' effects. Vector artwork is present as static HTML even when scripting is unavailable.
 
-Expandable photos start as anchor links to the original public derivative. The dialog focuses its close control, supports Escape, and restores focus to the trigger. The printable résumé uses high-contrast text and groups jobs and qualifications where space allows.
+Native HTML, SVG, CSS and IntersectionObserver cover the illustrated transitions without the runtime and asset costs of a WebGL renderer or a timeline library. The object uses procedural vector geometry, so it stays crisp on mobile and supports a full static fallback.
+
+On small screens, the portrait leads into the opening copy. Diagrams follow their explanatory text and navigation stays in the first view. The three featured enterprise stories share a thin frame. A single product image leads the independent-work list. Career details use compact rows, and recognition and principles open on demand.

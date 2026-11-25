@@ -2,6 +2,7 @@ import lighthouse from "lighthouse";
 import { chromium } from "@playwright/test";
 import { createServer } from "node:net";
 import { mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 const server = createServer();
 await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
 const port = server.address().port;
@@ -53,11 +54,12 @@ try {
       ]),
     ),
   };
-  await mkdir(".tools", { recursive: true });
-  await writeFile(".tools/lighthouse.json", result.report[0]);
-  await writeFile(".tools/lighthouse.html", result.report[1]);
+  const output = process.env.AUDIT_DIR || ".tools/axvrma-motion/lighthouse/home";
+  await mkdir(output, { recursive: true });
+  await writeFile(join(output, "lighthouse.json"), result.report[0]);
+  await writeFile(join(output, "lighthouse.html"), result.report[1]);
   await writeFile(
-    "docs/lighthouse-summary.json",
+    process.env.AUDIT_SUMMARY || "docs/lighthouse-summary.json",
     JSON.stringify(summary, null, 2) + "\n",
   );
   console.log(JSON.stringify(summary, null, 2));

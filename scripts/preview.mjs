@@ -38,9 +38,9 @@ for (const line of (await readFile("netlify.toml", "utf8")).split("\n")) {
 }
 const server = createServer(async (req, res) => {
   try {
-    const pathname = decodeURIComponent(
-      new URL(req.url, "http://localhost").pathname,
-    );
+    const { pathname: encodedPath, search } = new URL(req.url, "http://localhost");
+    const pathname = decodeURIComponent(encodedPath);
+    const cleanPath = pathname.replace(/\/+$/, "");
     for (const rule of rules) {
       const pattern = rule.for;
       if (!pattern) continue;
@@ -52,13 +52,20 @@ const server = createServer(async (req, res) => {
         for (const [key, value] of Object.entries(rule))
           if (key !== "for") res.setHeader(key, value);
     }
-    const redirect = redirects.find(([from]) => from === pathname);
+    const redirect = redirects.find(([from]) => from === cleanPath);
     if (redirect) {
-      res.writeHead(301, { Location: redirect[1] });
+      const [destination, fragment] = redirect[1].split("#");
+      res.writeHead(301, { Location: destination + search + (fragment ? `#${fragment}` : "") });
       res.end();
       return;
     }
-    let file = resolve(root, "." + pathname);
+    const flatPage = cleanPath === "/work" || cleanPath === "/about";
+    if (flatPage && pathname !== cleanPath) {
+      res.writeHead(301, { Location: cleanPath + search });
+      res.end();
+      return;
+    }
+    let file = resolve(root, "." + (flatPage ? `${cleanPath}.html` : pathname));
     if (file !== root && !file.startsWith(root + sep)) {
       res.writeHead(403);
       res.end();

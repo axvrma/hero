@@ -7,10 +7,11 @@ import { career, principles } from "../content/editorial.mjs";
 import { enterpriseCases } from "../content/enterprise.mjs";
 import { editorialAssets, impactMetrics } from "../content/publication.mjs";
 import { availableAssets, publishedMetrics, validateEditorial } from "../scripts/lib/publication.mjs";
-import { careerJourney, enterprisePage, impact, photography } from "../src/components/editorial.mjs";
-import { businessImpact, invoiceComparison } from "../src/components/impact.mjs";
-import { brandMarquee } from "../src/components/homepage.mjs";
-import { resume } from "../src/components/site.mjs";
+import { photography } from "../src/components/photography.mjs";
+import { products } from "../content/products.mjs";
+import { work } from "../src/components/work.mjs";
+import { invoiceComparison } from "../src/components/impact.mjs";
+import { brandMarquee, caseMetrics, impact } from "../src/components/homepage.mjs";
 import { calculateExpression, elapsedTime } from "../src/calculations.mjs";
 
 test("career chapters reference employment once with a single ordered DP World progression", async () => {
@@ -35,14 +36,13 @@ test("owner evidence and disclosure clearance are distinct requirements for publ
   const fixture = { ...impactMetrics[3], ...disclosure, value: 2400000 };
   const absent = publishedMetrics([{ ...fixture, publication: "pending" }]);
   assert.doesNotMatch(impact({ metrics: absent }), /Fixture|2.4M/);
-  assert.doesNotMatch(businessImpact(absent), /Fixture|2.4M/);
-  assert.match(businessImpact(absent), /Automated invoice processing/);
+  assert.match(impact({ metrics: absent }), /From invoice to usable data/);
   assert.throws(() => publishedMetrics([{ ...fixture, clearance: null }]), /Incomplete public metric/);
   assert.throws(() => publishedMetrics([{ ...fixture, verification: "pending" }]), /Incomplete public metric/);
   const approved = publishedMetrics([fixture]);
   assert.match(impact({ metrics: approved }), /≈\$2.4M/);
-  assert.match(businessImpact(approved), /Annual cost savings/);
-  assert.match(businessImpact(approved), /Fixture team · Owner-reported/);
+  assert.match(impact({ metrics: approved }), /Annual cost savings/);
+  assert.match(impact({ metrics: approved }), /Fixture team · Owner-reported/);
 });
 
 test("the time reduction is derived only from approved times and bars use the same ratio", () => {
@@ -53,24 +53,23 @@ test("the time reduction is derived only from approved times and bars use the sa
   const metrics = publishedMetrics([source, derived]);
   assert.equal(metrics[1].value, 75);
   assert.match(invoiceComparison(metrics), /y="24" width="50"/);
-  assert.match(businessImpact(metrics), /75%/);
-  assert.match(businessImpact(metrics), /Calculated from owner-reported times/);
-  assert.doesNotMatch(businessImpact(publishedMetrics([source])), /75%/);
+  assert.match(impact({ metrics }), /75%/);
+  assert.match(impact({ metrics }), /Calculated from owner-reported times/);
+  assert.doesNotMatch(impact({ metrics: publishedMetrics([source]) }), /75%/);
 });
 
-test("approved company metrics feed the corresponding career, case and printable résumé", async () => {
+test("approved company metrics feed the corresponding home story and matching case only", async () => {
   const content = JSON.parse(await readFile("content/portfolio.json", "utf8"));
   const fixture = { ...impactMetrics.at(-1), ...disclosure, value: 240000, attribution: "Nurtr company sales" };
   content.currentJob = validateEditorial(content, career, enterpriseCases, principles, impactMetrics);
   content.assets = new Map();
-  const caseStudy = enterpriseCases.find(({ id }) => id === fixture.project);
   assert.throws(() => validateEditorial(content, career, enterpriseCases, principles, [{ ...fixture, publication: "pending" }]), /Pending metric details/);
   content.metrics = publishedMetrics([fixture]);
-  for (const output of [businessImpact(content.metrics), careerJourney(content), enterprisePage(caseStudy, content), resume(content)]) {
+  for (const output of [impact(content), work(content, products, [])]) {
     assert.match(output, /\$240K/);
-    assert.match(output, /Nurtr company sales/);
+    assert.match(output, /Nurtr company sales · Owner-reported/);
   }
-  assert.doesNotMatch(enterprisePage(enterpriseCases[0], content), /\$240K/);
+  assert.equal(caseMetrics(content.metrics, enterpriseCases[0].id), "");
 });
 
 test("missing approved photos are omitted and present approved photos escape user-facing fields", async () => {
@@ -100,7 +99,7 @@ test("the editorial manifest publishes supplied cleared derivatives and keeps pe
   const available = await availableAssets(editorialAssets);
   assert.deepEqual([...available.keys()], ["professional-portrait", "casual-portrait", "san-francisco-portrait", "google-assistant-2018", "iit-guwahati-certificate", "workshop-hardware"]);
   assert.equal(available.get("professional-portrait").provenance, "ai-assisted-portrait");
-  assert.match(photography(available, "professional-portrait"), /<figcaption>AI-assisted portrait<\/figcaption>/);
+  assert.doesNotMatch(photography(available, "professional-portrait"), /<figcaption>/);
   assert.equal(available.get("san-francisco-portrait").width, 420);
   assert.equal(available.get("san-francisco-portrait").variants.length, 0);
 });
@@ -133,7 +132,6 @@ test("pending owner-supplied logos require individual clearance and use employer
   const logos = editorialAssets.filter(({ provenance }) => provenance === "owner-supplied-logo");
   const [asset] = logos;
   const content = JSON.parse(await readFile("content/portfolio.json", "utf8"));
-  content.currentJob = content.experience[0];
   try {
     assert.equal(logos.length, 4);
     assert.ok(logos.every(({ ownerApproval, rights }) => ownerApproval === "granted" && rights === "pending"));

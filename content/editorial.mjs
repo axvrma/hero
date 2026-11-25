@@ -2,8 +2,6 @@
 export const narrative = {
   headline: "The technology has changed. The curiosity hasn’t.",
   identity: ["Designer at heart.", "Engineer by choice.", "Builder by instinct."],
-  nextTitle: "Build things that matter. Become someone worth looking up to.",
-  nextBody: "I want to keep building tools that make people more effective, solve problems that are worth solving, and grow into a leader who inspires others to do the same.",
 };
 
 /** @type {import('./types.js').CareerChapter[]} */
@@ -20,19 +18,9 @@ export const career = [
 ];
 
 export const principles = [
-  { id: "root", title: "Find the Root", quote: "Don’t fix the symptom. Understand why the problem exists.", caseId: "intelligent-invoice-processing" },
+  { id: "root", title: "Find the Root", quote: "Trace the symptom back to the step where things first go wrong.", caseId: "intelligent-invoice-processing" },
   { id: "simplicity", title: "Design for Simplicity", quote: "Absorb the complexity so the user doesn’t have to.", caseId: "configuration-driven-ui" },
   { id: "execution", title: "Deconstruct, Prioritize, Execute", quote: "Break complex problems into manageable pieces, determine what matters most, and deliver deliberately.", caseId: "dynamic-shipment-workflows" },
-];
-
-export const storyChapters = [
-  { id: "first-computer", title: "Curiosity", careerIds: ["first-computer"], demo: "desktop" },
-  { id: "first-program", title: "Understanding", careerIds: ["first-program"], demo: "calculator" },
-  { id: "urstylecoach", title: "Design meets engineering", careerIds: ["design", "urstylecoach", "nurtr"], demo: "life" },
-  { id: "recognition", title: "Professional recognition", asset: "google-assistant-2018" },
-  { id: "iris", title: "Enterprise engineering", careerIds: ["dp-world", "iris", "airtel"], asset: "dp-world-kudos-2023" },
-  { id: "iit", title: "Continuous learning", careerIds: ["iit"], asset: "iit-guwahati-certificate" },
-  { id: "beyond", title: "Beyond engineering" },
 ];
 
 export const influences = [

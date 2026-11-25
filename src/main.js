@@ -1,132 +1,137 @@
-import "./style.css";
-import "./editorial.css";
-const root = document.documentElement;
-const themeButtons = document.querySelectorAll(".theme-toggle");
-function updateThemeButtons() {
-  for (const button of themeButtons)
-    button.setAttribute(
-      "aria-label",
-      `Switch to ${root.dataset.theme === "light" ? "dark" : "light"} theme`,
-    );
-}
-updateThemeButtons();
-for (const button of themeButtons)
-  button.addEventListener("click", () => {
-    const theme = root.dataset.theme === "light" ? "dark" : "light";
-    root.dataset.theme = theme;
-    try {
-      localStorage.setItem("theme", theme);
-    } catch {
-      /* Theme still works when browser storage is unavailable. */
+const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");
+const page = document.documentElement;
+const scenes = document.querySelectorAll("[data-motion], [data-reveal]");
+const supportsObserver = "IntersectionObserver" in window;
+
+if (supportsObserver) {
+  const view = new IntersectionObserver((entries) => {
+    for (const { target, isIntersecting } of entries) {
+      target.classList.toggle("in-view", isIntersecting);
+      if (isIntersecting && target.hasAttribute("data-reveal")) {
+        target.classList.add("revealed");
+        if (!target.hasAttribute("data-motion")) view.unobserve(target);
+      }
     }
-    updateThemeButtons();
-  });
-matchMedia("(prefers-color-scheme: light)").addEventListener(
-  "change",
-  (event) => {
-    let saved;
-    try {
-      saved = localStorage.getItem("theme");
-    } catch {}
-    if (saved !== "light" && saved !== "dark") {
-      root.dataset.theme = event.matches ? "light" : "dark";
-      updateThemeButtons();
-    }
-  },
-);
-const menuButton = document.querySelector(".menu-toggle");
-const menu = document.querySelector("#mobile-menu");
-if (menu) menu.hidden = true;
-root.classList.add("js-ready");
-function closeMenu(returnFocus = false) {
-  if (!menu || !menuButton) return;
-  menu.hidden = true;
-  menuButton.setAttribute("aria-expanded", "false");
-  menuButton.setAttribute("aria-label", "Open navigation");
-  if (returnFocus) menuButton.focus();
-}
-menuButton?.addEventListener("click", () => {
-  const opening = menu.hidden;
-  menu.hidden = !opening;
-  menuButton.setAttribute("aria-expanded", String(opening));
-  menuButton.setAttribute(
-    "aria-label",
-    opening ? "Close navigation" : "Open navigation",
-  );
-  if (opening) menu.querySelector("a")?.focus();
-});
-menu?.addEventListener("click", (event) => {
-  if (event.target.closest("a")) closeMenu();
-});
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && menu && !menu.hidden) closeMenu(true);
-});
-document.addEventListener("click", (event) => {
-  if (menu && !menu.hidden && !event.target.closest(".site-header"))
-    closeMenu();
-});
-matchMedia("(min-width: 901px)").addEventListener("change", (event) => {
-  if (event.matches) closeMenu();
-});
-const search = document.querySelector("#project-search");
-if (search) search.closest(".archive-tools").hidden = false;
-search?.addEventListener("input", () => {
-  const query = search.value.trim().toLowerCase();
-  const rows = document.querySelectorAll(".archive-list .archive-row");
-  let count = 0;
-  for (const row of rows) {
-    row.hidden = !row.textContent.toLowerCase().includes(query);
-    if (!row.hidden) count++;
-  }
-  document.querySelector("#search-count").textContent =
-    `${count} project${count === 1 ? "" : "s"}`;
-  document.querySelector(".search-empty").hidden = count !== 0;
-});
-const print = document.querySelector(".print-resume");
-if (print) {
-  print.hidden = false;
-  print.addEventListener("click", () => window.print());
+  }, { threshold: 0.14 });
+  scenes.forEach((scene) => view.observe(scene));
 }
 
-for (const element of document.querySelectorAll("[data-demo]")) {
-  const activate = async () => {
-    if (!element.open || element.dataset.mounted) return;
-    element.dataset.mounted = "loading";
-    try {
-      const { mountDemo } = await import("./demos.js");
-      mountDemo(element);
-      element.dataset.mounted = "true";
-    } catch {
-      delete element.dataset.mounted;
-    }
+const syncVisibility = () => page.classList.toggle("page-hidden", document.hidden);
+document.addEventListener("visibilitychange", syncVisibility);
+syncVisibility();
+
+const backgroundControl = document.querySelector("[data-background-motion-toggle]");
+let backgroundPaused = false;
+if (backgroundControl && supportsObserver) {
+  const storageKey = "axvrma-background-paused";
+  try { backgroundPaused = sessionStorage.getItem(storageKey) === "true"; } catch {}
+  const syncBackgroundMotion = () => {
+    page.classList.toggle("background-paused", backgroundPaused);
+    backgroundControl.hidden = motionPreference.matches;
+    backgroundControl.setAttribute("aria-pressed", String(backgroundPaused));
   };
-  element.addEventListener("toggle", activate);
-  activate();
-}
-
-if (document.querySelector("[data-photo]") && typeof HTMLDialogElement !== "undefined" &&
-    typeof HTMLDialogElement.prototype.showModal === "function") {
-  document.addEventListener("click", async (event) => {
-    const link = event.target.closest("[data-photo]");
-    if (!link || event.defaultPrevented || event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    try {
-      const { openPhoto } = await import("./photos.js");
-      openPhoto(link);
-    } catch {
-      window.location.assign(link.href);
-    }
+  backgroundControl.addEventListener("click", () => {
+    backgroundPaused = !backgroundPaused;
+    try { sessionStorage.setItem(storageKey, String(backgroundPaused)); } catch {}
+    syncBackgroundMotion();
   });
+  motionPreference.addEventListener("change", syncBackgroundMotion);
+  syncBackgroundMotion();
 }
 
 const marquee = document.querySelector("[data-marquee]");
-if (marquee) {
-  const toggle = marquee.querySelector(".brand-toggle");
-  marquee.dataset.motion = "running";
-  toggle.hidden = false;
-  toggle.addEventListener("click", () => {
-    const paused = marquee.dataset.motion === "paused";
-    marquee.dataset.motion = paused ? "running" : "paused";
-    toggle.textContent = paused ? "Pause marquee" : "Resume marquee";
+if (marquee && supportsObserver) {
+  const control = marquee.querySelector("[data-marquee-toggle]");
+  const updateControl = () => {
+    control.hidden = motionPreference.matches;
+  };
+  control.addEventListener("click", () => {
+    const paused = marquee.classList.toggle("marquee-paused");
+    control.setAttribute("aria-pressed", String(paused));
+    control.querySelector("span").textContent = paused ? "▶" : "Ⅱ";
   });
+  motionPreference.addEventListener("change", updateControl);
+  updateControl();
+}
+
+const art = document.querySelector("[data-pointer]");
+if (art && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  let frame = 0;
+  art.addEventListener("pointermove", (event) => {
+    if (motionPreference.matches || backgroundPaused) return;
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(() => {
+      const bounds = art.getBoundingClientRect();
+      art.style.setProperty("--pointer-x", ((event.clientX - bounds.left) / bounds.width - 0.5) * 20 + "px");
+      art.style.setProperty("--pointer-y", ((event.clientY - bounds.top) / bounds.height - 0.5) * 16 + "px");
+    });
+  }, { passive: true });
+  const reset = () => {
+    cancelAnimationFrame(frame);
+    art.style.removeProperty("--pointer-x");
+    art.style.removeProperty("--pointer-y");
+  };
+  art.addEventListener("pointerleave", reset);
+  motionPreference.addEventListener("change", reset);
+}
+
+const assembly = document.querySelector("[data-assembly]");
+if (assembly) {
+  const control = assembly.querySelector("button");
+  control.hidden = false;
+  control.addEventListener("click", () => {
+    const assembled = assembly.classList.toggle("assembled");
+    control.setAttribute("aria-pressed", String(assembled));
+  });
+}
+
+function openFragment() {
+  let id;
+  try {
+    id = decodeURIComponent(location.hash.slice(1));
+  } catch {
+    return;
+  }
+  const target = document.getElementById(id);
+  if (!target) return;
+  const entry = target.closest(".work-entry, .archive-entry");
+  const homeDetail = target.closest(".principles-scene, .recognition-scene");
+  const disclosure = target.closest("details") ?? (entry || homeDetail)?.querySelector("details.disclosure");
+  if (disclosure && !disclosure.open) {
+    disclosure.open = true;
+    if (target.closest("details") && target !== disclosure) target.scrollIntoView();
+  }
+}
+openFragment();
+addEventListener("hashchange", openFragment);
+
+let demos;
+for (const demo of document.querySelectorAll("[data-demo]")) {
+  const mount = () => {
+    if (!demo.open) return;
+    demos ??= import("./demos.js");
+    demos.then(({ mountDemo }) => mountDemo(demo));
+    demo.removeEventListener("toggle", mount);
+  };
+  demo.addEventListener("toggle", mount);
+  mount();
+}
+
+if ("HTMLDialogElement" in window) {
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest("[data-photo]");
+    if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    import("./photos.js").then(({ openPhoto }) => openPhoto(link));
+  });
+}
+
+const print = document.querySelector(".print-resume");
+if (print) {
+  print.hidden = false;
+  print.addEventListener("click", () => {
+    page.classList.add("printing-resume");
+    window.print();
+  });
+  addEventListener("afterprint", () => page.classList.remove("printing-resume"));
 }

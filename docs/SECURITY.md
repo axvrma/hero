@@ -4,8 +4,6 @@
 
 The portfolio has no backend, privileged write endpoint, login screen, external CMS adapter or runtime database connection. All content is reviewed in version-controlled local files and published through the normal Netlify deployment workflow.
 
-The unused CMS/rebuild functions, disconnected Firestore editor, browser SDK and local Firebase configuration/rules were removed from the application. No external Firebase project, database record, CMS record, account permission or hosting configuration was changed. Existing cloud services can be managed independently by the owner.
-
 ## Content boundaries
 
 HTML text and attributes are escaped. Preserved legacy documentation is processed by a build-time allowlist sanitizer that removes executable scripts, embedded objects, event handlers, unsafe URL protocols and local-development links. HTTPS source URLs cannot contain embedded credentials. JSON-LD escapes `<` to prevent script-element injection.

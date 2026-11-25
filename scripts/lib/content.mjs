@@ -18,12 +18,13 @@ export function safeUrl(value, protocols = ["https:"]) {
     return "";
   }
 }
-export function cleanLegacy(value) {
+export function cleanLegacy(value, { nested = false } = {}) {
   return sanitizeHtml(value, {
     allowedTags: [
       "h2",
       "h3",
       "h4",
+      "h5",
       "p",
       "ul",
       "ol",
@@ -45,7 +46,7 @@ export function cleanLegacy(value) {
     ],
     allowedAttributes: { a: ["href", "title"] },
     allowedSchemes: ["https", "mailto"],
-    transformTags: { h1: "h2" },
+    transformTags: nested ? { h1: "h4", h2: "h4", h3: "h5", h4: "h5" } : { h1: "h2" },
     exclusiveFilter: (frame) =>
       frame.tag === "a" &&
       /localhost|127\.0\.0\.1/.test(frame.attribs.href ?? ""),

@@ -1,8 +1,12 @@
-# AXVRMA 3.2 · Abhishek Verma
+# AXVRMA 4.0 · The Anatomy of Curiosity
 
-Abhishek Verma’s engineering portfolio. The homepage introduces his work as a Senior Software Engineer at DP World through portraiture, professional milestones and selected work. Case studies, Story and the Workshop carry the engineering detail and interactive demos.
+Abhishek Verma’s engineering portfolio opens with “Complexity in. Simplicity out.” Soft copper light and a fine optical field frame the opening portrait. Small type, thin rules and native disclosures keep the reading path short.
 
-The repository builds 32 public pages, including six enterprise case studies and 17 independent project case studies. It also builds a real 404, a sitemap, robots.txt and 39 exact legacy redirects.
+- `/` introduces the person, engineering outcomes, career, selected projects, principles, recognition and contact.
+- `/work` holds six enterprise cases, seven independent products, hackathons, the ten-project archive and the BoxBay AI experiment.
+- `/about` follows the personal story through early computing, design, engineering, continued study and the workshop. The résumé prints from `/about#resume`.
+
+The same build produces the sitemap, robots.txt, a true 404 and 72 direct permanent redirects.
 
 ## Develop
 
@@ -14,30 +18,22 @@ npm ci
 npm run dev
 ```
 
-Vite prints a local address, usually `http://127.0.0.1:5173`. Generation runs before development and production builds. Rerun `npm run generate` after editing content or a server-rendered template to refresh the development HTML.
+Vite prints a loopback address, usually `http://127.0.0.1:5173`. Rerun `npm run generate` after editing content or static templates to refresh the development HTML.
 
-## Edit and review
-
-- [Content editing](docs/CONTENT.md) explains editing the profile, career, enterprise cases and product registry.
-- [Design system](docs/DESIGN-SYSTEM.md) and [storytelling](docs/STORYTELLING.md) describe the visual language and page hierarchy.
-- [Asset placement](docs/ASSETS.md) lists the exact paths and approval steps for photography.
-- [Content review](docs/CONTENT-REVIEW.md) tracks owner approvals and open factual questions.
-
-## Verify and deploy
+## Verify and preview
 
 ```sh
-npm run generate
-npm run typecheck
-npm test
-SITE_URL=https://axvrma.com npm run build
 SITE_URL=https://axvrma.com npm run verify
 npx playwright install chromium
 npm run test:e2e
-npm run preview
+npm run preview -- --port 4174
 ```
 
-With the production preview running, run `AUDIT_URL=http://127.0.0.1:4173/ npm run lighthouse` in another shell. Run `node scripts/capture-visuals.mjs` against the same preview to capture screenshots. See [verification](docs/VERIFICATION.md) and [performance](docs/PERFORMANCE.md) for the audit conditions.
+With the production preview running, use `npm run lighthouse` for the homepage audit and `node scripts/capture-visuals.mjs` for screenshots. Netlify uses Node.js 24, `npm run build` and `dist`. Production canonicals use `https://axvrma.com`. Deploy previews use their own origin and carry noindex. Publish through the existing Netlify workflow after owner authorization.
 
-Netlify uses Node.js 24, `npm run build`, and `dist` from the checked-in configuration. The production context uses `https://axvrma.com` for canonical URLs. Deploy previews use their own origin with noindex. Use the existing Git-triggered Netlify workflow to publish after review.
+## Project documentation
 
-[Architecture](docs/ARCHITECTURE.md) · [Routes](docs/ROUTES.md) · [Security](docs/SECURITY.md)
+- [Architecture](docs/ARCHITECTURE.md) and [security](docs/SECURITY.md)
+- [Design system and illustration inventory](docs/DESIGN-SYSTEM.md) and [storytelling](docs/STORYTELLING.md)
+- [Content editing](docs/CONTENT.md), [asset integration](docs/ASSETS.md) and [publication approvals](docs/CONTENT-REVIEW.md)
+- [Route migration](docs/ROUTES.md), [verification and screenshots](docs/VERIFICATION.md) and [performance](docs/PERFORMANCE.md)

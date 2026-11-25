@@ -65,12 +65,13 @@ const configurations = {
 };
 
 function regions(panel) {
-  const select = panel.querySelector("select");
+  const options = panel.querySelector("fieldset");
   const config = panel.querySelector("[data-config]");
   const fields = panel.querySelector("[data-fields]");
   const status = panel.querySelector(".demo-status");
   function render() {
-    const selected = configurations[select.value];
+    const choice = options.querySelector(":checked");
+    const selected = configurations[choice.value];
     config.textContent = JSON.stringify({ fields: selected }, null, 2);
     fields.replaceChildren(...selected.map(({ label, type }) => {
       const wrapper = document.createElement("label");
@@ -81,9 +82,9 @@ function regions(panel) {
       wrapper.append(input);
       return wrapper;
     }));
-    status.textContent = `${select.selectedOptions[0].text}: ${selected.map(({ label }) => label).join(" and ")}.`;
+    status.textContent = `${choice.labels[0].textContent.trim()}: ${selected.map(({ label }) => label).join(" and ")}.`;
   }
-  select.addEventListener("change", render);
+  options.addEventListener("change", render);
   render();
 }
 
@@ -93,7 +94,7 @@ const shipmentTasks = {
 };
 
 function shipment(panel) {
-  const select = panel.querySelector("select");
+  const options = panel.querySelector("fieldset");
   const list = panel.querySelector("[data-tasks]");
   const status = panel.querySelector(".demo-status");
   function updateProgress() {
@@ -101,7 +102,8 @@ function shipment(panel) {
     status.textContent = `${checked} of ${list.children.length} example tasks complete.`;
   }
   function render() {
-    list.replaceChildren(...shipmentTasks[select.value].map(([task, role]) => {
+    const choice = options.querySelector(":checked");
+    list.replaceChildren(...shipmentTasks[choice.value].map(([task, role]) => {
       const item = document.createElement("li");
       const label = document.createElement("label");
       const input = document.createElement("input");
@@ -112,7 +114,7 @@ function shipment(panel) {
     }));
     updateProgress();
   }
-  select.addEventListener("change", render);
+  options.addEventListener("change", render);
   list.addEventListener("change", updateProgress);
   render();
 }

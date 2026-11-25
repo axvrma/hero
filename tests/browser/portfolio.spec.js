@@ -1,346 +1,204 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { readFile } from "node:fs/promises";
-const routes = JSON.parse(await readFile(".generated/routes.json", "utf8")).map(({ path }) => path);
-const axeTags = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22a", "wcag22aa"];
-for (const route of routes)
-  test(`route ${route} is server-rendered, navigable and accessible`, async ({
-    page,
-  }) => {
-    const response = await page.goto(route);
-    expect(response.status()).toBe(200);
-    await expect(page.locator("h1")).toHaveCount(1);
-    await expect(page.locator("main")).toBeVisible();
-    await expect(page.locator("h1")).not.toBeEmpty();
-    await expect(page.locator('.desktop-nav a[href="/work"]')).toBeVisible();
-    const result = await new AxeBuilder({ page })
-      .withTags(axeTags)
-      .analyze();
-    expect(result.violations.map(({ id, nodes }) => [id, nodes.map(({ target }) => target)])).toEqual([]);
-  });
-test("theme preference survives navigation and reload and works without storage", async ({
-  page,
-}) => {
-  await page.goto("/");
-  const initial = await page.locator("html").getAttribute("data-theme");
-  await page.getByRole("button", { name: /Switch to .* theme/ }).click();
-  const chosen = initial === "light" ? "dark" : "light";
-  await expect(page.locator("html")).toHaveAttribute("data-theme", chosen);
-  await page.reload();
-  await expect(page.locator("html")).toHaveAttribute("data-theme", chosen);
-  await page.goto("/work/atlas");
-  await expect(page.locator("html")).toHaveAttribute("data-theme", chosen);
-  await page.addInitScript(() =>
-    Object.defineProperty(window, "localStorage", {
-      get() {
-        throw Error("disabled");
-      },
-    }),
-  );
-  await page.reload();
-  await page.getByRole("button", { name: /Switch to .* theme/ }).click();
-  await expect(page.locator("main")).toBeVisible();
-});
-test("dark and light home pass automated accessibility", async ({ page }) => {
-  for (const theme of ["dark", "light"]) {
-    await page.addInitScript(
-      (value) => localStorage.setItem("theme", value),
-      theme,
-    );
-    await page.goto("/");
-    const result = await new AxeBuilder({ page })
-      .withTags(axeTags)
-      .analyze();
-    expect(result.violations.map(({ id, nodes }) => [id, nodes.map(({ target }) => target)])).toEqual([]);
-  }
-});
-test("mobile navigation supports keyboard, Escape, focus restoration and destination", async ({
-  page,
-}) => {
+import { products } from "../../content/products.mjs";
+import { enterpriseCases } from "../../content/enterprise.mjs";
+import { hackathonProjects } from "../../content/hackathons.mjs";
+
+const routes = ["/", "/work", "/about"];
+const redirects = JSON.parse(await readFile(".generated/redirects.json", "utf8"));
+const axeTags = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
+const summarize = (result) => result.violations.map(({ id, nodes }) => [id, nodes.map(({ target }) => target)]);
+
+test("the navigation has only Work, About and a printable résumé", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  const button = page.locator(".menu-toggle");
-  await button.focus();
-  await page.keyboard.press("Enter");
-  await expect(button).toHaveAttribute("aria-expanded", "true");
-  await expect(page.locator("#mobile-menu a").first()).toBeFocused();
-  await page.keyboard.press("Escape");
-  await expect(button).toBeFocused();
-  await expect(page.locator("#mobile-menu")).toBeHidden();
-  await button.click();
-  await page
-    .locator("#mobile-menu")
-    .getByRole("link", { name: "Story", exact: true })
-    .click();
-  await expect(page).toHaveURL(/\/story/);
-  await expect(page.locator("h1")).toContainText("It all started with a question");
-});
-for (const width of [320, 1440])
-  test(`Hackathons is reachable from navigation and a direct URL at ${width}px`, async ({ page }) => {
-    await page.setViewportSize({ width, height: 844 });
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto("/");
-    const link = page.locator("footer").getByRole("link", { name: "Hackathons" });
-    await link.press("Enter");
-
-    const section = page.getByRole("region", { name: "Built under pressure." });
-    const heading = section.getByRole("heading", { level: 2 });
-    await expect(page).toHaveURL(/\/#hackathons$/);
-    await expect(heading).toBeInViewport();
-    await page.keyboard.press("Tab");
-    await expect(section.getByRole("link", {
-      name: "Live Demo: Excuse Generator 3000",
-    })).toBeFocused();
-
-    await page.goto("/work");
-    await expect(link).toHaveAttribute("href", "/#hackathons");
-    await page.goto("/#hackathons");
-    await expect(heading).toBeInViewport();
-  });
-test("ecosystem links lead to corresponding case studies", async ({ page }) => {
-  await page.goto("/work");
-  await page.getByText("Explore the product map", { exact: true }).click();
-  for (const id of ["atlas", "vibes", "envision", "servio", "prism", "luminescent", "auditbench"])
-    await expect(
-      page.locator(`.map-node[data-product="${id}"]`),
-    ).toHaveAttribute("href", `/work/${id}`);
-  await page.locator('.map-node[data-product="atlas"]').click();
-  await expect(page.locator("h1")).toContainText("Atlas");
-});
-test("project search filters results and reports empty state", async ({
-  page,
-}) => {
-  await page.goto("/work");
-  const search = page.getByRole("searchbox");
-  await search.fill("web xr");
-  await expect(page.locator(".archive-row:visible")).toHaveCount(1);
-  await expect(page.locator("#search-count")).toHaveText("1 project");
-  await search.fill("no-such-project");
-  await expect(page.locator(".search-empty")).toBeVisible();
-  await search.fill("");
-  await expect(page.locator(".archive-row:visible")).toHaveCount(10);
-});
-for (const width of [320, 375, 390, 768, 1024, 1280, 1440, 1920])
-  for (const theme of ["light", "dark"])
-    test(`representative layouts fit ${width}px in ${theme} mode`, async ({ page }) => {
-      await page.setViewportSize({ width, height: 900 });
-      await page.addInitScript((value) => localStorage.setItem("theme", value), theme);
-      for (const route of routes.filter((route) =>
-        !route.startsWith("/work/") ||
-        ["/work/atlas", "/work/vibes", "/work/envision", "/work/servio", "/work/prism", "/work/luminescent", "/work/auditbench"].includes(route))) {
-        await page.goto(route);
-        const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
-        expect(overflow, route).toBe(false);
-      }
-    });
-test("reduced motion disables smooth scrolling", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
-  expect(
-    await page
-      .locator("html")
-      .evaluate((el) => getComputedStyle(el).scrollBehavior),
-  ).toBe("auto");
-});
-test("all page content remains available with JavaScript disabled", async ({
-  browser,
-}) => {
-  const context = await browser.newContext({ javaScriptEnabled: false });
-  const page = await context.newPage();
-  await page.goto("http://127.0.0.1:4173/work/atlas");
-  await expect(page.locator("h1")).toContainText("Atlas");
-  await expect(page.locator("#architecture")).toBeVisible();
-  await page.setViewportSize({ width: 375, height: 800 });
-  await page.goto("http://127.0.0.1:4173/");
-  await expect(page.locator("#mobile-menu").getByRole("link", { name: "Story" })).toBeVisible();
-  await page.locator("#mobile-menu").getByRole("link", { name: "Story" }).click();
-  await expect(page.locator("#story-first-computer")).toBeVisible();
-  await page.getByText("The first computer", { exact: true }).click();
-  await page.getByText("Notepad", { exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Notes" })).toBeVisible();
-  await context.close();
-});
-test("all legacy redirects preserve canonical destinations", async ({
-  request,
-}) => {
-  const redirects = JSON.parse(
-    await readFile(".generated/redirects.json", "utf8"),
-  );
-  for (const [from, to] of redirects) {
-    const response = await request.get(from, { maxRedirects: 0 });
-    expect(response.status(), from).toBe(301);
-    expect(response.headers().location).toBe(to);
-  }
-});
-test("unknown routes return the real 404 document", async ({ page }) => {
-  const response = await page.goto("/not-a-route");
-  expect(response.status()).toBe(404);
-  await expect(page.locator("h1")).toContainText("Nothing here");
-});
-test("public routes load without failed local resources or browser errors", async ({
-  page,
-}) => {
-  const errors = [];
-  page.on("console", (message) => {
-    if (message.type() === "error") errors.push(message.text());
-  });
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("response", (response) => {
-    if (
-      response.url().startsWith("http://127.0.0.1:4173") &&
-      response.status() >= 400
-    )
-      errors.push(`${response.status()} ${response.url()}`);
-  });
-  for (const route of routes) {
-    await page.goto(route);
-    await page.locator("footer").scrollIntoViewIfNeeded();
-    const broken = await page.locator("img").evaluateAll((images) =>
-      images.filter((image) => image.complete && image.naturalWidth === 0).map((image) => image.src));
-    expect(broken, route).toEqual([]);
-  }
-  expect(errors).toEqual([]);
-});
-test("mobile menu is accessible when expanded", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
-  await page.locator(".menu-toggle").click();
-  const result = await new AxeBuilder({ page })
-    .withTags(axeTags)
-    .analyze();
-  expect(result.violations).toEqual([]);
+  const nav = page.getByRole("navigation", { name: "Main navigation" });
+  await expect(nav.getByRole("link")).toHaveText(["Work", "About", "Résumé"]);
+  await nav.getByRole("link", { name: "Work" }).press("Enter");
+  await expect(page).toHaveURL(/\/work$/);
+  await expect(nav.getByRole("link", { name: "Work" })).toHaveAttribute("aria-current", "page");
+  await nav.getByRole("link", { name: "About" }).press("Enter");
+  await expect(page).toHaveURL(/\/about$/);
+  await nav.getByRole("link", { name: "Résumé" }).press("Enter");
+  await expect(page).toHaveURL(/\/about#resume$/);
+  await expect(page.getByRole("button", { name: "Print or save PDF" })).toBeVisible();
+  const homeLink = page.getByRole("link", { name: "Abhishek Verma home" });
+  await expect(homeLink).toHaveText("Abhishek Verma");
+  await homeLink.press("Enter");
+  await expect(page).toHaveURL(/\/$/);
 });
 
-test("retired Web XR demo preserves its source and omits the dead launch action", async ({page}) => {
-  await page.goto("/work/web-xr");
-  await expect(page.getByRole("link", {name: "View source"})).toHaveAttribute("href", "https://github.com/axvrma/web-xr");
-  await expect(page.getByRole("link", {name: "Launch application"})).toHaveCount(0);
-});
-
-test("desktop skip link leads into the page with keyboard navigation", async ({ page }) => {
+test("a keyboard skip link enters the main navigation order", async ({ page }) => {
   await page.goto("/");
   await page.keyboard.press("Tab");
-  const skip = page.getByRole("link", { name: "Skip to content" });
-  await expect(skip).toBeFocused();
+  await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "Explore my work" })).toBeFocused();
 });
 
-test("story demos load on demand and support keyboard input, errors and clearing", async ({ page }) => {
-  const modules = [];
-  page.on("request", (request) => {
-    if (/\/assets\/demos-/.test(request.url())) modules.push(request.url());
-  });
-  await page.goto("/story");
-  expect(modules).toEqual([]);
-  await page.getByText("The first calculator", { exact: true }).press("Enter");
-  const input = page.getByLabel("Expression");
-  await input.fill("2 + 3 × (4 - 1)");
-  await input.press("Enter");
-  await expect(page.getByText("Result: 11")).toBeVisible();
-  expect(modules).toHaveLength(1);
-  await input.fill("1/(3-3)");
-  await input.press("Enter");
-  await expect(page.getByText("Division by zero is undefined.")).toBeVisible();
-  await expect(input).toHaveAttribute("aria-invalid", "true");
-  await page.locator("[data-calculator]").getByRole("button", { name: "Clear" }).click();
-  await expect(input).toHaveValue("");
-  await expect(input).toBeFocused();
-
-  await page.locator("[data-demo=life] > summary").press("Enter");
-  const date = page.getByLabel("Starting date");
-  await date.fill("2999-01-01");
-  const calculate = page.getByRole("button", { name: "Calculate elapsed time" });
-  await calculate.click();
-  await expect(page.getByText("Choose a starting date in the past or today.")).toBeVisible();
-  await date.fill("2000-01-01");
-  await calculate.click();
-  await expect(page.locator("[data-unit=days]")).toHaveText(/\d/);
-  expect(await page.evaluate(() => [localStorage.getItem("start"), sessionStorage.length])).toEqual([null, 0]);
+test("the sitemap and build manifest identify exactly three canonical pages", async ({ request }) => {
+  const manifest = JSON.parse(await readFile(".generated/routes.json", "utf8"));
+  expect(manifest.map(({ path }) => path)).toEqual(routes);
+  const homepage = await (await request.get("/")).text();
+  const canonical = homepage.match(/rel="canonical" href="([^"]+)"/)?.[1];
+  const sitemap = await (await request.get("/sitemap.xml")).text();
+  const entries = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, url]) => url);
+  expect(entries).toEqual(canonical ? routes.map((route) => new URL(route, canonical).href) : []);
 });
 
-test("fictional configurations change rendered fields, shipment roles and progress", async ({ page }) => {
-  await page.goto("/experience/configuration-driven-ui");
-  await page.getByText("One renderer, two regions", { exact: true }).press("Enter");
-  await expect(page.getByLabel("Berth")).toBeVisible();
-  await page.getByLabel("Fictional service region").selectOption("highlands");
-  await expect(page.getByLabel("Access notes")).toBeVisible();
-  await expect(page.getByLabel("Berth")).toHaveCount(0);
-  await expect(page.locator("[data-config]")).toContainText("Access notes");
-  await page.goto("/experience/dynamic-shipment-workflows");
-  await page.getByText("Explore a fictional shipment", { exact: true }).click();
-  await page.getByLabel("Example shipment").selectOption("cooled");
-  await page.getByLabel("Check temperature range · Cold-chain coordinator").check();
-  await expect(page.getByRole("status")).toHaveText("1 of 3 example tasks complete.");
-  await page.getByLabel("Example shipment").selectOption("standard");
-  await expect(page.getByRole("status")).toHaveText("0 of 2 example tasks complete.");
+test("all historical addresses reach a canonical page and matching anchor in one 301", async ({ request }) => {
+  const documents = new Map(await Promise.all(routes.map(async (path) => {
+    const response = await request.get(path, { maxRedirects: 0 });
+    expect(response.status(), path).toBe(200);
+    return [path, await response.text()];
+  })));
+  expect(redirects).toContainEqual(["/work/lighthouse-agent", "/work#auditbench"]);
+  expect(redirects).toContainEqual(["/project-lighthouse-agent.html", "/work#auditbench"]);
+  for (const page of ["/work", "/about"]) {
+    expect(redirects).toContainEqual([`${page}/index.html`, page]);
+    const previousHostPath = await request.get(`${page}/`, { maxRedirects: 0 });
+    expect(previousHostPath.status()).toBe(301);
+    expect(previousHostPath.headers().location).toBe(page);
+  }
+  const campaign = await request.get("/work/lighthouse-agent?ref=portfolio", { maxRedirects: 0 });
+  expect(campaign.headers().location).toBe("/work?ref=portfolio#auditbench");
+  for (const [from, to] of redirects) {
+    const response = await request.get(from, { maxRedirects: 0 });
+    expect(response.status(), from).toBe(301);
+    expect(response.headers().location, from).toBe(to);
+    const [path, anchor] = to.split("#");
+    expect(documents.has(path), from).toBe(true);
+    if (anchor) expect(documents.get(path), from).toContain(`id="${anchor}"`);
+  }
 });
 
-for (const theme of ["light", "dark"])
-  test(`expanded demos in ${theme} mode pass automated accessibility`, async ({ page }) => {
-    await page.addInitScript((value) => localStorage.setItem("theme", value), theme);
-    for (const route of ["/story", "/experience/configuration-driven-ui", "/experience/dynamic-shipment-workflows"]) {
+test("case and archive disclosures open from old URLs and support keyboard toggles", async ({ page }) => {
+  await page.goto("/work/atlas");
+  await expect(page).toHaveURL(/\/work#atlas$/);
+  const atlas = page.locator("#atlas");
+  const details = atlas.locator("details");
+  await expect(details).toHaveJSProperty("open", true);
+  await expect(atlas.getByRole("heading", { name: "Architecture" })).toBeVisible();
+  await details.locator("summary").press("Enter");
+  await expect(details).toHaveJSProperty("open", false);
+  await details.locator("summary").press("Enter");
+  await expect(details).toHaveJSProperty("open", true);
+  await page.goto("/experience/intelligent-invoice-processing");
+  await expect(page).toHaveURL(/\/work#intelligent-invoice-processing$/);
+  await expect(page.locator("#details-intelligent-invoice-processing")).toHaveJSProperty("open", true);
+  await page.goto("/project-web-xr.html");
+  const legacy = page.locator("#web-xr");
+  await expect(legacy.locator("details")).toHaveJSProperty("open", true);
+  await expect(legacy.getByRole("link", { name: /Source code/ })).toHaveAttribute("href", "https://github.com/axvrma/web-xr");
+  await expect(legacy.getByRole("link", { name: /Live demo/ })).toHaveCount(0);
+  await page.goto("/work/lighthouse-agent");
+  await expect(page).toHaveURL(/\/work#auditbench$/);
+  await expect(page.locator("#details-auditbench")).toHaveJSProperty("open", true);
+});
+
+test("all enterprise and independent work remains present with original external links", async ({ page }) => {
+  await page.goto("/work");
+  await expect(page.locator(".enterprise-entry")).toHaveCount(6);
+  await expect(page.locator(".product-entry")).toHaveCount(7);
+  await expect(page.locator(".archive-entry")).toHaveCount(10);
+  for (const { id, title } of enterpriseCases) {
+    const entry = page.locator(`#${id}`);
+    await expect(entry.getByRole("heading", { name: title })).toBeVisible();
+    await expect(entry.getByText("My contribution", { exact: true })).toBeVisible();
+  }
+  for (const { id, live, source } of [...products, ...hackathonProjects]) {
+    const entry = page.locator(`#${id}`);
+    await expect(entry.getByRole("link", { name: /^Source code:/ })).toHaveAttribute("href", new URL(source).href);
+    await expect(entry.locator(`a[href="${new URL(live).href}"]`).first()).toBeVisible();
+  }
+});
+
+test("static pages pass Axe at desktop and mobile widths", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const route of routes) {
       await page.goto(route);
-      for (const summary of await page.locator("[data-demo] > summary").all()) await summary.click();
-      if (route === "/story") await page.getByLabel("Expression").waitFor();
-      else await page.getByRole("combobox").waitFor();
-      const result = await new AxeBuilder({ page }).withTags(axeTags).analyze();
-      expect(result.violations.map(({ id, nodes }) => [id, nodes.map(({ target }) => target)]), route).toEqual([]);
+      expect(summarize(await new AxeBuilder({ page }).withTags(axeTags).analyze()), `${width} ${route}`).toEqual([]);
     }
-  });
-
-test("résumé and contact links lead to their verified destinations", async ({ page }) => {
-  await page.goto("/resume");
-  await expect(page.getByRole("link", { name: "Open original résumé" })).toHaveAttribute("href", /^https:\/\/drive\.google\.com\/file/);
-  await expect(page.getByRole("heading", { name: "DP World", exact: true })).toBeVisible();
-  await expect(page.locator(".role-progression")).toContainText("September 2023");
-  await page.emulateMedia({ media: "print" });
-  await expect(page.locator(".site-header")).toBeHidden();
-  await expect(page.getByRole("heading", { name: "DP World", exact: true })).toBeVisible();
-  await page.emulateMedia({ media: "screen" });
-  await page.goto("/contact");
-  await expect(page.getByRole("link", { name: "Email me" })).toHaveAttribute("href", /^mailto:/);
-  await expect(page.getByRole("link", { name: "LinkedIn" })).toHaveAttribute("href", "https://linkedin.com/in/axvrma");
-  await expect(page.getByRole("link", { name: "GitHub" })).toHaveAttribute("href", "https://github.com/axvrma");
+  }
 });
 
-test("production artifact preview serves the Netlify CSP on pages and missing routes", async ({ request }) => {
-  for (const path of ["/", "/story", "/no-such-page"]) {
+test("all pages and expanded content reflow without horizontal page scroll", async ({ page }) => {
+  const scenarios = ["/", "/work#configuration-driven-ui", "/about#story-first-program", "/work#atlas", "/work#design-spec-generator"];
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [320, 375, 390, 640, 768, 1024, 1440, 1920]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const path of scenarios) {
+      await page.goto(path);
+      for (const selector of ["#configuration-driven-ui .demo > summary", "[data-demo=calculator] > summary"]) {
+        if (!path.includes("configuration-driven-ui") && selector.startsWith("#")) continue;
+        if (!path.includes("first-program") && selector.startsWith("[")) continue;
+        await page.locator(selector).click();
+        await expect(page.locator(selector).locator("..").locator(".demo-interactive")).toBeVisible();
+      }
+      const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+      expect(scrollWidth, `${width} ${path}`).toBeLessThanOrEqual(width);
+    }
+  }
+});
+
+test("all pages retain content, links and native disclosures without JavaScript", async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
+  try {
+    const page = await context.newPage();
+    await page.goto("/");
+    await expect(page.getByRole("heading", { name: /Complexity in/ })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Employers" }).getByRole("listitem")).toHaveCount(4);
+    await expect(page.getByRole("button", { name: "Pause employer marquee" })).toHaveCount(0);
+    await page.getByRole("link", { name: "Explore Atlas" }).click();
+    await expect(page).toHaveURL(/\/work#atlas$/);
+    await expect(page.locator("#atlas").getByRole("heading", { name: "Atlas", exact: true })).toBeVisible();
+    await page.locator("#details-atlas > summary").click();
+    await expect(page.locator("#details-atlas").getByRole("heading", { name: "Architecture" })).toBeVisible();
+    await page.getByRole("navigation", { name: "Main navigation" }).getByRole("link", { name: "About" }).click();
+    await page.getByText("The first computer", { exact: true }).click();
+    await page.getByText("Notepad", { exact: true }).click();
+    await expect(page.getByRole("heading", { name: "Notes" })).toBeVisible();
+    const certificate = page.getByRole("link", { name: "Expand certificate" });
+    await expect(certificate).toHaveAttribute("href", /-redacted\.webp$/);
+  } finally {
+    await context.close();
+  }
+});
+
+test("all pages load without missing local resources or browser and CSP errors", async ({ page, baseURL }) => {
+  const errors = [];
+  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("response", (response) => {
+    if (response.url().startsWith(baseURL) && response.status() >= 400) errors.push(`${response.status()} ${response.url()}`);
+  });
+  for (const route of routes) {
+    await page.goto(route);
+    await page.locator("img").evaluateAll((images) => Promise.all(images.map((image) => {
+      image.loading = "eager";
+      return image.decode();
+    })));
+    await page.locator("footer").scrollIntoViewIfNeeded();
+  }
+  expect(errors).toEqual([]);
+});
+
+test("missing and retired server routes return 404 with the Netlify security headers", async ({ page, request }) => {
+  const response = await page.goto("/not-a-route");
+  expect(response.status()).toBe(404);
+  await expect(page.locator("h1")).toContainText("A small detour.");
+  for (const path of ["/", "/work", "/about", "/no-such-page", "/api/sync", "/admin"]) {
     const response = await request.get(path);
     const headers = response.headers();
     expect(headers["content-security-policy"]).toContain("script-src 'self'");
     expect(headers["content-security-policy"]).toContain("frame-ancestors 'none'");
     expect(headers["content-security-policy"]).not.toMatch(/unsafe-(inline|eval)/);
     expect(headers["permissions-policy"]).toBe("camera=(), microphone=(), geolocation=()");
-  }
-});
-
-test("an approved image can expand with keyboard focus and Escape restores it", async ({ page }) => {
-  await page.route("**/about", async (route) => {
-    const response = await route.fetch();
-    const body = (await response.text()).replace("</main>", '<figure><a data-photo href="/images/atlas-720.webp"><img src="/images/atlas-720.webp" width="720" height="450" alt="Atlas test fixture"></a></figure></main>');
-    await route.fulfill({ response, body });
-  });
-  await page.goto("/about");
-  const dialog = page.getByRole("dialog", { name: "Expanded photograph", includeHidden: true });
-  await expect(dialog).toHaveCount(0);
-  const photo = page.getByRole("link", { name: "Atlas test fixture" });
-  await photo.press("Enter");
-  await expect(page.getByRole("button", { name: "Close image" })).toBeFocused();
-  await expect(dialog.getByRole("img", { name: "Atlas test fixture" })).toBeVisible();
-  await page.keyboard.press("Escape");
-  await expect(photo).toBeFocused();
-});
-
-test("content and expanded demos reflow at a 200 percent-equivalent CSS viewport", async ({ page }) => {
-  await page.setViewportSize({ width: 640, height: 500 });
-  for (const path of ["/", "/resume", "/story", "/experience/configuration-driven-ui"]) {
-    await page.goto(path);
-    for (const summary of await page.locator("[data-demo] > summary").all()) await summary.click();
-    if (path === "/story") await page.getByLabel("Expression").waitFor();
-    if (path.endsWith("configuration-driven-ui")) await page.getByRole("combobox").waitFor();
-    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(640);
+    if (!routes.includes(path)) expect(response.status()).toBe(404);
   }
 });

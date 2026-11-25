@@ -19,11 +19,11 @@ The exact pending figures are recorded in the ignored local file `.asset-inbox/a
 - [ ] Obtain DP World disclosure clearance and the approved measurement scope for annual savings, baseline and resulting invoice times, the derived time reduction and shipment operational effort. Confirm the basis of savings before making an accounting interpretation beyond the approved wording.
 - [ ] Obtain additional approval and scope for client staffing requirements before any exact percentage is shown. Keep descriptions about operational capacity and efficiency.
 - [ ] Obtain Nurtr disclosure clearance for company sales and country reach. Record the measurement scope and company attribution.
-- [ ] Enter only cleared values in the shared registry. Record the evidence and the distinct clearance record. Keep the source status accurate. Approved figures flow to the impact section, enterprise cases, career and printable résumé.
+- [ ] Enter only cleared values in the shared registry. Record the evidence and the distinct clearance record. Keep the source status accurate. Approved figures flow to the corresponding homepage impact story and Work case.
 
 ## Career and résumé
 
 - [x] Record the owner-confirmed UrStyleCoach, Nurtr, IRIS Worldwide, Airtel Africa and DP World timeline and the three DP World designations.
 - [ ] Establish whether cross-micro-frontend coordination and field highlighting are the same implementation or related projects. The site describes them independently.
 - [ ] Review the linked external résumé separately. The current PDF includes the Senior Software Engineer title and the 2023 award. It omits the detailed DP World progression, Nurtr chapter, exact IIT programme and completion date, invoice leadership and 2026 award now covered by the printable site résumé. It also points to the earlier Netlify portfolio address.
-- [ ] Approve any future BoxBay AI source or demo destination. The Lab describes a personal simulation.
+- [ ] Approve any future BoxBay AI source or demo destination. The Work page describes a personal simulation.

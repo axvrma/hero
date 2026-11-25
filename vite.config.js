@@ -31,16 +31,10 @@ export default defineConfig({
       },
       configureServer(server) {
         server.middlewares.use((req, res, next) => {
-          const pathname = new URL(req.url, "http://localhost").pathname;
-          if (
-            pathname !== "/" &&
-            !pathname.includes(".") &&
-            !pathname.startsWith("/@")
-          )
-            req.url =
-              pathname +
-              "/index.html" +
-              (req.url.includes("?") ? "?" + req.url.split("?")[1] : "");
+          const { pathname, search } = new URL(req.url, "http://localhost");
+          if (pathname === "/work" || pathname === "/about") {
+            req.url = `${pathname}.html${search}`;
+          }
           next();
         });
       },

@@ -7,19 +7,25 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const checker = fileURLToPath(new URL("../scripts/check-output.mjs", import.meta.url));
-async function check({ origin, socialOrigin = origin, env = {}, dotenv = "" }) {
+async function check({ origin, socialOrigin = origin, env = {}, dotenv = "", redirects = [], extraPage = false }) {
   const directory = await mkdtemp(join(tmpdir(), "portfolio-output-"));
   try {
     await mkdir(join(directory, ".generated"));
     await mkdir(join(directory, "dist"));
-    await writeFile(join(directory, ".generated/routes.json"), JSON.stringify([{ path: "/" }]));
-    await writeFile(join(directory, ".generated/redirects.json"), "[]");
+    const routes = ["/", "/work", "/about"];
+    await writeFile(join(directory, ".generated/routes.json"), JSON.stringify(routes.map((path) => ({ path }))));
+    await writeFile(join(directory, ".generated/redirects.json"), JSON.stringify(redirects));
     if (dotenv) await writeFile(join(directory, ".env"), dotenv);
-    await writeFile(join(directory, "dist/index.html"), `<!doctype html><html><head>
+    for (const path of routes) {
+      const filename = path === "/" ? "index.html" : `${path.slice(1)}.html`;
+      await writeFile(join(directory, "dist", filename), `<!doctype html><html><head>
       <meta name="description" content="Portfolio">
-      ${origin ? `<link rel="canonical" href="${origin}/">` : ""}
-      ${socialOrigin ? `<meta property="og:url" content="${socialOrigin}/">` : ""}
-      </head><body><h1>Abhishek Verma</h1></body></html>`);
+      ${origin ? `<link rel="canonical" href="${origin}${path}">` : ""}
+      ${socialOrigin ? `<meta property="og:url" content="${socialOrigin}${path}">` : ""}
+      </head><body><h1 id="subject">Abhishek Verma</h1></body></html>`);
+    }
+    await writeFile(join(directory, "dist/404.html"), "<h1>Page not found</h1>");
+    if (extraPage) await writeFile(join(directory, "dist/extra.html"), "<h1>Extra page</h1>");
     return spawnSync(process.execPath, [checker], {
       cwd: directory,
       env: { ...process.env, SITE_URL: "", URL: "", CONTEXT: "", DEPLOY_PRIME_URL: "", ...env },
@@ -66,4 +72,13 @@ test("output check catches stale Open Graph URLs independently of canonical", as
   assert.equal(result.status, 1);
   assert.match(result.stderr, /Open Graph URL does not match/);
   assert.doesNotMatch(result.stderr, /canonical URL does not match/);
+});
+
+test("output check allows verified fragment redirects and rejects missing targets", async () => {
+  assert.equal((await check({ redirects: [["/old", "/work#subject"]] })).status, 0);
+  assert.match((await check({ redirects: [["/old", "/work#missing"]] })).stderr, /no fragment target/);
+});
+
+test("output check rejects HTML pages outside the three canonical pages and 404", async () => {
+  assert.match((await check({ extraPage: true })).stderr, /Unexpected HTML output/);
 });

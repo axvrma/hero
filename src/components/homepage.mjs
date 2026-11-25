@@ -1,101 +1,177 @@
+import { career, motivations, narrative, principles } from "../../content/editorial.mjs";
+import { enterpriseCases } from "../../content/enterprise.mjs";
 import { escape as e } from "../../scripts/lib/content.mjs";
-import { hackathonProjects } from "../../content/hackathons.mjs";
-import { diagonal, mark } from "./icons.mjs";
-import { companyLogo, photoImage } from "./editorial.mjs";
-import { external, sectionIntro } from "./ui.mjs";
+import { ambientBackground, assembly, diagram, opticalField } from "./illustrations.mjs";
+import { invoiceComparison, metricList } from "./impact.mjs";
+import { companyLogo, heroPortraitSizes, photography } from "./photography.mjs";
+import { backgroundMotionControl, external, sceneTitle } from "./ui.mjs";
+import { productVisual } from "./visuals.mjs";
 
-const employerIds = ["dp-world", "airtel", "iris", "nurtr", "urstylecoach"];
+export const resumeHref = "/about#resume";
 
-export function brandMarquee(content) {
-  const employers = employerIds.map((id) => content.experience.find((job) => job.id === id));
-  const items = (tag) => employers.map(({ id, company }) => {
-    const logo = companyLogo(content.assets, id);
-    const relationship = id === content.currentJob.id ? "Current employer" : id === "urstylecoach" ? "Design internship" : "Former employer";
-    return `<${tag} class="brand-item">${logo}<strong${logo ? ' class="sr-only"' : ""}>${e(company)}</strong><span class="brand-relation">${relationship}</span></${tag}>`;
-  }).join("");
-  return `<section class="brand-section" aria-labelledby="brand-title" data-marquee>
-    <div class="brand-heading"><h2 id="brand-title"><a href="/experience#journey">My professional journey.</a></h2>
-      <button class="brand-toggle" type="button" aria-controls="brand-window" hidden>Pause marquee</button>
+function hero(content) {
+  const { profile, currentJob, assets } = content;
+  return `<section class="hero" aria-labelledby="hero-title" data-motion>
+    <div class="hero-stage shell" data-pointer>
+      <div class="hero-field">${opticalField()}</div>
+      <div class="hero-copy">
+        <p class="hero-name">${e(profile.name)}</p>
+        <h1 id="hero-title">Complexity in.<br>Simplicity out.</h1>
+        <p class="hero-description">${e(profile.role)} at ${e(currentJob.company)}.</p>
+        <div class="actions"><a class="text-link" href="/work">Explore my work</a><a class="text-link" href="${resumeHref}">View résumé</a></div>
+      </div>
+      <div class="hero-visual">
+        ${photography(assets, "professional-portrait", { priority: true, sizes: heroPortraitSizes })}
+        <div class="hero-optic">${assembly("hero-optic", 3)}</div>
+      </div>
+      ${backgroundMotionControl}
     </div>
-    <div class="brand-window" id="brand-window" role="region" aria-label="Employment history" tabindex="0">
-      <div class="brand-track">
-        <ul class="brand-list" role="list">${items("li")}</ul>
-        <div class="brand-list brand-copy" aria-hidden="true" inert>${items("div")}</div>
+  </section>`;
+}
+
+export function brandMarquee({ assets, experience }) {
+  const ids = ["dp-world", "airtel", "iris", "nurtr"];
+  const employer = (id) => {
+    const name = experience.find((job) => job.id === id).company;
+    const logo = companyLogo(assets, id);
+    return `<li>${logo}<strong${logo ? ' class="sr-only"' : ""}>${e(name)}</strong></li>`;
+  };
+  return `<section class="brands" aria-label="Employers" data-marquee data-motion>
+    <div class="brands-inner shell">
+      <p class="eyebrow">Employers</p>
+      <div class="brands-window"><div class="brands-track">
+        <ul>${ids.map((id) => employer(id)).join("")}</ul>
+        <ul class="brands-copy" aria-hidden="true" inert>${ids.map(employer).join("")}</ul>
+      </div></div>
+      <button class="marquee-toggle" type="button" aria-pressed="false" aria-label="Pause employer marquee" data-marquee-toggle hidden><span aria-hidden="true">Ⅱ</span></button>
+    </div>
+  </section>`;
+}
+
+export const featuredCases = [
+  { id: "intelligent-invoice-processing", art: "invoice", title: "From invoice to usable data.", copy: "Our team automated extraction and posting, cutting manual processing." },
+  { id: "dynamic-shipment-workflows", art: "shipment", title: "The right task for the right role.", copy: "Shipment configuration guided who did what and when." },
+  { id: "bridging-design-and-engineering", art: "globe", title: "Building for a global audience.", copy: "I helped Nurtr’s team evolve its product as it reached users worldwide." },
+];
+
+export function caseMetrics(metrics, id) {
+  const matching = metrics.filter(({ project }) => project === id);
+  const comparison = invoiceComparison(matching);
+  return metricList(comparison ? matching.filter(({ id }) => id !== "invoice-processing-time") : matching) + comparison;
+}
+
+export function impact(content) {
+  return `<section class="scene impact-scene ambient-section" id="impact">
+    ${ambientBackground("enterprise")}<div class="shell">
+    ${sceneTitle("01", "Enterprise work", "Good engineering changes outcomes.")}
+    <div class="impact-run">${featuredCases.map(({ id, art, title, copy }) => {
+      const item = enterpriseCases.find((entry) => entry.id === id);
+      return `<article class="impact-story">
+        <div class="impact-copy" data-reveal><p class="eyebrow">${e(item.organization)}</p><h3><a href="/work#${id}">${e(title)}</a></h3><p>${e(copy)}</p>
+          ${caseMetrics(content.metrics, id)}
+        </div>${diagram(art)}
+      </article>`;
+    }).join("")}</div>
+    </div>
+  </section>`;
+}
+
+const stages = [
+  ["Design", ["urstylecoach"]],
+  ["Products", ["nurtr", "iris"]],
+  ["Enterprise systems", ["airtel", "dp-world"]],
+  ["Continuing study", ["iit"]],
+];
+
+function journey({ experience, assets }) {
+  return `<section class="scene journey-scene shell" id="journey">
+    ${sceneTitle("03", "About", "Different chapters. The same curiosity.")}
+    <div class="journey-body">
+      <div><p>${e(narrative.headline)}</p><a class="text-link" href="/about#story">Read my story</a></div>
+      <ol class="journey-stages">${stages.map(([title, ids]) => `<li>
+        <h3>${title}</h3><dl>${ids.map((id) => {
+          const chapter = career.find((item) => item.id === id);
+          const job = experience.find((item) => item.id === chapter.job);
+          return `<div>${job ? companyLogo(assets, id) : ""}<dt>${e(job?.company || chapter.place)}</dt><dd>${e(job?.duration || chapter.period)}</dd></div>`;
+        }).join("")}</dl>
+      </li>`).join("")}</ol>
+    </div>
+  </section>`;
+}
+
+function selectedWork(products) {
+  const [atlas, ...more] = ["atlas", "prism", "envision", "vibes"].map((id) => products.find((item) => item.id === id));
+  return `<section class="scene selected-scene ambient-section" id="work">
+    ${ambientBackground("products")}<div class="shell">
+    ${sceneTitle("02", "Independent projects", "Questions worth building.")}
+    <span id="products"></span>
+    <article class="selected-feature">
+      ${productVisual(atlas)}
+      <div><p class="eyebrow">${e(atlas.category)}</p>
+        <h3><a href="/work#atlas" aria-label="Explore Atlas">Atlas</a></h3>
+        <p>${e(motivations.atlas.headline)}</p>
+      </div>
+    </article>
+    <ul class="selected-list">${more.map(({ id, name, category }) => `<li><a href="/work#${id}">
+      <strong>${e(name)}</strong><span>${e(category)}</span><span aria-hidden="true">↗</span></a></li>`).join("")}</ul>
+    <div class="actions" id="hackathons"><a class="text-link" href="/work#products">All products</a><a class="text-link" href="/work#hackathons">Hackathons</a></div>
+    </div>
+  </section>`;
+}
+
+function principlesScene() {
+  return `<section class="principles-scene shell" id="principles">
+    <span id="engineering"></span>
+    <details class="disclosure principles-disclosure"><summary><h2>How I work</h2></summary><ol>${principles.map(({ id, title, quote, caseId }, i) => `<li class="principle">
+      <div class="principle-copy" data-reveal><span class="index">${String(i + 1).padStart(2, "0")}</span>
+        <h3>${e(title)}</h3><p>${e(quote)}</p><a class="text-link" href="/work#${e(caseId)}">See it in practice</a>
+      </div>
+      ${id === "execution" ? `<figure class="assembly-figure" data-motion data-assembly>${assembly("execution-optic")}
+        <button class="button button-outline assembly-toggle" type="button" aria-pressed="false" hidden>Assemble the layers</button>
+        <figcaption class="sr-only">Five aligned optical plates separate for inspection and reassemble on a common axis.</figcaption>
+      </figure>` : diagram(id)}
+    </li>`).join("")}</ol></details>
+  </section>`;
+}
+
+function recognition(content) {
+  const photos = [
+    ["google-assistant-2018", "Google Assistant developer recognition", "2018"],
+    ["dp-world-kudos-2023", "DP World Kudos Award", "2023"],
+    ["iit-guwahati-certificate", "IIT Guwahati AI & ML certification", "2026"],
+  ];
+  return `<section class="recognition-scene shell" id="recognition">
+    <span id="achievements"></span>
+    <details class="disclosure recognition-disclosure"><summary><h2>Recognition</h2></summary>
+    <div class="recognition-spread">${photos.map(([id, label, year]) => `<article>
+      ${photography(content.assets, id, { expandable: true, sizes: "(max-width: 760px) 90vw, 430px" }) ||
+        `<div class="award-type"><span class="eyebrow">${id === "dp-world-kudos-2023" ? "DP World" : "Recognition"}</span><strong>${year}</strong><span>${id === "dp-world-kudos-2023" ? "Kudos Award" : e(label)}</span></div>`}
+      <h3 class="sr-only">${e(label)}, ${year}</h3>
+    </article>`).join("")}</div>
+    <details class="disclosure recognition-more"><summary>More recognition</summary>
+      <ul><li>Airtel Star Performer, 2021</li><li><a href="/work#excuse-generator-3000">Microsoft GitTogether, first place</a></li>
+      <li><a href="/work#paytm-hackathon">Paytm Hackathon finalist, top eight of about 450 projects</a></li>
+      <li>Major League Hacking, first place, 2020</li><li>DP World Kudos Award, 2026 (owner-reported)</li></ul>
+    </details></details>
+  </section>`;
+}
+
+function personal() {
+  return '<div class="personal-scene shell" id="beyond"><a class="text-link" href="/about#workshop">Visit the workshop</a></div>';
+}
+
+function closing({ profile }) {
+  return `<section class="closing" id="contact" data-motion>
+    <div class="shell closing-inner">
+      <div class="closing-art">${assembly("closing-optic")}</div>
+      <div class="closing-content" data-reveal><p class="eyebrow">Contact</p>
+        <h2>Build things that matter.</h2>
+        <div class="actions"><a class="button button-primary" href="mailto:${e(profile.email)}">Email me</a>${external(profile.linkedin, "LinkedIn")}${external(profile.github, "GitHub")}<a class="text-link" href="${resumeHref}">Résumé</a></div>
       </div>
     </div>
   </section>`;
 }
 
-const milestones = [
-  { id: "dp-world-kudos-2023", layout: "award", title: "Recognition for engineering excellence.", caption: "DP World · Kudos Award · 2023", href: "/experience#achievements", sizes: "(max-width: 720px) 90vw, (max-width: 1440px) 50vw, 725px" },
-  { id: "google-assistant-2018", layout: "google", title: "An early milestone.", caption: "Google Assistant developer recognition · 2018", href: "/story#story-recognition", sizes: "(max-width: 480px) 90vw, (max-width: 720px) 46vw, (max-width: 1440px) 37vw, 530px" },
-  { id: "iit-guwahati-certificate", layout: "credential", title: "Back to being a student.", href: "/experience#education", sizes: "(max-width: 480px) 82vw, (max-width: 720px) 42vw, (max-width: 1440px) 31vw, 450px" },
-  { id: "san-francisco-portrait", layout: "personal", title: "Beyond the code.", caption: "Engineer. Builder. Explorer.", href: "/story#story-beyond" },
-  { id: "workshop-hardware", layout: "workshop", title: "The Workshop.", caption: "My playground for experimentation.", href: "/lab", sizes: "(max-width: 480px) 46vw, (max-width: 720px) 44vw, (max-width: 1440px) 29vw, 420px" },
-];
-
-function proofArtwork(layout, qualification) {
-  if (layout === "award") return `<div class="proof-award-art" aria-hidden="true">
-    <svg viewBox="0 0 600 330" preserveAspectRatio="xMidYMid slice" fill="none"><g stroke="currentColor">
-      <circle cx="470" cy="184" r="138"/><circle cx="470" cy="184" r="103"/><circle cx="470" cy="184" r="69"/>
-      <path d="M313 184h314M470 25v318M348 284 577 60"/><circle cx="470" cy="184" r="8" fill="currentColor"/>
-    </g></svg><span>DP World</span><strong>2023</strong>
-  </div>`;
-  if (layout === "credential") return `<div class="proof-credential-art">
-    <p class="mono">${e(qualification.shortInstitution)}</p>
-    <strong>${e(qualification.shortDegree)}</strong>
-    <p>Explainable AI · Cybersecurity</p>
-  </div>`;
-  return "";
-}
-
-export function visualProof(content) {
-  const qualification = content.education[0];
-  return `<section class="editorial-section visual-proof" id="journey" aria-labelledby="proof-title">
-    ${sectionIntro("Milestones", "A journey worth building.", "", "proof-title")}
-    <div class="proof-grid" id="achievements">${milestones.map(({ id, layout, title, caption, href, sizes }) => {
-      const credential = layout === "credential";
-      const asset = content.assets.get(id);
-      const photo = asset && photoImage(asset, { expandable: credential, sizes });
-      const artwork = photo || proofArtwork(layout, qualification);
-      return `<figure class="proof-tile proof-${layout}${photo ? " has-proof-photo" : ""}">
-        ${artwork ? `<div class="proof-media">${artwork}</div>` : ""}
-        <figcaption class="proof-caption">
-          <h3><a href="${href}">${e(title)} ${diagonal}</a></h3>
-          ${credential ? (photo ? `<p>${e(asset.caption)}</p><p>${e(qualification.shortInstitution)} · Explainable AI · Cybersecurity</p>` : "") : `<p>${e(caption)}</p>`}
-        </figcaption>
-      </figure>`;
-    }).join("")}</div>
-    <div class="recognition-associations">
-      <h3>Recognition and learning</h3>
-      <ul role="list">
-        <li><a href="/experience#achievements">Airtel Star Performer · 2021</a></li>
-        <li><a href="/experience#achievements">Major League Hacking winner · 2020</a></li>
-        <li><a href="/lab#hackathons">Microsoft GitTogether · Winner</a></li>
-        <li><a href="/lab#hackathons">Paytm Hackathon · Finalist</a></li>
-        <li><a href="/experience#education">Emeritus · Programme partner</a></li>
-      </ul>
-    </div>
-  </section>`;
-}
-
-export function productArchive(products, motivations) {
-  return `<ul class="home-product-archive" aria-label="More flagship products" role="list">${products.map((p) => `
-    <li><a class="${e(p.id)}" href="/work/${e(p.id)}">${mark(p.id, 21)}<span><strong>${e(p.name)}</strong><span>${e(motivations[p.id].headline)}</span></span>${diagonal}</a></li>`).join("")}</ul>`;
-}
-
-export function personalTeaser() {
-  const [winner, finalist] = hackathonProjects;
-  return `<section class="editorial-section beyond-section">
-    <div class="beyond-story">
-      ${sectionIntro("Personal story", "It all started with a question.", "From the first family computer to engineering for a living. I still tinker with self-hosting, Raspberry Pi, Android ROMs and local AI in the Workshop.")}
-      <div class="beyond-links"><a class="button button-primary" href="/story">Read my story</a><a class="button button-outline" href="/lab">Visit the Workshop</a></div>
-    </div>
-    <section class="beyond-hackathons" id="hackathons" aria-labelledby="home-hackathons-title" tabindex="-1">
-      <p class="eyebrow">Hackathons</p>
-      <h2 id="home-hackathons-title">Built under pressure.</h2>
-      <p>${e(winner.result)} at Microsoft GitTogether · ${e(finalist.result)} at Paytm</p>
-      <div class="beyond-links">${external(winner.live, "Live Demo", "text-link", winner.name)}<a class="text-link" href="/lab#hackathons">All hackathon builds ${diagonal}</a></div>
-    </section>
-  </section>`;
+export function home(content, products) {
+  return [hero(content), brandMarquee(content), impact(content), selectedWork(products), journey(content), principlesScene(), recognition(content), personal(), closing(content)].join("");
 }
