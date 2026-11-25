@@ -107,3 +107,15 @@ for (const element of document.querySelectorAll("[data-demo]")) {
 if (document.querySelector("[data-photo]") && typeof HTMLDialogElement !== "undefined") {
   import("./photos.js").then(({ enablePhotos }) => enablePhotos()).catch(() => {});
 }
+
+const marquee = document.querySelector("[data-marquee]");
+if (marquee) {
+  const toggle = marquee.querySelector(".brand-toggle");
+  marquee.dataset.motion = "running";
+  toggle.hidden = false;
+  toggle.addEventListener("click", () => {
+    const paused = marquee.dataset.motion === "paused";
+    marquee.dataset.motion = paused ? "running" : "paused";
+    toggle.textContent = paused ? "Pause marquee" : "Resume marquee";
+  });
+}

@@ -1,9 +1,7 @@
 // @ts-check
 export const narrative = {
   headline: "The technology has changed. The curiosity hasn’t.",
-  intro: "I started with design, found my purpose in engineering, and never stopped questioning how things work. Today, I build enterprise systems, developer tools and digital products that make complexity feel simple.",
-  identity: "Designer at heart. Engineer by choice. Builder by instinct.",
-  educationLabel: "Postgraduate education in AI & ML, IIT Guwahati",
+  identity: ["Designer at heart.", "Engineer by choice.", "Builder by instinct."],
   nextTitle: "Build things that matter. Become someone worth looking up to.",
   nextBody: "I want to keep building tools that make people more effective, solve problems that are worth solving, and grow into a leader who inspires others to do the same.",
 };
@@ -18,7 +16,7 @@ export const career = [
   { id: "iris", job: "iris", headline: "Expanding my engineering perspective.", theme: "Adaptability", summary: "I worked across Angular, React and Ionic to deliver client solutions for web and mobile." },
   { id: "airtel", job: "airtel", headline: "One application. Many possibilities.", theme: "Abstraction and ownership", summary: "I built the internal enterprise portal and contributed to a form system that let regional support teams use different forms from a shared, JSON-configured interface." },
   { id: "dp-world", job: "dp-world", headline: "Solving complexity at enterprise scale.", theme: "Engineering ownership", summary: "My work grew from implementing workflow interfaces to taking technical ownership across micro-frontends, invoice processing, design systems and developer tools. It also gave me a chance to mentor and learn from other engineers." },
-  { id: "iit", period: "2025–2026 · Alongside DP World", place: "IIT Guwahati", headline: "Back to being a student.", theme: "Continued learning", summary: "I pursued postgraduate education in Artificial Intelligence and Machine Learning while working in enterprise engineering." },
+  { id: "iit", period: "2025–2026 · Alongside DP World", place: "E&ICT Academy, IIT Guwahati", headline: "Back to being a student.", theme: "Continued learning", summary: "I went back to studying alongside my work in enterprise engineering, with a focus on explainable AI and cybersecurity." },
 ];
 
 export const principles = [
@@ -28,12 +26,13 @@ export const principles = [
 ];
 
 export const storyChapters = [
-  { careerIds: ["first-computer"], title: "Discovering computers", demo: "desktop" },
-  { careerIds: ["first-program"], title: "Understanding software", demo: "calculator" },
-  { careerIds: ["design"], title: "Discovering design" },
-  { careerIds: ["urstylecoach", "nurtr"], title: "Bringing design to life through code", demo: "life" },
-  { careerIds: ["iris", "airtel", "dp-world"], title: "Growing into enterprise engineering" },
-  { careerIds: ["iit"], title: "Continuing to explore" },
+  { id: "first-computer", title: "Curiosity", careerIds: ["first-computer"], demo: "desktop" },
+  { id: "first-program", title: "Understanding", careerIds: ["first-program"], demo: "calculator" },
+  { id: "urstylecoach", title: "Design meets engineering", careerIds: ["design", "urstylecoach", "nurtr"], demo: "life" },
+  { id: "recognition", title: "Professional recognition", asset: "google-assistant-2018" },
+  { id: "iris", title: "Enterprise engineering", careerIds: ["dp-world", "iris", "airtel"], asset: "dp-world-kudos-2023" },
+  { id: "iit", title: "Continuous learning", careerIds: ["iit"], asset: "iit-guwahati-certificate" },
+  { id: "beyond", title: "Beyond engineering" },
 ];
 
 export const influences = [
@@ -52,7 +51,7 @@ export const workshop = [
   { id: "lego", title: "LEGO", body: "I like taking a handful of repeatable parts and seeing how many different things they can become. The satisfaction is in figuring out what each piece makes possible." },
   { id: "hardware", title: "Raspberry Pi and hardware", body: "A small computer gives me a reason to explore what happens between a program and the physical world." },
   { id: "android", title: "Android custom ROMs", body: "Flashing ROMs gives me a way to question the defaults in the software I carry every day." },
-  { id: "homelab", title: "The homelab", body: "I started self-hosting because I wanted more control over my tools and data. Running a service myself is also one of the clearest ways to understand everything it depends on." },
+  { id: "homelab", title: "The homelab", body: "I started self-hosting because I wanted more control over my tools and data. Running services, local AI and developer tooling myself helps me understand what each one depends on." },
 ];
 
 export const labExperiments = [

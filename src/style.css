@@ -201,9 +201,11 @@ h4 {
   background: var(--accent);
   color: var(--accent-text);
   padding: 12px 20px;
+  clip-path: inset(50%);
 }
 .skip-link:focus {
   top: 10px;
+  clip-path: none;
 }
 .site-header {
   position: relative;

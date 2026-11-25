@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-24T13:02:48.597Z",
+  "date": "2026-11-25T10:35:46.377Z",
   "url": "http://127.0.0.1:4173/",
   "version": "13.6.0",
   "settings": {
@@ -14,19 +14,19 @@
     }
   },
   "categories": {
-    "performance": 100,
+    "performance": 97,
     "accessibility": 100,
     "best-practices": 100,
     "seo": 100
   },
   "metrics": {
     "first-contentful-paint": {
-      "value": 1352.838,
+      "value": 1352.734,
       "display": "1.4 s"
     },
     "largest-contentful-paint": {
-      "value": 1352.838,
-      "display": "1.4 s"
+      "value": 2479.1009999999997,
+      "display": "2.5 s"
     },
     "cumulative-layout-shift": {
       "value": 0,
@@ -37,7 +37,7 @@
       "display": "0 ms"
     },
     "speed-index": {
-      "value": 1352.838,
+      "value": 1352.734,
       "display": "1.4 s"
     }
   }

@@ -1,23 +1,21 @@
 # Verification
 
-Validated on November 24, 2026 on Apple Silicon macOS with Node.js 24.19.0, Vite 8.3.5, Playwright 1.64.1 and Chromium 156. The production artifact used `SITE_URL=https://axvrma.com`.
+AXVRMA 3.1 was checked on November 25, 2026 on Apple Silicon macOS using Node.js 24.19.0, Vite 8.3.5, Playwright 1.64.1 and Chromium 156. The production artifact used `SITE_URL=https://axvrma.com`. The comparison baseline was the checked-out AXVRMA 3.0 commit `78a1355`, which matched the remote HEAD when the audit started.
 
 ## Results
 
-- `npm ci` installed from the lockfile and reported zero known dependency vulnerabilities. It noted that the optional `fsevents` install script is outside npm’s allowlist. Build and preview worked on this host.
-- `npm run generate` and `npm run typecheck` passed. Generation emitted 32 complete static pages and one 404.
-- `npm test` passed all 17 tests. Coverage includes content and URL handling, canonical origins, registry identity, employment progression, approval gating, missing photos, arithmetic and calendar dates.
-- `npm run build` and `npm run verify` passed. The checker resolved route, asset, responsive image, fragment and redirect references. Two isolated production builds had identical artifact checksums. A simulated Netlify deploy preview used its preview origin and emitted noindex and robots restrictions.
-- `npx playwright install chromium` completed and `npm run test:e2e` passed all 71 tests. The suite verified every public route, all 39 redirects, the real 404, key contact and résumé links, and the production CSP in artifact preview. It exercised search, keyboard navigation, theme persistence, photograph focus with a fixture, no-JavaScript reading and navigation, reduced motion, and all five interactive demos.
-- Direct HTTPS requests returned HTTP 200 for all seven preserved flagship live and source destinations and all three preserved hackathon live and source destinations. This checks reachability at the time of the run.
+- `npm ci`, `npm run generate`, `npm run typecheck`, `npm test`, `npm run build` and `npm run verify` passed. The install reported zero known vulnerabilities and noted the unused optional `fsevents` installation script.
+- Unit tests went from 17 to 19. The added coverage verifies supplied derivatives, responsive candidates, missing optional assets, pending files, orphaned variants, reviewed certificate redaction and rejection of unknown files in editorial asset directories.
+- Browser tests went from 71 to 78. All five original demos and the original canonical routes, generated fragment targets, 404, publication gates and strict CSP were exercised. New coverage includes keyboard marquee control, static reduced-motion and no-JavaScript fallbacks, photo dialog focus restoration, mobile image selection, milestone reflow and consistent qualification text.
+- Route and redirect manifests matched the 3.0 baseline byte for byte. The build has 32 public pages, six enterprise case studies, 17 independent case studies, seven flagships, 39 exact legacy redirects, the 404, robots and sitemap. Auditbench retains the Lighthouse Agent mappings.
 
-## Accessibility and responsive coverage
+## Accessibility and visual QA
 
-Axe checks covered all 32 public routes, the expanded mobile menu, both homepage themes, and the expanded interactive demos in both themes. The initial run found undersized targets in the enterprise table of contents. The targets were increased and the final checks reported zero violations. Keyboard checks exercised skip navigation, native disclosures, form errors, menus and dialog dismissal with focus restoration. Reflow checks ran from 320px to 1920px in both themes, plus a 640px CSS viewport to represent 200% zoom from 1280px in key flows.
+The automated checks cover all 32 public routes, both homepage themes, the mobile menu, expanded demos and the public photo dialog. Playwright checks layouts at 320, 375, 390, 768, 1024, 1280, 1440 and 1920 CSS pixels in light and dark, with a 640px equivalent-zoom check on key flows. Chromium and Axe results describe this automated coverage.
 
-Playwright captures in the local `.tools/axvrma-3/` directory cover the homepage in light and dark, the work and invoice pages, the selected product section, and desktop and mobile story layouts. Screenshots were inspected for visible layout issues. Real approved photography is still pending, so the photo dialog was verified with a local fixture.
+Visual review found a narrow Workshop diagram overflow, a skip link artifact in section captures an awkward heading wrap and a mobile chapter-list marker alignment issue. The final styles resolve those issues. Lighthouse also surfaced a mismatch between visible product preview text and its link name. The linked art now uses its visible text and image descriptions as its accessible name.
 
-Chromium and Axe results provide automated evidence toward WCAG 2.2 AA. Full conformance, assistive-technology coverage and behavior on the deployed domain remain outside this local run.
+Public screenshots in `.tools/axvrma-3.1/public/` cover desktop home in light and dark, mobile home, marquee, milestones, featured products, Story and Workshop. An isolated loopback preview exercised the pending DP World and IIT assets, and `.tools/axvrma-3.1/private-review/` contains their private visual evidence, including certificate expansion. Certificate checks at 320, 390, 768 and 1440 CSS pixels in both themes confirmed zero Axe violations in the modal, full-resolution loading and Esc focus restoration. Production has the factual milestone treatments while those two images await clearance.
 
 ## Repeat the checks
 
@@ -29,4 +27,4 @@ npm run test:e2e
 npm run preview
 ```
 
-With the preview running, use `AUDIT_URL=http://127.0.0.1:4173/ npm run lighthouse`. See [performance](PERFORMANCE.md) for the measurement and baseline. A live deployment would also need the usual smoke check on its public origin.
+With preview running, use `node scripts/capture-visuals.mjs` for screenshots and the homepage word and image measurements. Set `VISUAL_URL` or `VISUAL_DIR` to use a different preview origin or output. Run `AUDIT_URL=http://127.0.0.1:4173/ npm run lighthouse` separately. See [performance](PERFORMANCE.md) for the measured comparison.

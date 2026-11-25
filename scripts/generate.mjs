@@ -4,8 +4,8 @@ import { products as registry } from "../content/products.mjs";
 import { hackathonProjects } from "../content/hackathons.mjs";
 import { escape as e, resolveOrigin, safeUrl } from "./lib/content.mjs";
 import * as site from "../src/components/site.mjs";
-import { enterprisePage, enterprisePath, labPage, storyPage } from "../src/components/editorial.mjs";
-import { career, motivations, narrative, principles } from "../content/editorial.mjs";
+import { enterprisePage, enterprisePath, heroPreload, labPage, storyPage } from "../src/components/editorial.mjs";
+import { career, motivations, principles } from "../content/editorial.mjs";
 import { enterpriseCases } from "../content/enterprise.mjs";
 import { editorialAssets, impactMetrics } from "../content/publication.mjs";
 import { availableAssets, publishedMetrics, validateEditorial } from "./lib/publication.mjs";
@@ -71,6 +71,7 @@ const projectSchema = (p) => ({
   ...(p.live ? { url: p.live } : {}),
   author: { "@type": "Person", name: content.profile.name },
 });
+const qualification = content.education[0];
 const person = {
   "@type": "Person",
   name: content.profile.name,
@@ -79,6 +80,13 @@ const person = {
   alumniOf: content.education.slice(0, 2).map(({ institution }) => ({
     "@type": "EducationalOrganization", name: institution,
   })),
+  hasCredential: {
+    "@type": "EducationalOccupationalCredential",
+    name: qualification.degree,
+    credentialCategory: "Postgraduate certification",
+    recognizedBy: { "@type": "EducationalOrganization", name: qualification.institution },
+    description: `Conducted jointly with ${qualification.partner}. Specialisations in ${qualification.specialisations.join(" and ")}. Programme dates ${qualification.duration}. Completed ${qualification.completion}.`,
+  },
   ...(origin ? { url: `${origin}/` } : {}),
   sameAs: [content.profile.github, content.profile.linkedin].filter((url) => safeUrl(url)),
 };
@@ -87,7 +95,7 @@ const routes = [
   [
     "/",
     `${content.profile.role} at ${content.currentJob.company}`,
-    `${content.profile.name} is a ${content.profile.role} at ${content.currentJob.company}. Enterprise workflows and independent products. ${narrative.educationLabel}.`,
+    `${content.profile.name} is a ${content.profile.role} at ${content.currentJob.company}. Enterprise engineering, independent products and ${qualification.shortDegree} from ${qualification.shortInstitution}.`,
     site.home(content, products),
     profileSchema,
   ],
@@ -177,7 +185,8 @@ for (const [path, title, description, body, schema] of [
     path === "/404" ||
     !origin || (process.env.CONTEXT && process.env.CONTEXT !== "production");
   const pageTitle = title.includes(content.profile.name) ? title : `${title} | ${content.profile.name}`;
-  const meta = `<title>${e(pageTitle)}</title>
+  const meta = `${path === "/" ? heroPreload(content.assets) : ""}
+<title>${e(pageTitle)}</title>
 <meta name="description" content="${e(description)}">
 ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
 ${canonical && path !== "/404" ? `<link rel="canonical" href="${e(canonical)}">` : ""}
@@ -187,7 +196,7 @@ ${canonical && path !== "/404" ? `<link rel="canonical" href="${e(canonical)}">`
 <meta property="og:description" content="${e(description)}">
 ${canonical ? `<meta property="og:url" content="${e(canonical)}">` : ""}
 <meta property="og:image" content="${e(origin)}/social.png">
-<meta property="og:image:alt" content="${e(`${content.profile.name}, ${content.profile.role} at ${content.currentJob.company}, with an orbit illustration.`)}">
+<meta property="og:image:alt" content="${e(`${content.profile.name}, ${content.profile.role} at ${content.currentJob.company}, beside an AI-assisted portrait.`)}">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 ${schema ? `<script type="application/ld+json">${JSON.stringify(schema).replace(/</g, "\\u003c")}</script>` : ""}`;

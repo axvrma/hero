@@ -26,6 +26,7 @@ dist-ssr
 .env
 
 .generated/
+.asset-inbox/
 .research/
 .tools/
 playwright-report/

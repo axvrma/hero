@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { readFile } from "node:fs/promises";
 const routes = JSON.parse(await readFile(".generated/routes.json", "utf8")).map(({ path }) => path);
-const axeTags = ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"];
+const axeTags = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22a", "wcag22aa"];
 for (const route of routes)
   test(`route ${route} is server-rendered, navigable and accessible`, async ({
     page,

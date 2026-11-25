@@ -115,9 +115,14 @@
   ],
   "education": [
     {
-      "institution": "Indian Institute of Technology, Guwahati",
-      "degree": "Post Graduate - Artificial Intelligence and Machine Learning (2025-2026)",
-      "duration": ""
+      "institution": "Electronics & ICT Academy, Indian Institute of Technology Guwahati",
+      "degree": "Post Graduate Certification Programme in Artificial Intelligence and Machine Learning",
+      "duration": "26 June 2025 – 20 May 2026",
+      "partner": "Emeritus",
+      "specialisations": ["Explainable AI (XAI)", "Cybersecurity"],
+      "completion": "6 July 2026",
+      "shortInstitution": "E&ICT Academy, IIT Guwahati",
+      "shortDegree": "PG Certification in AI & ML"
     },
     {
       "institution": "Lakshmi Narain College of Technology, Bhopal",

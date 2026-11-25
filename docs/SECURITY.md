@@ -22,7 +22,7 @@ Content tests check escaping, sanitized HTML and URL validation. Production outp
 
 ## Editorial publication and local demos
 
-Business metrics stay external to Git until approved for public disclosure. The generator accepts only approved and verified metrics with complete scopes, attribution and evidence references. Pending entries carry identifiers and case associations. The photography manifest checks file existence and rejects files at reserved public paths if approval or rights clearance is missing. Public assets can be requested by URL, so sensitive source imagery and unused proofs belong outside `public`.
+Business metrics stay external to Git until approved for public disclosure. The generator accepts only approved and verified metrics with complete scopes, attribution and evidence references. Pending entries carry identifiers and case associations. The photography manifest checks originals and responsive variants, rejects unregistered editorial files and enforces a visual redaction record for certificate derivatives. It requires approval and rights clearance before a derivative can enter the public build. Public assets can be requested by URL, so sensitive source imagery and unused proofs belong outside `public`.
 
 The arithmetic demo interprets a bounded number of tokens with an explicit operator grammar. Life Calculator and fictional workflow demos neither transmit nor persist inputs. The form demonstration constructs elements with browser APIs and treats configuration labels as text. Optional photo expansion performs a local navigation or opens a native dialog using the same approved image URL.
 

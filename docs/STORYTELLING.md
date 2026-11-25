@@ -2,14 +2,17 @@
 
 **The technology has changed. The curiosity hasn’t.**
 
-The portfolio introduces Abhishek as a senior engineer who started with design and learned by building. The home page leads with his current role, experience, education and résumé. It moves through professional impact, career chapters and enterprise cases before independent products, engineering principles, recognition, The Workshop, the personal story and contact.
+The homepage leads with Abhishek Verma’s portrait, Senior Software Engineer role at DP World, 8+ years of experience and résumé access. A compact marquee distinguishes current and former employment, developer recognition, competition results and study. The milestones connect images and captions to the pages that carry their context.
 
-- **Recruiters** can get context from the hero and follow the résumé, LinkedIn or contact.
-- **Hiring managers** can read the professional results and scan the experience index for scope, role, collaboration and delivery.
-- **Technical evaluators** can follow the detailed cases, diagrams, fictional examples, product evidence and source links.
+## Page hierarchy
 
-The Experience route pairs a chapter-led narrative with a reference list of roles. DP World appears as one employer with a progression of designations. Story follows six first-person chapters, with small recreations of a childhood computer, an arithmetic calculator and Life Calculator. Lab provides a place for tinkering, simulations, hackathons and the moonshot.
+1. **Home** introduces the person, associations and milestones, followed by three enterprise cases, two pictured products, the flagship archive, engineering principles, personal links and contact.
+2. **Experience** carries the complete career chronology, employment history, six enterprise cases, awards and education. The three home features use the same public workflow concepts. The case pages retain team attribution, constraints, trade-offs and qualitative outcomes.
+3. **Work** retains seven flagship identities and 17 independent product case studies. The homepage leads with authentic Atlas and Envision screenshots. Vibes, Servio, Prism, Luminescent and Auditbench appear in a compact index. Their full pages carry motivations, architecture, demos and source links.
+4. **Story** follows Curiosity, Understanding, Design meets engineering, Professional recognition, Enterprise engineering, Continuous learning and Beyond engineering. Native disclosures retain the early career detail and house the original desktop, arithmetic and Life Calculator experiences.
+5. **Lab** pairs the owner’s laptop with a conceptual self-hosting illustration. It retains the homelab, LEGO, Raspberry Pi, Android ROMs, independent BoxBay AI simulation, hackathon builds and JARVIS-inspired aspiration.
+6. **Engineering, About, Résumé and Contact** retain direct routes for philosophy, biography, printable credentials and ways to get in touch.
 
-Professional stories distinguish team outcomes from individual contributions. The principles of finding the root, designing for simplicity, and deconstructing and prioritizing work each connect to an enterprise case. Product pages connect motivations to technical evidence. Luminescent’s story describes its documented design and architecture.
+The shorter home copy puts technical detail, the complete timeline and fuller hackathon coverage at their existing destinations. Recruiters can reach the résumé from the first view. Hiring managers can move from the quality of the evidence into any professional case. Technical evaluators retain the existing architecture explanations and original demonstrations.
 
-Storytelling reference reviewed for identity-first framing and curated case studies. [Anirudh Goyal’s portfolio](https://anirudhgoyal.framer.website/)
+The design reference informed the placement of recognisable associations, portrait-led milestones and selected work. [Anirudh Goyal’s portfolio](https://anirudhgoyal.framer.website/)

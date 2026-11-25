@@ -6,7 +6,7 @@ Edit repository sources, then run `npm run typecheck` and `npm run verify`. Sign
 
 Edit profile and verified contact destinations in `content/portfolio.json`. Employment entries need a unique slug-like `id`, company, duration and factual contributions. A current role derives its title from the ordered `progression` entries under a single employer. Update the job there to keep the homepage, résumé and structured data consistent.
 
-Add a chapter in `content/editorial.mjs` with a unique `id`, a theme, a headline and a first-person summary. Refer to a job by its ID for dates and employer, or provide a `period` for nonemployment chapters. Link the chapter from `storyChapters` where appropriate. The experience page renders the complete timeline. Homepage curation lives in the renderer’s compact journey selection.
+Add a chapter in `content/editorial.mjs` with a unique `id`, a theme, a headline and a first-person summary. Refer to a job by its ID for dates and employer, or provide a `period` for nonemployment chapters. Link the chapter from `storyChapters` where appropriate. The experience page renders the complete timeline. Homepage milestone selections are in `src/components/homepage.mjs`. The education entry in `content/portfolio.json` carries the qualification wording, partner, specialisations, dates and abbreviated display name used by the homepage and structured data.
 
 ## Enterprise case studies and principles
 

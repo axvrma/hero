@@ -1,22 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <defs>
-    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#4a4942" stroke-width="1"/></pattern>
-    <linearGradient id="disc" x2="1" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#fa9275"/><stop offset="1" stop-color="#a63a2d"/></linearGradient>
-    <clipPath id="orb"><circle cx="940" cy="315" r="120"/></clipPath>
-  </defs>
-  <path fill="#20211e" d="M0 0h1200v630H0z"/>
-  <path fill="url(#grid)" d="M696 0h504v630H696z"/>
-  <g transform="translate(62 56)" stroke="#fa9275" fill="none"><circle cx="16" cy="16" r="11"/><path d="m4 27 24-22M4 16h24M16 4v24"/><circle cx="16" cy="16" r="2.75" fill="#fa9275"/></g>
-  <g fill="#f8f3e9" font-family="Arial, sans-serif"><text x="107" y="79" font-size="24" font-weight="700">Abhishek Verma</text>
-    <text x="62" y="180" font-size="27">Senior Software Engineer at DP World</text>
-    <text x="62" y="269" font-size="74" font-weight="700" letter-spacing="-4">The technology</text>
-    <text x="62" y="349" font-size="74" font-weight="700" letter-spacing="-4">has changed.</text>
-    <text x="62" y="425" font-size="60" font-weight="700" letter-spacing="-3.5" fill="#fa9275">The curiosity hasn’t.</text>
-    <text x="62" y="550" font-size="23" fill="#c4c1b7">Designer at heart. Engineer by choice. Builder by instinct.</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Abhishek Verma</title>
+  <desc id="description">Senior Software Engineer at DP World, beside an AI-assisted portrait.</desc>
+  <rect width="1200" height="630" fill="#191a17"/>
+  <path d="M32 31h1136v568H32zM730 31v568" fill="none" stroke="#484940"/>
+  <image href="images/portraits/hero-portrait.webp" x="731" y="32" width="436" height="566" preserveAspectRatio="xMidYMid slice"/>
+  <g transform="translate(78 87)" fill="none" stroke="#fa9275" stroke-width="1.5">
+    <circle r="12"/><path d="M-15 12 15-12M-15 0h30M0-15v30"/><circle r="3" fill="#fa9275"/>
   </g>
-  <g stroke="#a7aaa0" stroke-opacity=".55" fill="none"><circle cx="940" cy="315" r="175"/><circle cx="940" cy="315" r="147"/><path d="M706 315h468M940 81v468" stroke-dasharray="3 6"/></g>
-  <circle cx="940" cy="315" r="120" fill="url(#disc)"/>
-  <g clip-path="url(#orb)"><path fill="#232522" d="m786 384 232-224 76 77-232 224z"/><g stroke="#ffe2d4" stroke-opacity=".62" fill="none"><circle cx="940" cy="315" r="92"/><circle cx="940" cy="315" r="58"/></g></g>
-  <path d="m797 457 286-284" stroke="#f1eee7" stroke-opacity=".7"/>
-  <circle cx="940" cy="315" r="5" fill="#f8f3e9"/><circle cx="1083" cy="173" r="4" fill="#fa9275"/><circle cx="797" cy="457" r="4" fill="#fa9275"/>
+  <g font-family="Arial, sans-serif">
+    <text x="105" y="94" font-size="23" font-weight="700" fill="#f8f3e9">Abhishek Verma</text>
+    <text x="65" y="245" font-size="66" font-weight="700" letter-spacing="-4" fill="#f8f3e9">The technology</text>
+    <text x="65" y="312" font-size="66" font-weight="700" letter-spacing="-4" fill="#f8f3e9">has changed.</text>
+    <text x="65" y="388" font-size="66" font-weight="700" letter-spacing="-4" fill="#fa9275">The curiosity hasn’t.</text>
+    <text x="67" y="530" font-size="24" fill="#bebbb0">Senior Software Engineer at DP World</text>
+    <text x="67" y="561" font-size="18" fill="#bebbb0">axvrma.com</text>
+    <rect x="947" y="553" width="201" height="30" rx="2" fill="#191a17"/>
+    <text x="1136" y="574" font-size="15" fill="#f8f3e9" text-anchor="end">AI-assisted portrait</text>
+  </g>
 </svg>

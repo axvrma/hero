@@ -1,16 +1,28 @@
 # Photography and public assets
 
-Put finished, approved photographs at the exact paths below. The repository currently uses original geometric hero artwork and omits empty photography regions.
+The owner-supplied originals are staged under `.asset-inbox/axvrma-visual-assets/`. Git ignores that directory. `content/publication.mjs` records the approved derivative paths, intrinsic dimensions, responsive candidates, focal points, captions, alternative text, provenance and rights status.
 
-- `public/images/portraits/abhishek-professional.webp` is the hero portrait. Supply 1200 × 1500 or larger at 4:5. Allow space around the face for a nearly square crop.
-- `public/images/portraits/abhishek-casual.webp` appears with the personal growth section. Supply 1440 × 1080 at 4:3.
-- `public/images/journey/dp-world-office.webp` appears in the DP World career chapter. Supply 1600 × 1000 at 8:5.
-- `public/images/recognition/paytm-hackathon.webp` appears with the hackathon stories. Supply 1440 × 1080 at 4:3.
-- `public/images/recognition/award-certificate.webp` appears in Recognition. Supply around 1440 × 1080 or use the redacted original document ratio.
-- `public/images/workshop/workbench.webp` appears in the Lab. Supply 1440 × 1080 at 4:3.
+## Supplied assets in the public build
 
-Prepare the final image outside the repository. Confirm publication rights and consent for anyone pictured. Inspect office photographs for screens, customer information, badges and documents. Inspect certificates for signatures, QR codes, identifiers and personal details. Export a compressed WebP or AVIF and strip EXIF and location metadata. Add the approved file and update its manifest entry in `content/publication.mjs` with the actual path, pixel dimensions, alt text, caption, optional attribution and focal point. Set `publication: "approved"` and `rights: "cleared"` in the same review.
+- **Professional portrait** at `public/images/portraits/hero-portrait.webp` with 480px, 640px, 768px and 1080px widths. It appears in the hero and the social preview. The portrait was generated with AI using the owner’s reference photographs. Both placements say “AI-assisted portrait.”
+- **Casual portrait** at `public/images/portraits/portrait-casual.webp` with 480px and 768px widths. The owner’s photograph appears in Story.
+- **San Francisco portrait** at `public/images/portraits/portrait-san-francisco.webp`. The 420 × 420 original appears in a compact homepage tile and in Story.
+- **Google Assistant recognition** at `public/images/recognition/google-assistant-2018.webp` with 480px, 768px and 1320px widths. The owner’s photograph appears in the homepage milestones, Story and Experience. The caption identifies developer recognition in 2018.
+- **Workshop laptop** at `public/images/workshop/homelab.webp` with 480px, 768px and 1080px widths. The owner’s photograph appears in the homepage milestones and on Lab. The paired ecosystem illustration is conceptual.
 
-Layouts omit a registered image when its file is missing. The build rejects a file at a manifest path that lacks approval and rights clearance. Keep all unapproved files outside `public` and outside Git. Review the preview at wide and narrow sizes. Images outside the hero load lazily and can use a keyboard-accessible expansion dialog.
+## Supplied assets awaiting publication clearance
 
-Product screenshots keep their existing paths under `public/images`. Retain existing captures, dimensions, responsive widths and art licensing. `public/favicon.svg` is the site icon. The 1200 × 630 `public/social.svg` is the editable social image source and `public/social.png` is the PNG used by social metadata.
+- **DP World 2023 Kudos Award** is registered as `public/images/recognition/dp-world-kudos-2023.webp`, with planned 640px, 960px and 1320px widths. Obtain consent for the participants and verify employer policy. The homepage currently shows a typographic milestone, and Experience retains the award citation. Once cleared, the photo appears in the milestones, Story and Experience. The homepage image uses containment so both participants and the award presentation stay visible.
+- **IIT Guwahati certificate** is registered as `public/images/recognition/iit-guwahati-ai-ml-2026-redacted.webp`, with planned 480px, 800px and 1684px widths. Visual review at 1684 × 1191 confirmed that the certificate identifier and signatures are obscured. Issue information, typed names and the qualification details remain legible. The derivative is a flattened WebP. The factual claim is verified, and image publication has its own approval. Once cleared, the rendered thumbnail will preserve the full document, and the keyboard-accessible viewer will link to the full-resolution redacted image.
+
+The DP World office and Paytm event photographs remain optional pending entries. Existing hackathon product screenshots remain in use. See [owner review](CONTENT-REVIEW.md) for release conditions.
+
+## Prepare and approve derivatives
+
+Export at original resolution or smaller, preserve aspect ratio, and strip EXIF, XMP and location data. The full certificate derivative preserves the supplied document pixels. Use explicit intrinsic dimensions and validate each responsive candidate. The build rejects pending files or variants, orphaned variants, and unregistered files in the four editorial image directories. Certificates also require the recorded visual redaction review and a redacted filename. Add the optimised files and mark approval and rights clearance in the manifest together.
+
+Product imagery uses the existing screenshots and concept art. Keep the archive’s image licensing and the distinction between screenshot and illustration. `public/social.svg` references the local portrait and is the editable source for the 1200 × 630 `public/social.png` used in social metadata.
+
+## Organisation names
+
+The homepage marquee uses locally rendered typography for DP World, Airtel Africa, IIT Guwahati, Google Assistant, Microsoft GitTogether, Paytm and Emeritus. Relationship labels come from the employment, recognition, hackathon and qualification records. No official logo files were added. Any future official logo needs a documented source and usage permission before it replaces a name.

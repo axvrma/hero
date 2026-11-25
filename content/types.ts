@@ -87,6 +87,9 @@ export type EditorialAsset = {
   height: number;
   focalPoint: "center" | "top" | "left" | "right";
   attribution: string | null;
+  provenance: "ai-assisted-portrait" | "owner-supplied-photo" | "certificate-derivative";
+  redaction?: "visually-verified";
+  variants?: { path: string; width: number }[];
   publication: "pending" | "approved";
   rights: "pending" | "cleared";
 };

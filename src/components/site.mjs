@@ -10,8 +10,9 @@ import { motivations } from "../../content/editorial.mjs";
 import { breadcrumb, external, pageIntro, sectionIntro } from "./ui.mjs";
 import {
   careerJourney, closing, employment, engineeringPrinciples,
-  enterpriseList, hero, impact, photography,
+  educationDetails, enterpriseList, hero, impact, photography, selectedImpact,
 } from "./editorial.mjs";
+import { brandMarquee, personalTeaser, productArchive, visualProof } from "./homepage.mjs";
 export { pageIntro } from "./ui.mjs";
 export function header(path, profile) {
   const nav = [
@@ -34,13 +35,13 @@ export function footer(profile) {
 }
 export const contact = closing;
 
-export function feature(p) {
+export function feature(p, compact = false) {
   const motivation = motivations[p.id];
   return `<article class="project-feature ${e(p.id)}">
-    <a class="visual-link" href="/work/${e(p.id)}" aria-label="Explore the ${e(p.name)} case study">${visual(p)}</a>
-    <div class="feature-meta"><p class="eyebrow">${e(p.name)} · ${e(p.category)}</p><h3><a href="/work/${e(p.id)}">${e(motivation.headline)}</a></h3><p>${e(p.description)}</p>
-    <p class="feature-signal">${e(motivation.signal)}</p>
-    <div class="product-links"><a href="/work/${e(p.id)}" class="text-link">Case study</a>${external(p.live, p.liveLabel || "Live demo")}${external(p.source, "Source code")}</div></div>
+    <a class="visual-link" href="/work/${e(p.id)}">${visual(p, compact ? "(max-width: 760px) 90vw, (max-width: 1440px) 54vw, 780px" : undefined)}</a>
+    <div class="feature-meta"><p class="eyebrow">${e(p.name)} · ${e(p.category)}</p><h3>${compact ? e(motivation.headline) : `<a href="/work/${e(p.id)}">${e(motivation.headline)}</a>`}</h3><p>${e(p.description)}</p>
+    ${compact ? "" : `<p class="feature-signal">${e(motivation.signal)}</p>`}
+    <div class="product-links"><a href="/work/${e(p.id)}" class="text-link" aria-label="Case study: ${e(p.name)}">Case study</a>${external(p.live, p.liveLabel || "Live demo")}${compact ? "" : external(p.source, "Source code")}</div></div>
   </article>`;
 }
 function hackathonCard(project) {
@@ -94,44 +95,29 @@ export function archiveRows(projects, limit) {
     )
     .join("")}</div>`;
 }
-function productRows(products) {
-  return `<div class="compact-products">${products.map((p) => `<article>
-    <p class="eyebrow">${e(p.name)}</p>
-    <h3><a href="/work/${e(p.id)}">${e(motivations[p.id].headline)}</a></h3>
-    <p>${e(motivations[p.id].signal)}</p>
-  </article>`).join("")}</div>`;
-}
 export function home(content, products) {
-  return `<div class="shell">
+  const featured = ["atlas", "envision"].map((id) => products.find((product) => product.id === id));
+  return `<div class="shell home-edition">
     ${hero(content)}
-    ${impact(content)}
-    ${careerJourney(content, true)}
-    ${enterpriseList(true)}
+    ${brandMarquee()}
+    ${visualProof(content)}
+    ${selectedImpact(content)}
     <section class="editorial-section product-section" id="products">
-      ${sectionIntro("Independent products", "Curiosity, turned into products.", "Most of my independent projects started with a question, a frustration, or a limitation I wasn’t ready to accept.")}
-      <div class="editorial-product-gallery">${products.slice(0, 2).map(feature).join("")}</div>
-      ${productRows(products.slice(2))}
-      <a class="text-link editorial-more" href="/work">Explore the product ecosystem and project archive</a>
+      ${sectionIntro("Independent products", "Built from curiosity.")}
+      <div class="editorial-product-gallery home-product-gallery">${featured.map((product) => feature(product, true)).join("")}</div>
+      ${productArchive(products.filter((product) => !featured.includes(product)), motivations)}
+      <a class="text-link editorial-more" href="/work">All products and projects</a>
     </section>
     ${engineeringPrinciples()}
-    ${recognition(content, true)}
-    ${hackathons(content)}
-    <section class="editorial-section editorial-teaser">
-      ${sectionIntro("The Workshop", "Engineering doesn’t stop at my desk.", "I spend time with LEGO, Android ROMs, Raspberry Pi and self-hosted systems. The Workshop is where I follow those interests and try ideas at a smaller scale.")}
-      <a class="button button-outline" href="/lab">Visit the Lab</a>
-    </section>
-    <section class="editorial-section editorial-teaser story-teaser">
-      ${sectionIntro("Personal story", "It all started with a question.", "My first computer made me wonder what every button did. A calculator, an internship in design and an Android app eventually turned that question into a career.")}
-      <a class="button button-outline" href="/story">Read my story</a>
-    </section>
-  </div>${closing(content.profile)}`;
+    ${personalTeaser()}
+  </div>${closing(content.profile, false, true)}`;
 }
 export function work(products, secondary, name) {
   return `<div class="shell">${pageIntro("Independent products", "Curiosity, turned into products.", "Most of my independent projects started with a question, a frustration, or a limitation I wasn’t ready to accept.")}
   <p class="work-professional"><a class="text-link" href="/experience#work">Explore my enterprise case studies</a></p>
   <section class="editorial-section work-products" aria-labelledby="featured-title">
     ${sectionIntro("Flagship products", "Why I build.", "", "featured-title")}
-    <div class="editorial-product-gallery" id="projects">${products.map(feature).join("")}</div>
+    <div class="editorial-product-gallery" id="projects">${products.map((product) => feature(product)).join("")}</div>
     <details class="product-map"><summary>Explore the product map</summary>${ecosystem(products, name)}</details>
   </section>
   <section id="archive" class="editorial-section">
@@ -141,21 +127,25 @@ export function work(products, secondary, name) {
   </section></div>`;
 }
 export function about(content) {
-  return `<div class="shell">${pageIntro("ABOUT / THE PERSON BEHIND THE PRODUCTS", 'An engineer’s mind.<br><span class="muted">A builder’s curiosity.</span>', content.profile.about || "I’m Abhishek Verma. I build interfaces, systems, and the small tools that make working with them better.")}<section class="about-layout section"><div class="about-monogram" aria-hidden="true"><span>av<span class="accent">.</span></span><div class="mono">ABHISHEK VERMA<br>SOFTWARE ENGINEER & PRODUCT BUILDER</div></div><div class="prose"><h2>From the interface<br>to the infrastructure.</h2><p>My work spans enterprise frontend systems, reusable design systems, workflow management, and independent products. I’m interested in the point where a complex system starts to feel simple to the person using it.</p><p>At DP World, that has meant working on workflow interfaces, micro-frontends, and a unified design system. In my independent practice, it means building products like Atlas, Vibes, Envision, Servio, Prism, Luminescent, and Auditbench.</p><p>Different surfaces. The same questions: is the model clear, does the interaction make sense, and can the next engineer keep building on it?</p><a href="/experience" class="text-link">Explore my professional experience ${arrow}</a> <a href="/story" class="text-link">Read my personal story</a></div></section><section class="section"><div class="section-label"><span class="mono">EDUCATION & CONTINUED LEARNING</span></div><div class="education-grid">${content.education.map((ed) => `<article><h2>${e(ed.institution)}</h2><p>${e(ed.degree)} ${e(ed.duration)}</p></article>`).join("")}</div></section><section class="section"><div class="section-heading"><h2>A few places<br><span class="muted">to find my thinking.</span></h2><div class="contact-social">${external(content.profile.github, "Code on GitHub")}${external(content.profile.linkedin, "Connect on LinkedIn")}</div></div></section></div>${contact(content.profile)}`;
+  return `<div class="shell">${pageIntro("ABOUT / THE PERSON BEHIND THE PRODUCTS", 'An engineer’s mind.<br><span class="muted">A builder’s curiosity.</span>', content.profile.about || "I’m Abhishek Verma. I build interfaces, systems, and the small tools that make working with them better.")}<section class="about-layout section"><div class="about-monogram" aria-hidden="true"><span>av<span class="accent">.</span></span><div class="mono">ABHISHEK VERMA<br>SOFTWARE ENGINEER & PRODUCT BUILDER</div></div><div class="prose"><h2>From the interface<br>to the infrastructure.</h2><p>My work spans enterprise frontend systems, reusable design systems, workflow management, and independent products. I’m interested in the point where a complex system starts to feel simple to the person using it.</p><p>At DP World, that has meant working on workflow interfaces, micro-frontends, and a unified design system. In my independent practice, it means building products like Atlas, Vibes, Envision, Servio, Prism, Luminescent, and Auditbench.</p><p>Different surfaces. The same questions: is the model clear, does the interaction make sense, and can the next engineer keep building on it?</p><a href="/experience" class="text-link">Explore my professional experience ${arrow}</a> <a href="/story" class="text-link">Read my personal story</a></div></section><section class="section"><div class="section-label"><span class="mono">EDUCATION & CONTINUED LEARNING</span></div><div class="education-grid">${content.education.map((ed) => `<article><h2>${e(ed.institution)}</h2>${educationDetails(ed)}</article>`).join("")}</div></section><section class="section"><div class="section-heading"><h2>A few places<br><span class="muted">to find my thinking.</span></h2><div class="contact-social">${external(content.profile.github, "Code on GitHub")}${external(content.profile.linkedin, "Connect on LinkedIn")}</div></div></section></div>${contact(content.profile)}`;
 }
-export function recognition(content, compact = false) {
+export function recognition(content, includePhotos = true) {
   return `<section class="editorial-section recognition-section" id="achievements">
     ${sectionIntro("Recognition", "Moments that matter.")}
     <div class="recognition-list">${content.achievements.map(({ title, description }) => `<article><h3>${e(title)}</h3><p>${e(description)}</p></article>`).join("")}</div>
-    ${compact ? "" : '<a class="text-link editorial-more" href="/#hackathons">Explore hackathon results</a>'}
-    ${photography(content.assets, "recognition-certificate", { expandable: true })}
+    <a class="text-link editorial-more" href="/lab#hackathons">Explore hackathon results</a>
+    ${includePhotos ? `<div class="recognition-photos">
+      ${photography(content.assets, "dp-world-kudos-2023", { expandable: true, sizes: "(max-width: 680px) 90vw, 45vw" })}
+      ${photography(content.assets, "google-assistant-2018", { expandable: true, sizes: "(max-width: 680px) 90vw, 45vw" })}
+    </div>` : ""}
   </section>`;
 }
 
-function education(content) {
+function education(content, includePhoto = true) {
   return `<section class="editorial-section" id="education">
     ${sectionIntro("Continued learning", "Education & certifications.")}
-    <div class="education-grid">${content.education.map((ed) => `<article><h3>${e(ed.institution)}</h3><p>${e(ed.degree)} ${e(ed.duration)}</p></article>`).join("")}</div>
+    <div class="education-grid">${content.education.map((ed) => `<article><h3>${e(ed.institution)}</h3>${educationDetails(ed)}</article>`).join("")}</div>
+    ${includePhoto ? photography(content.assets, "iit-guwahati-certificate", { expandable: true, sizes: "(max-width: 680px) 85vw, 460px" }) : ""}
   </section>`;
 }
 
@@ -183,6 +173,6 @@ export function resume(content) {
     ${pageIntro("Résumé", e(profile.name), `${profile.role} at ${currentJob.company} · ${profile.location}`)}
     <a class="text-link" href="mailto:${e(profile.email)}">${e(profile.email)}</a>
     <div class="page-actions"><button class="button button-primary print-resume" type="button" hidden>Print / Save PDF</button>${external(profile.resume, "Open original résumé", "button button-outline")}<a class="text-link" href="/experience#work">Enterprise case studies</a></div>
-    ${employment(content)}${education(content)}${capabilities(content)}${recognition(content)}
+    ${employment(content)}${education(content, false)}${capabilities(content)}${recognition(content, false)}
   </div>`;
 }

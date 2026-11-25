@@ -1,5 +1,16 @@
-import { stat } from "node:fs/promises";
-import { resolve } from "node:path";
+import { lstat, readdir } from "node:fs/promises";
+import { join, resolve } from "node:path";
+
+const editorialDirectories = ["portraits", "journey", "recognition", "workshop"];
+const imagePath = /^\/images\/(?:[a-z0-9-]+\/)*[a-z0-9-]+\.(?:webp|avif|jpg|png)$/;
+
+async function optionalFile(path) {
+  try {
+    return await lstat(path);
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+}
 
 export function publishedMetrics(metrics) {
   return metrics.filter((metric) => {
@@ -16,25 +27,45 @@ export function publishedMetrics(metrics) {
 
 export async function availableAssets(assets, root = "public") {
   const files = new Map();
+  const registered = new Set();
+  const ids = new Set();
   for (const asset of assets) {
-    if (!/^\/images\/(?:[a-z0-9-]+\/)*[a-z0-9-]+\.(?:webp|avif|jpg|png)$/.test(asset.path)) {
-      throw Error(`Invalid editorial path: ${asset.id}`);
+    if (ids.has(asset.id)) throw Error(`Duplicate editorial asset: ${asset.id}`);
+    ids.add(asset.id);
+    const candidates = [asset, ...(asset.variants ?? [])];
+    const widths = new Set();
+    for (const { path, width } of candidates) {
+      if (!imagePath.test(path) || registered.has(path)) throw Error(`Invalid editorial path: ${asset.id}`);
+      if (!Number.isInteger(width) || width < 1 || width > asset.width || widths.has(width)) {
+        throw Error(`Invalid editorial image width: ${asset.id}`);
+      }
+      widths.add(width);
+      registered.add(path);
     }
-    let file;
-    try {
-      file = await stat(resolve(root, `.${asset.path}`));
-    } catch (error) {
-      if (error.code !== "ENOENT") throw error;
-      continue;
+    const present = await Promise.all(candidates.map(({ path }) => optionalFile(resolve(root, `.${path}`))));
+    if (!present.some(Boolean)) continue;
+    if (asset.publication !== "approved" || asset.rights !== "cleared") throw Error(`Unapproved photo in public assets: ${asset.id}`);
+    if (asset.provenance === "certificate-derivative" &&
+        (asset.redaction !== "visually-verified" || candidates.some(({ path }) => !/-redacted(?:-\d+)?\./.test(path)))) {
+      throw Error(`Certificate requires verified redaction: ${asset.id}`);
     }
-    if (asset.publication !== "approved" || asset.rights !== "cleared") {
-      throw Error(`Unapproved photo in public assets: ${asset.id}`);
-    }
-    if (!file.isFile() || !asset.alt?.trim() || !Number.isInteger(asset.width) || asset.width < 1 ||
-        !Number.isInteger(asset.height) || asset.height < 1) {
+    if (!present[0] || present.some((file) => file && !file.isFile()) ||
+        !asset.alt?.trim() || !Number.isInteger(asset.height) || asset.height < 1) {
       throw Error(`Invalid editorial asset: ${asset.id}`);
     }
-    files.set(asset.id, asset);
+    files.set(asset.id, { ...asset, variants: candidates.slice(1).filter((_, index) => present[index + 1]) });
+  }
+  for (const directory of editorialDirectories) {
+    const relative = `/images/${directory}`;
+    const path = join(root, relative);
+    const folder = await optionalFile(path);
+    if (!folder) continue;
+    if (!folder.isDirectory()) throw Error(`Invalid editorial directory: ${relative}`);
+    for (const entry of await readdir(path, { withFileTypes: true })) {
+      if (!entry.isFile() || !registered.has(`${relative}/${entry.name}`)) {
+        throw Error(`Unregistered editorial file: ${relative}/${entry.name}`);
+      }
+    }
   }
   return files;
 }

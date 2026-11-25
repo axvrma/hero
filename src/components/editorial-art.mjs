@@ -27,3 +27,38 @@ export function principleArt(id) {
 }
 
 export const moonshotArt = `<svg viewBox="0 0 330 240" fill="none" aria-hidden="true"><g stroke="currentColor"><circle cx="165" cy="120" r="86"/><circle cx="165" cy="120" r="66" stroke-dasharray="3 6"/><path d="M30 120h270M165 18v204"/><path d="m165 44 55 108-55 44-55-44z" stroke-width="2"/><path d="m165 82 34 63-34 25-34-25zM110 152l-30 24m140-24 30 24"/></g><circle cx="165" cy="120" r="12" fill="var(--accent)"/><path d="M44 37h22m-11-11v22m210 155h22m-11-11v22" stroke="var(--accent)"/></svg>`;
+
+const careerScenes = {
+  desktop: {
+    className: "chapter-terminal",
+    paths: `<rect x="74" y="22" width="172" height="112" rx="8"/><path d="M84 33h152v81H84zM133 134l-5 19m59-19 5 19m-80 0h96M100 56l12 10-12 10m21 5h25"/><circle cx="160" cy="124" r="2" fill="currentColor"/><path d="M190 48h32m-32 10h32m-32 10h22" opacity=".35"/>`,
+  },
+  calculator: {
+    className: "chapter-calculator",
+    paths: `<rect x="93" y="25" width="134" height="129" rx="8"/><path d="M106 39h108v28H106zM118 54h9m6 0h8m7 0h9" /><path d="M112 86h17v12h-17zm39 0h17v12h-17zm39 0h17v12h-17zm-78 29h17v12h-17zm39 0h17v12h-17zm39 0h17v12h-17z"/><path d="M194 119h9m-9 4h9" opacity=".65"/>`,
+  },
+  life: {
+    className: "chapter-life",
+    paths: `<rect x="112" y="16" width="96" height="148" rx="12"/><path d="M146 29h28m-22 121h16"/><circle cx="160" cy="78" r="26"/><path d="M160 63v15l11 8M133 124h54m-43 10h32" />`,
+  },
+};
+
+export function careerArt(id) {
+  const { className, paths } = careerScenes[id];
+  return `<div class="chapter-art ${className}" aria-hidden="true"><svg viewBox="0 0 320 180" fill="none" stroke="currentColor" stroke-width="2"><path d="M34 90h252M160 9v162M52 26h216v128H52z" opacity=".28" stroke-dasharray="3 6"/>${paths}</svg></div>`;
+}
+
+export function homelabArt() {
+  return `<figure class="workshop-map">
+    <div class="workshop-map-body">
+      <svg viewBox="0 0 500 320" preserveAspectRatio="none" fill="none" aria-hidden="true">
+        <g stroke="currentColor"><ellipse cx="250" cy="160" rx="198" ry="129" stroke-dasharray="2 6"/><ellipse cx="250" cy="160" rx="145" ry="97"/><ellipse cx="250" cy="160" rx="64" ry="48"/>
+        <path d="M250 28v264M52 160h396m-52-91L104 251m0-182 292 182" opacity=".45"/></g>
+        <circle cx="250" cy="160" r="8" fill="currentColor"/>
+      </svg>
+      <strong class="workshop-map-center">Self-hosting</strong>
+      <ul role="list" class="workshop-map-nodes"><li>Personal cloud</li><li>Media</li><li>Local AI</li><li>Networking</li><li>Monitoring</li><li>Automation</li></ul>
+    </div>
+    <figcaption>A conceptual map of the Workshop</figcaption>
+  </figure>`;
+}

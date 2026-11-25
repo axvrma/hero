@@ -7,7 +7,7 @@ import { career, principles } from "../content/editorial.mjs";
 import { enterpriseCases } from "../content/enterprise.mjs";
 import { editorialAssets, impactMetrics } from "../content/publication.mjs";
 import { availableAssets, publishedMetrics, validateEditorial } from "../scripts/lib/publication.mjs";
-import { impact, photography } from "../src/components/editorial.mjs";
+import { impact, photography, selectedImpact } from "../src/components/editorial.mjs";
 import { calculateExpression, elapsedTime } from "../src/calculations.mjs";
 
 test("career chapters reference employment once with a single ordered DP World progression", async () => {
@@ -30,10 +30,12 @@ test("only verified and approved complete metrics reach the renderer", () => {
   };
   const output = impact({ metrics: publishedMetrics([fixture]) });
   assert.doesNotMatch(output, /1234|Test metric|Fixture/);
+  assert.doesNotMatch(selectedImpact({ metrics: publishedMetrics([fixture]) }), /1234|Test metric|Fixture/);
   assert.match(output, /Less manual invoice processing/);
   assert.throws(() => publishedMetrics([{ ...fixture, publication: "approved" }]), /Incomplete public metric/);
   const approved = publishedMetrics([{ ...fixture, publication: "approved", verification: "verified" }]);
   assert.match(impact({ metrics: approved }), /1234 test units/);
+  assert.match(selectedImpact({ metrics: approved }), /1234 test units/);
 });
 
 test("missing approved photos are omitted and present approved photos escape user-facing fields", async () => {
@@ -46,7 +48,46 @@ test("missing approved photos are omitted and present approved photos escape use
     await writeFile(join(root, "." + asset.path), "test fixture");
     const available = await availableAssets([asset], root);
     assert.match(photography(available, asset.id), /Portrait &quot;sample&quot;/);
-    await assert.rejects(availableAssets([editorialAssets[0]], root), /Unapproved photo/);
+    assert.doesNotMatch(photography(available, asset.id), /srcset=/);
+    await assert.rejects(availableAssets([{ ...asset, publication: "pending" }], root), /Unapproved photo/);
+    await writeFile(join(root, "." + asset.variants[0].path), "test fixture variant");
+    const responsive = await availableAssets([asset], root);
+    const image = photography(responsive, asset.id, { priority: true, sizes: "90vw" });
+    assert.match(image, /hero-portrait-480\.webp 480w, \/images\/portraits\/hero-portrait\.webp 1080w/);
+    assert.doesNotMatch(image, /hero-portrait-768\.webp/);
+    assert.match(image, /sizes="90vw".*width="1080" height="1440" loading="eager" fetchpriority="high"/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("the editorial manifest publishes supplied cleared derivatives and keeps pending assets out", async () => {
+  const available = await availableAssets(editorialAssets);
+  assert.deepEqual([...available.keys()], ["professional-portrait", "casual-portrait", "san-francisco-portrait", "google-assistant-2018", "workshop-hardware"]);
+  assert.equal(available.get("professional-portrait").provenance, "ai-assisted-portrait");
+  assert.match(photography(available, "professional-portrait"), /<figcaption>AI-assisted portrait<\/figcaption>/);
+  assert.equal(available.get("san-francisco-portrait").width, 420);
+  assert.equal(available.get("san-francisco-portrait").variants.length, 0);
+});
+
+test("certificate derivatives require both approval and reviewed redaction, including orphan variants", async () => {
+  const root = await mkdtemp(join(tmpdir(), "axvrma-certificates-"));
+  const asset = editorialAssets.find(({ id }) => id === "iit-guwahati-certificate");
+  const folder = join(root, "images/recognition");
+  const fixture = (file) => writeFile(join(root, "." + file), "fixture");
+  try {
+    await mkdir(folder, { recursive: true });
+    assert.equal(asset.redaction, "visually-verified");
+    assert.equal(photography(await availableAssets([asset], root), asset.id), "");
+    await fixture(asset.variants[0].path);
+    await assert.rejects(availableAssets([asset], root), /Unapproved photo/);
+    const approved = { ...asset, publication: "approved", rights: "cleared" };
+    await assert.rejects(availableAssets([approved], root), /Invalid editorial asset/);
+    await fixture(asset.path);
+    await assert.rejects(availableAssets([{ ...approved, redaction: undefined }], root), /verified redaction/);
+    assert.match(photography(await availableAssets([approved], root), asset.id, { expandable: true }), /aria-label="Expand certificate"/);
+    await writeFile(join(folder, "original-certificate.pdf"), "fixture");
+    await assert.rejects(availableAssets([approved], root), /Unregistered editorial file/);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

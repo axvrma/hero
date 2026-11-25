@@ -1,6 +1,6 @@
-# Abhishek Verma · Beyond the Code
+# AXVRMA 3.1 · Abhishek Verma
 
-Abhishek Verma’s engineering portfolio. It introduces his work as a Senior Software Engineer at DP World, documents how teams solved enterprise problems, and connects his independent products to the questions that started them.
+Abhishek Verma’s engineering portfolio. The homepage introduces his work as a Senior Software Engineer at DP World through portraiture, professional milestones and selected work. Case studies, Story and the Workshop carry the engineering detail and interactive demos.
 
 The repository builds 32 public pages, including six enterprise case studies and 17 independent project case studies. It also builds a real 404, a sitemap, robots.txt and 39 exact legacy redirects.
 
@@ -36,7 +36,7 @@ npm run test:e2e
 npm run preview
 ```
 
-With the production preview running, run `AUDIT_URL=http://127.0.0.1:4173/ npm run lighthouse` in another shell. See [verification](docs/VERIFICATION.md) and [performance](docs/PERFORMANCE.md) for the audit conditions.
+With the production preview running, run `AUDIT_URL=http://127.0.0.1:4173/ npm run lighthouse` in another shell. Run `node scripts/capture-visuals.mjs` against the same preview to capture screenshots. See [verification](docs/VERIFICATION.md) and [performance](docs/PERFORMANCE.md) for the audit conditions.
 
 Netlify uses Node.js 24, `npm run build`, and `dist` from the checked-in configuration. The production context uses `https://axvrma.com` for canonical URLs. Deploy previews use their own origin with noindex. Use the existing Git-triggered Netlify workflow to publish after review.
 
