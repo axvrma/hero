@@ -4,7 +4,7 @@ import { products as registry } from "../content/products.mjs";
 import { hackathonProjects } from "../content/hackathons.mjs";
 import { escape as e, resolveOrigin, safeUrl } from "./lib/content.mjs";
 import * as site from "../src/components/site.mjs";
-import { heroPreload } from "../src/components/photography.mjs";
+import { recognition, testimonials } from "../content/personal-folio.mjs";
 import { career, motivations, principles } from "../content/editorial.mjs";
 import { enterpriseCases } from "../content/enterprise.mjs";
 import { editorialAssets, impactMetrics } from "../content/publication.mjs";
@@ -14,6 +14,20 @@ content.currentJob = validateEditorial(content, career, enterpriseCases, princip
 content.profile.role = content.currentJob.progression.at(-1).role;
 content.metrics = publishedMetrics(impactMetrics);
 content.assets = await availableAssets(editorialAssets);
+content.enterprise = enterpriseCases;
+content.hackathons = hackathonProjects;
+content.preview = process.env.CONTEXT === "deploy-preview" ||
+  (process.env.CONTEXT !== "production" && process.env.PORTFOLIO_PREVIEW === "1");
+content.recognition = recognition.map(({ achievement, hackathon, ...item }) => ({
+  ...item,
+  body: item.body ?? content.achievements[achievement]?.description ??
+    hackathonProjects.find(({ id }) => id === hackathon)?.story,
+}));
+if (content.preview) content.recognition.push(...testimonials.map((item) => ({ ...item, sample: true })));
+const licensedFont = process.env.POCKOTA_WEBFONT_PATH
+  ? await readFile(process.env.POCKOTA_WEBFONT_PATH) : null;
+if (licensedFont && licensedFont.subarray(0, 4).toString("ascii") !== "wOF2")
+  throw Error("POCKOTA_WEBFONT_PATH must point to the licensed WOFF2 file.");
 for (const { id } of registry) {
   if (!motivations[id]) throw Error(`Missing product motivation: ${id}`);
 }
@@ -92,7 +106,7 @@ const person = {
 };
 const profileSchema = { "@context": "https://schema.org", "@type": "ProfilePage", mainEntity: person };
 const routes = [
-  ["/", "The Anatomy of Curiosity", `${content.profile.name} is a ${content.profile.role} at ${content.currentJob.company}, building enterprise systems and independent products.`, site.home(content, products), profileSchema],
+  ["/", "Senior Software Engineer and Product Builder", `${content.profile.name} is a ${content.profile.role} at ${content.currentJob.company}, building enterprise systems and independent products.`, site.home(content, products), profileSchema],
   ["/work", "Enterprise work and independent products", "Engineering case studies, seven independent products, and experiments by Abhishek Verma.", site.work(content, products, secondary),
     { "@context": "https://schema.org", "@type": "ItemList", itemListElement: products.map((p, index) => ({
       "@type": "ListItem", position: index + 1, item: { ...projectSchema(p), ...(origin ? { "@id": `${origin}/work#${p.id}` } : {}) },
@@ -101,21 +115,27 @@ const routes = [
 ];
 await rm(".generated/site", { recursive: true, force: true });
 await mkdir(".generated/site", { recursive: true });
+if (licensedFont) {
+  await mkdir(".generated/site/licensed-font", { recursive: true });
+  await writeFile(".generated/site/licensed-font/pockota-medium.woff2", licensedFont);
+  await writeFile(".generated/site/licensed-font/pockota.css",
+    '@font-face { font-family: "Pockota Medium"; src: url("./pockota-medium.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; } :root { --licensed-heading-font: "Pockota Medium", Fraunces, Georgia, serif; --licensed-heading-weight: 400; }');
+}
 for (const [path, title, description, body, schema] of [
   ...routes,
   [
     "/404",
     "Page not found",
     "The page you’re looking for isn’t here.",
-    `<section class="page-top not-found"><div class="shell">${site.pageIntro("404", "A small <em>detour.</em>", "This address doesn’t lead to a page. You can still explore the work or return home.")}<div class="actions"><a class="button button-primary" href="/work">Explore the work</a><a class="button button-outline" href="/">Back home</a></div></div></section>`,
+    `<section class="page-top not-found"><div class="shell">${site.pageIntro("404", "Page not found", "Explore the work or return home.")}<div class="actions"><a class="button button-primary" href="/work">Explore the work</a><a class="button button-outline" href="/">Back home</a></div></div></section>`,
   ],
 ]) {
   const canonical = origin ? origin + (path === "/" ? "/" : path) : "";
   const noindex =
-    path === "/404" ||
+    path === "/404" || content.preview ||
     !origin || (process.env.CONTEXT && process.env.CONTEXT !== "production");
   const pageTitle = title.includes(content.profile.name) ? title : `${title} | ${content.profile.name}`;
-  const meta = `${path === "/" ? heroPreload(content.assets) : ""}
+  const meta = `${licensedFont ? '<link rel="stylesheet" href="/licensed-font/pockota.css">' : ""}
 <title>${e(pageTitle)}</title>
 <meta name="description" content="${e(description)}">
 ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
@@ -126,7 +146,7 @@ ${canonical && path !== "/404" ? `<link rel="canonical" href="${e(canonical)}">`
 <meta property="og:description" content="${e(description)}">
 ${canonical ? `<meta property="og:url" content="${e(canonical)}">` : ""}
 <meta property="og:image" content="${e(origin)}/social.png">
-<meta property="og:image:alt" content="${e(`${content.profile.name}, ${content.profile.role} at ${content.currentJob.company}, beside an AI-assisted portrait.`)}">
+<meta property="og:image:alt" content="${e(`${content.profile.name}, ${content.profile.role} at ${content.currentJob.company}`)}">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 ${schema ? `<script type="application/ld+json">${JSON.stringify(schema).replace(/</g, "\\u003c")}</script>` : ""}`;
@@ -180,7 +200,7 @@ await writeFile(
 );
 await writeFile(
   ".generated/site/robots.txt",
-  `User-agent: *\n${!origin || (process.env.CONTEXT && process.env.CONTEXT !== "production") ? "Disallow: /" : "Allow: /"}\n${origin ? `Sitemap: ${origin}/sitemap.xml\n` : ""}`,
+  `User-agent: *\n${!origin || content.preview || (process.env.CONTEXT && process.env.CONTEXT !== "production") ? "Disallow: /" : "Allow: /"}\n${origin ? `Sitemap: ${origin}/sitemap.xml\n` : ""}`,
 );
 await writeFile(
   ".generated/site/sitemap.xml",

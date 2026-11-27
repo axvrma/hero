@@ -1,0 +1,81 @@
+@font-face {
+  font-family: Manrope;
+  src: url("/fonts/manrope-latin.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url("/fonts/inter-latin.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Fraunces;
+  src: url("/fonts/fraunces-600.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+  --background: #081822;
+  --footer: #071822;
+  --surface: #07151d;
+  --editorial-surface: #061219;
+  --text: #fff;
+  --muted: #a1afb6;
+  --hero-muted: #85949a;
+  --stroke: #273b46;
+  --accent: #b3f9a2;
+  --spark: #62ffc5;
+  --panel: #172934;
+  --heading-font: var(--licensed-heading-font, Fraunces, Georgia, serif);
+  --heading-weight: var(--licensed-heading-weight, 600);
+  --body-font: Manrope, sans-serif;
+  --detail-font: Inter, sans-serif;
+  --hero-size: 48px;
+  --hero-line: 1.3;
+  --section-size: 48px;
+  --section-line: 1.2;
+  --section-tracking: -.02em;
+  --case-title-size: 38px;
+  --case-title-line: 1.28;
+  --case-width: 1024px;
+  --case-height: 500px;
+  --case-gap: 80px;
+  --case-radius: 32px;
+  --section-width: 1118px;
+  --heading-width: 774px;
+  --button-height: 48px;
+  --button-radius: 12px;
+  --tile-radius: 24px;
+  --easing: cubic-bezier(.22, .61, .36, 1);
+}
+
+@media (800px <= width < 1200px) {
+  :root {
+    --case-width: 726px;
+    --case-height: 360px;
+    --case-gap: 32px;
+    --case-radius: 24px;
+    --case-title-size: 24px;
+    --section-width: 724px;
+  }
+}
+
+@media (width < 800px) {
+  :root {
+    --hero-size: 28px;
+    --section-size: 24px;
+    --section-tracking: 0em;
+    --case-width: 328px;
+    --case-height: 600px;
+    --case-gap: 48px;
+    --case-radius: 16px;
+    --case-title-size: 24px;
+    --section-width: 328px;
+  }
+}
