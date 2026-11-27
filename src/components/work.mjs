@@ -1,112 +1,109 @@
-import { motivations, labExperiments } from "../../content/editorial.mjs";
-import { enterpriseCases } from "../../content/enterprise.mjs";
-import { hackathonProjects } from "../../content/hackathons.mjs";
+import { motivations } from "../../content/editorial.mjs";
+import { featured } from "../../content/personal-folio.mjs";
 import { cleanLegacy, escape as e } from "../../scripts/lib/content.mjs";
+import { caseArt } from "./art.mjs";
 import { demo } from "./demos.mjs";
-import { caseMetrics, featuredCases } from "./homepage.mjs";
-import { ambientBackground, diagram } from "./illustrations.mjs";
+import { caseMetrics } from "./homepage.mjs";
 import { photography } from "./photography.mjs";
-import { backgroundMotionControl, external, pageIntro, sceneTitle } from "./ui.mjs";
-import { productVisual } from "./visuals.mjs";
+import { checkList, external, heading, pageIntro, projectImage } from "./ui.mjs";
 
-const enterpriseArt = {
-  ...Object.fromEntries(featuredCases.map(({ id, art }) => [id, art])),
-  "micro-frontend-communication": "modules",
-  "configuration-driven-ui": "config",
-  "life-calculator": "calculator",
-};
+const extras = [["context", "Context"], ["team", "Team"], ["constraints", "Constraints"], ["approach", "Approach"], ["decisions", "Decisions"], ["tradeoffs", "Trade-offs"], ["lesson", "What I learned"]];
+const featuredById = new Map(featured.map((item) => [item.id, item]));
+const outline = (fields) => `<dl class="case-outline">${fields.map(([label, body]) => `<div><dt>${e(label)}</dt><dd>${e(body)}</dd></div>`).join("")}</dl>`;
 
-const technicalFields = [
-  ["context", "Context"], ["team", "Team"], ["constraints", "Constraints"],
-  ["approach", "Approach"], ["decisions", "Decisions"], ["tradeoffs", "Trade-offs"], ["lesson", "What I learned"],
-];
-
-function enterpriseEntry(item, content) {
-  const { id, organization, title, problem, role, outcome, example } = item;
-  return `<article class="work-entry enterprise-entry" id="${id}" tabindex="-1">
-    <div class="work-entry-lead"><div><p class="eyebrow">${e(organization)}</p><h3>${e(title)}</h3></div>
-      <dl class="case-outline"><div><dt>Problem</dt><dd>${e(problem)}</dd></div><div><dt>My contribution</dt><dd>${e(role)}</dd></div><div><dt>Outcome</dt><dd>${e(outcome)}</dd></div></dl>
-    </div>${caseMetrics(content.metrics, id)}
-    <details class="disclosure" id="details-${id}"><summary>Engineering details</summary>
-      ${diagram(enterpriseArt[id])}
-      <dl class="case-outline detail-outline">${technicalFields.map(([key, label]) => `<div><dt>${label}</dt><dd>${e(item[key])}</dd></div>`).join("")}</dl>
-      <a class="text-link" href="/#principles">Engineering principles</a>
+export function enterpriseEntry(item, content) {
+  const lead = featuredById.get(item.id);
+  const related = lead?.related ?? [];
+  return `<article class="secondary-card enterprise-entry" id="${e(item.id)}" tabindex="-1">
+    <p class="case-label">${e(item.organization)}</p><h3>${e(item.title)}</h3>
+    ${lead ? `<p class="case-deck">${e(lead.title)}</p>` : ""}
+    ${outline([["Problem", item.problem], ["My contribution", item.role], ["Team outcome", item.outcome]])}
+    ${caseMetrics(content.metrics, item.id, ...related)}
+    <details class="disclosure" id="details-${e(item.id)}"><summary>Engineering details</summary>
+      ${outline(extras.map(([key, label]) => [label, item[key]]))}
+      ${related.length ? `<div class="actions">${related.map((id) => `<a href="#${id}">${e(content.enterprise.find((entry) => entry.id === id).title)}</a>`).join("")}</div>` : ""}
     </details>
-    ${example ? demo(example) : ""}
+    ${item.example ? demo(item.example) : ""}
   </article>`;
 }
 
-function productEntry(product) {
-  const { id, name, category, description, live, liveLabel, source, sections, features, architecture, stack, limitations, evidence, legacy } = product;
-  const motivation = motivations[id];
-  const aliases = legacy.filter((alias) => alias !== id).map((alias) => `<span id="${e(alias)}"></span>`).join("");
-  return `<article class="work-entry product-entry" id="${id}" tabindex="-1">
-    ${aliases}
-    <div class="work-entry-lead"><div class="product-copy" data-reveal><p class="eyebrow">${e(category)}</p>
-      <h3>${e(name)}</h3><p>${e(description)}</p>
-      <div class="actions">${external(live, liveLabel || "Live demo", "text-link", name)}${external(source, "Source code", "text-link", name)}</div>
-    </div></div>
-    <details class="disclosure" id="details-${id}"><summary>Case study and technical details</summary>
-      <div class="technical-copy">${productVisual(product)}<p>${e(motivation.story)}</p><p>${e(motivation.signal)}</p>
-        ${motivation.comparison ? `<dl class="case-outline"><div><dt>Before</dt><dd>${e(motivation.comparison.before)}</dd></div><div><dt>With ${e(name)}</dt><dd>${e(motivation.comparison.after)}</dd></div></dl>` : ""}
-        ${sections.map(({ title, body }) => `<section><h4>${e(title)}</h4><p>${e(body)}</p></section>`).join("")}
-        <section><h4>Architecture</h4><ol class="architecture-flow">${architecture.map((step) => `<li>${e(step)}</li>`).join("")}</ol><p>${stack.map(e).join(" · ")}</p></section>
-        <section><h4>Capabilities</h4><ul>${features.map((feature) => `<li>${e(feature)}</li>`).join("")}</ul></section>
-        <section><h4>Scope and evidence</h4><p>${e(limitations)}</p><div class="actions">${evidence.map((url, index) => external(url, evidence.length > 1 ? `Repository evidence ${index + 1}` : "Repository evidence")).join("")}</div></section>
-      </div>
+const previews = {
+  atlas: { src: "/images/atlas-workspace-720.webp", width: 720, height: 396, alt: "Atlas visual workflow editor" },
+  vibes: { src: "/images/vibes-ocean.webp", width: 560, height: 1000, alt: "Ocean scene in the Vibes media player" },
+  envision: { src: "/images/envision-720.webp", width: 720, height: 405, alt: "Envision spatial computing studio" },
+  servio: { src: "/images/servio-720.webp", width: 720, height: 405, alt: "Servio’s local development workspace" },
+  auditbench: { src: "/images/auditbench-workspace.webp", width: 1440, height: 810, alt: "Auditbench Lighthouse performance reports" },
+};
+
+function productEntry(item) {
+  const { id, name, category, description, live, liveLabel, source, sections, architecture, features, stack, limitations, evidence } = item;
+  const aliases = item.legacy.filter((alias) => alias !== id).map((alias) => `<span id="${e(alias)}"></span>`).join("");
+  return `<article class="secondary-card product-entry" id="${e(id)}" tabindex="-1">${aliases}
+    <p class="case-label">${e(category)}</p><h3>${e(name)}</h3><p>${e(description)}</p>
+    <div class="actions">${external(live, liveLabel || "Live demo", "button button-outline", name)}${external(source, "Source code", "text-link", name)}</div>
+    <details class="disclosure" id="details-${e(id)}"><summary>Case study and technical details</summary>
+      ${previews[id] ? `<div class="secondary-media">${projectImage(previews[id])}</div>` : ""}
+      <p>${e(motivations[id].story)}</p>
+      ${sections.map(({ title, body }) => `<h4>${e(title)}</h4><p>${e(body)}</p>`).join("")}
+      <h4>Architecture</h4><p>${architecture.map(e).join(" · ")}</p><p>${stack.map(e).join(" · ")}</p>
+      <h4>Capabilities</h4>${checkList(features)}
+      <h4>Scope and evidence</h4><p>${e(limitations)}</p>
+      <div class="actions">${evidence.map((url, i) => external(url, "Repository evidence", "text-link", `${name} ${i + 1}`)).join("")}</div>
     </details>
   </article>`;
 }
 
 function hackathonEntry(project, archived) {
-  const { id, name, description, result, event, buildTime, story, live, source, preview } = project;
-  return `<article class="work-entry hackathon-entry" id="${id}" tabindex="-1"><div class="work-entry-lead">
-    <div><p class="eyebrow">${e(event || "Hackathon project")}</p><p class="result">${e(result)}</p><h4>${e(name)}</h4>
-      ${buildTime ? `<p class="eyebrow">${e(buildTime)}</p>` : ""}<p>${e(description)}</p><p>${e(story)}</p>
-      <div class="actions">${external(live, "Live demo", "button button-primary", name)}${external(source, "Source code", "text-link", name)}${archived ? `<a class="text-link" href="#archive-${id}">Original project notes</a>` : ""}</div>
-    </div>
-    <figure class="product-visual" data-reveal><img src="${e(preview.src)}" alt="${e(preview.alt)}" width="${preview.width}" height="${preview.height}" loading="lazy" decoding="async"><figcaption>${e(preview.caption)}</figcaption></figure>
-  </div></article>`;
+  const { id, name, description, result, event, story, live, source, preview } = project;
+  return `<article class="secondary-card hackathon-entry" id="${e(id)}" tabindex="-1">
+    <p class="case-label">${e(event || "Hackathon prototype")} · ${e(result)}</p><h4>${e(name)}</h4>
+    <p>${e(description)}</p><p>${e(story)}</p>
+    <div class="actions">${external(live, "Live demo", "button button-outline", name)}${external(source, "Source code", "text-link", name)}${archived ? `<a href="#archive-${e(id)}">Original project notes</a>` : ""}</div>
+    <figure class="secondary-media">${projectImage(preview)}<figcaption>${e(preview.caption)}</figcaption></figure>
+  </article>`;
 }
 
-function archiveEntry(project, hackathonIds) {
-  const { id, name, description, source, live, body } = project;
-  return `<article class="archive-entry" id="${hackathonIds.has(id) ? `archive-${id}` : id}" tabindex="-1">
-    <details class="disclosure"><summary><strong>${e(name)}</strong><span>${e(description)}</span></summary>
-      <div class="archive-prose">${cleanLegacy(body || "<p>Explore the project source for implementation details.</p>", { nested: true })}</div>
+function archiveEntry({ id, name, description, source, live, body }, hackathonIds) {
+  const anchor = hackathonIds.has(id) ? `archive-${id}` : id;
+  return `<article class="archive-entry" id="${e(anchor)}" tabindex="-1">
+    <details class="disclosure"><summary>${e(name)}</summary>
+      <p>${e(description)}</p>
+      <div class="archive-prose">${cleanLegacy(body || "", { nested: true })}</div>
       <div class="actions">${external(source, "Source code", "text-link", name)}${external(live, "Live demo", "text-link", name)}</div>
     </details>
   </article>`;
 }
 
 export function work(content, products, secondary) {
-  const priority = featuredCases.map(({ id }) => enterpriseCases.find((item) => item.id === id));
-  const ordered = [...priority, ...enterpriseCases.filter((item) => !priority.includes(item))];
-  const productOrder = ["atlas", "prism", "envision", "vibes", "servio", "luminescent", "auditbench"];
-  const hackathonIds = new Set(hackathonProjects.map(({ id }) => id));
-  return `<div class="page-top work-top"><div class="shell">
-      ${pageIntro("Work", "A collection of problems worth solving.", "")}
-      <nav class="section-nav" aria-label="Work sections"><a href="#enterprise">Enterprise</a><a href="#products">Independent products</a><a href="#experiments">Experiments and hackathons</a></nav>
-      ${backgroundMotionControl}
-    </div></div>
-    <div class="work-body">
-      <section class="scene ambient-section" id="enterprise">${ambientBackground("enterprise")}<div class="shell">
-        ${sceneTitle("01", "", "Enterprise systems")}
-        ${ordered.map((item) => enterpriseEntry(item, content)).join("")}
-      </div></section>
-      <section class="scene ambient-section" id="products">${ambientBackground("products")}<div class="shell">
-        ${sceneTitle("02", "", "Independent products")}
-        ${productOrder.map((id) => productEntry(products.find((product) => product.id === id))).join("")}
-      </div></section>
-      <section class="scene shell" id="experiments">${sceneTitle("03", "", "Experiments and hackathons")}
-        ${labExperiments.map(({ id, title, headline, body }) => `<article class="experiment" id="${id}" tabindex="-1"><p class="eyebrow">Independent simulation</p><h3>${e(title)}</h3><p><strong>${e(headline)}</strong></p><p>${e(body)}</p></article>`).join("")}
-        <section class="work-subsection" id="hackathons"><h3>Hackathons</h3>${hackathonProjects.map((project) => hackathonEntry(project, secondary.some(({ id }) => id === project.id))).join("")}
-          <p class="hackathon-note">First place at Major League Hacking, 2020.</p>
-          ${photography(content.assets, "paytm-hackathon-photo", { expandable: true })}
-        </section>
-        <section class="work-subsection" id="archive"><h3>Project archive</h3>
-          ${secondary.map((project) => archiveEntry(project, hackathonIds)).join("")}
-        </section>
+  const prototype = featuredById.get("boxbay-ai");
+  const hackathonIds = new Set(content.hackathons.map(({ id }) => id));
+  return `<div class="secondary-page">
+    ${pageIntro("Work", "Case Studies and Projects", "Enterprise systems, independent products and hackathon experiments.")}
+    <nav class="secondary-nav" aria-label="Work sections">
+      <a href="#enterprise">Enterprise</a><a href="#products">Independent products</a><a href="#experiments">Experiments</a>
+    </nav>
+    <section id="enterprise" class="secondary-section" aria-labelledby="enterprise-title">
+      ${heading("Selected work", "Enterprise Systems", "", "enterprise-title")}
+      ${content.enterprise.map((item) => enterpriseEntry(item, content)).join("")}
+    </section>
+    <section id="products" class="secondary-section" aria-labelledby="products-title">
+      ${heading("Independent", "Products I’ve Built", "", "products-title")}
+      ${products.map(productEntry).join("")}
+    </section>
+    <section id="experiments" class="secondary-section" aria-labelledby="experiments-title">
+      ${heading("Experiments", "Prototypes and Hackathons", "", "experiments-title")}
+      <article class="secondary-card" id="${prototype.id}" tabindex="-1">
+        <p class="case-label">${e(prototype.category)}</p><h3>${e(prototype.organization)}</h3>
+        <p class="case-deck">${e(prototype.title)}</p><p>${e(prototype.summary)}</p>
+        ${outline([["My contribution", prototype.contribution], ["What the simulation measures", prototype.outcome]])}
+        <div class="secondary-media">${caseArt(prototype.art, content)}</div>
+      </article>
+      <section id="hackathons" class="secondary-subsection" tabindex="-1"><h3>Hackathons</h3>
+        <p>First place at Major League Hacking in 2020 for a real-time certificate generator.</p>
+        ${content.hackathons.map((item) => hackathonEntry(item, secondary.some(({ id }) => id === item.id))).join("")}
+        ${photography(content.assets, "paytm-hackathon-photo", { expandable: true })}
       </section>
-    </div>`;
+      <section id="archive" class="secondary-subsection"><h3>Project archive</h3>${secondary.map((item) => archiveEntry(item, hackathonIds)).join("")}</section>
+    </section>
+  </div>`;
 }

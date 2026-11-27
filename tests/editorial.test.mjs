@@ -8,10 +8,8 @@ import { enterpriseCases } from "../content/enterprise.mjs";
 import { editorialAssets, impactMetrics } from "../content/publication.mjs";
 import { availableAssets, publishedMetrics, validateEditorial } from "../scripts/lib/publication.mjs";
 import { photography } from "../src/components/photography.mjs";
-import { products } from "../content/products.mjs";
-import { work } from "../src/components/work.mjs";
-import { invoiceComparison } from "../src/components/impact.mjs";
-import { brandMarquee, caseMetrics, impact } from "../src/components/homepage.mjs";
+import { enterpriseEntry } from "../src/components/work.mjs";
+import { brandMarquee, caseMetrics } from "../src/components/homepage.mjs";
 import { calculateExpression, elapsedTime } from "../src/calculations.mjs";
 
 test("career chapters reference employment once with a single ordered DP World progression", async () => {
@@ -24,6 +22,8 @@ test("career chapters reference employment once with a single ordered DP World p
   assert.throws(() => validateEditorial(content, career.slice(0, 4), enterpriseCases, principles, impactMetrics), /disagree/);
 });
 
+const invoiceMetrics = (metrics) => caseMetrics(metrics, "intelligent-invoice-processing");
+
 const disclosure = {
   scope: "Fictional sample", baseline: "Sample baseline", outcome: "Sample outcome",
   attribution: "Fixture team", evidence: "Fixture evidence", clearance: "Fixture release",
@@ -35,27 +35,26 @@ test("owner evidence and disclosure clearance are distinct requirements for publ
   assert.ok(impactMetrics.every(({ value }) => value === null));
   const fixture = { ...impactMetrics[3], ...disclosure, value: 2400000 };
   const absent = publishedMetrics([{ ...fixture, publication: "pending" }]);
-  assert.doesNotMatch(impact({ metrics: absent }), /Fixture|2.4M/);
-  assert.match(impact({ metrics: absent }), /From invoice to usable data/);
+  assert.doesNotMatch(invoiceMetrics(absent), /Fixture|2.4M/);
+  assert.equal(invoiceMetrics(absent), "");
   assert.throws(() => publishedMetrics([{ ...fixture, clearance: null }]), /Incomplete public metric/);
   assert.throws(() => publishedMetrics([{ ...fixture, verification: "pending" }]), /Incomplete public metric/);
   const approved = publishedMetrics([fixture]);
-  assert.match(impact({ metrics: approved }), /≈\$2.4M/);
-  assert.match(impact({ metrics: approved }), /Annual cost savings/);
-  assert.match(impact({ metrics: approved }), /Fixture team · Owner-reported/);
+  assert.match(invoiceMetrics(approved), /≈\$2.4M/);
+  assert.match(invoiceMetrics(approved), /Annual cost savings/);
+  assert.match(invoiceMetrics(approved), /Fixture team · Owner-reported/);
 });
 
-test("the time reduction is derived only from approved times and bars use the same ratio", () => {
+test("the time reduction is derived only from approved times", () => {
   const source = { ...impactMetrics[0], ...disclosure, value: 4, comparison: { before: 16, after: 4 } };
   const derived = { ...impactMetrics[1], ...disclosure };
   assert.throws(() => publishedMetrics([derived, { ...source, publication: "pending" }]), /approved source inputs/);
   assert.throws(() => publishedMetrics([{ ...source, comparison: { before: 0, after: 4 } }]), /Invalid approved time comparison/);
   const metrics = publishedMetrics([source, derived]);
   assert.equal(metrics[1].value, 75);
-  assert.match(invoiceComparison(metrics), /y="24" width="50"/);
-  assert.match(impact({ metrics }), /75%/);
-  assert.match(impact({ metrics }), /Calculated from owner-reported times/);
-  assert.doesNotMatch(impact({ metrics: publishedMetrics([source]) }), /75%/);
+  assert.match(invoiceMetrics(metrics), /75%/);
+  assert.match(invoiceMetrics(metrics), /Calculated from owner-reported times/);
+  assert.doesNotMatch(invoiceMetrics(publishedMetrics([source])), /75%/);
 });
 
 test("approved company metrics feed the corresponding home story and matching case only", async () => {
@@ -65,7 +64,8 @@ test("approved company metrics feed the corresponding home story and matching ca
   content.assets = new Map();
   assert.throws(() => validateEditorial(content, career, enterpriseCases, principles, [{ ...fixture, publication: "pending" }]), /Pending metric details/);
   content.metrics = publishedMetrics([fixture]);
-  for (const output of [impact(content), work(content, products, [])]) {
+  const nurtr = enterpriseCases.find(({ id }) => id === fixture.project);
+  for (const output of [caseMetrics(content.metrics, nurtr.id), enterpriseEntry(nurtr, content)]) {
     assert.match(output, /\$240K/);
     assert.match(output, /Nurtr company sales · Owner-reported/);
   }
@@ -97,7 +97,10 @@ test("missing approved photos are omitted and present approved photos escape use
 
 test("the editorial manifest publishes supplied cleared derivatives and keeps pending assets out", async () => {
   const available = await availableAssets(editorialAssets);
-  assert.deepEqual([...available.keys()], ["professional-portrait", "casual-portrait", "san-francisco-portrait", "google-assistant-2018", "iit-guwahati-certificate", "workshop-hardware"]);
+  assert.deepEqual([...available.keys()], [
+    "professional-portrait", "casual-portrait", "san-francisco-portrait", "google-assistant-2018", "iit-guwahati-certificate", "workshop-hardware",
+    "logo-dp-world", "logo-airtel", "logo-iris", "logo-nurtr", "logo-urstylecoach",
+  ]);
   assert.equal(available.get("professional-portrait").provenance, "ai-assisted-portrait");
   assert.doesNotMatch(photography(available, "professional-portrait"), /<figcaption>/);
   assert.equal(available.get("san-francisco-portrait").width, 420);
@@ -127,26 +130,26 @@ test("certificate derivatives require both approval and reviewed redaction, incl
   }
 });
 
-test("pending owner-supplied logos require individual clearance and use employer-name fallbacks", async () => {
+test("every employer has a published logo and a screen reader label", async () => {
   const root = await mkdtemp(join(tmpdir(), "axvrma-brands-"));
-  const logos = editorialAssets.filter(({ provenance }) => provenance === "owner-supplied-logo");
+  const logos = editorialAssets.filter(({ id }) => id.startsWith("logo-"));
   const [asset] = logos;
   const content = JSON.parse(await readFile("content/portfolio.json", "utf8"));
   try {
-    assert.equal(logos.length, 4);
-    assert.ok(logos.every(({ ownerApproval, rights }) => ownerApproval === "granted" && rights === "pending"));
-    content.assets = await availableAssets(logos, root);
-    assert.match(brandMarquee(content), /<strong>DP World<\/strong>/);
-    assert.doesNotMatch(brandMarquee(content), /<img/);
+    assert.equal(logos.length, content.experience.length);
+    content.assets = await availableAssets(editorialAssets);
+    const html = brandMarquee(content);
+    for (const { id, company } of content.experience) {
+      const logo = content.assets.get(`logo-${id}`);
+      assert.ok(logo, id);
+      assert.ok(html.includes(`src="${logo.path}" alt=""`), id);
+      assert.ok(html.includes(`class="sr-only">${company}</span>`), company);
+    }
+    assert.doesNotMatch(html, /<strong>/);
     await mkdir(join(root, "images/brands"), { recursive: true });
     await writeFile(join(root, "." + asset.path), "logo fixture");
-    await assert.rejects(availableAssets(logos, root), /Unapproved editorial asset/);
-    const approved = { ...asset, publication: "approved", rights: "cleared" };
-    await assert.rejects(availableAssets([{ ...approved, width: 0 }], root), /Invalid editorial image width/);
-    content.assets = await availableAssets([approved, ...logos.slice(1)], root);
-    assert.match(brandMarquee(content), /alt="" width="187" height="116" loading="lazy"/);
-    assert.match(brandMarquee(content), /class="sr-only">DP World/);
-    assert.match(brandMarquee(content), /<strong>IRIS Worldwide<\/strong>/);
+    await assert.rejects(availableAssets([{ ...asset, rights: "pending" }], root), /Unapproved editorial asset/);
+    await assert.rejects(availableAssets([{ ...asset, width: 0 }], root), /Invalid editorial image width/);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

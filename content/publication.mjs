@@ -77,14 +77,16 @@ export const editorialAssets = [
   employerLogo("airtel", "Airtel Africa", 115, 116, "airtel-africa"),
   employerLogo("iris", "IRIS Worldwide", 91, 84),
   employerLogo("nurtr", "Nurtr", 240, 42),
+  employerLogo("urstylecoach", "UrStyleCoach", 336, 141, "urstylecoach", "https://www.urstylecoach.com/"),
 ];
 
-/** @returns {import('./types.js').EditorialAsset} @param {string} id @param {string} name @param {number} width @param {number} height @param {string} [filename] */
-function employerLogo(id, name, width, height, filename = id) {
+/** @returns {import('./types.js').EditorialAsset} @param {string} id @param {string} name @param {number} width @param {number} height @param {string} [filename] @param {string} [source] */
+function employerLogo(id, name, width, height, filename = id, source) {
   return {
     id: `logo-${id}`, path: `/images/brands/${filename}.webp`, width, height, alt: name, caption: null,
-    focalPoint: "center", attribution: null, provenance: "owner-supplied-logo", ownerApproval: "granted",
-    publication: "pending", rights: "pending",
+    focalPoint: "center", attribution: source ?? null,
+    provenance: source ? "brand-website-logo" : "owner-supplied-logo",
+    ownerApproval: "granted", publication: "approved", rights: "cleared",
   };
 }
 
