@@ -95,7 +95,7 @@ export type EditorialAsset = {
   height: number;
   focalPoint: "center" | "top" | "left" | "right";
   attribution: string | null;
-  provenance: "ai-assisted-portrait" | "owner-supplied-photo" | "certificate-derivative" | "owner-supplied-logo";
+  provenance: "ai-assisted-portrait" | "owner-supplied-photo" | "certificate-derivative" | "owner-supplied-logo" | "brand-website-logo";
   redaction?: "visually-verified";
   ownerApproval?: "granted";
   variants?: { path: string; width: number }[];

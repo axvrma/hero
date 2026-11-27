@@ -124,7 +124,11 @@ h1, h2 { line-height: var(--section-line); }
 .employer-track ul { padding: 0 0 0 10px; list-style: none; gap: 60px; }
 .employer-track li { width: 112px; display: grid; place-items: center; color: #7c8d97; font-size: 18px; font-weight: 700; white-space: nowrap; }
 .employer-track li:nth-child(3) { width: 132px; }
-.company-logo img { max-width: 110px; max-height: 40px; object-fit: contain; filter: grayscale(1); opacity: .7; }
+.company-logo img { max-width: 110px; max-height: 40px; object-fit: contain; filter: brightness(0) invert(1); opacity: .48; }
+.company-logo img:is([src$="/iris.webp"], [src$="/urstylecoach.webp"]) {
+  /* Turn dark artwork on a light source background into the same translucent ink. */
+  filter: url("/images/logo-ink.svg#dark-ink");
+}
 @keyframes marquee { to { transform: translateX(-33.333333%); } }
 .employer-ticker:hover .employer-track { animation-play-state: paused; }
 

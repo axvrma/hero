@@ -5,7 +5,7 @@
 - [x] Record the owner’s portfolio-use approval for the four employer logos, the 2023 DP World award photograph and the redacted IIT certificate.
 - [x] Verify and release the redacted IIT derivative. The published file preserves the reviewed redaction. The original certificate PDF belongs outside Git and the deployment artifact.
 - [x] Verify the Post Graduate Certification Programme in Artificial Intelligence and Machine Learning from the supplied certificate. Electronics & ICT Academy, Indian Institute of Technology Guwahati conducted it jointly with Emeritus. Specialisations are Explainable AI (XAI) and Cybersecurity. The programme ran from 26 June 2025 to 20 May 2026, with official completion on 6 July 2026.
-- [ ] Obtain portfolio-use clearance for each of the DP World, Airtel Africa, IRIS Worldwide and Nurtr marks. Names are live as fallbacks. [Asset provenance and usage sources](ASSETS.md)
+- [x] Release the employer ticker with the five company logos at the owner’s request. [Asset provenance](ASSETS.md)
 - [ ] Obtain consent from the other identifiable participant and DP World’s publication clearance for the supplied 2023 photograph. The owner’s approval covers intended usage from his side.
 - [ ] Document the owner-reported DP World Kudos Award in 2026 and verify the citation. It has a distinct text entry with evidence pending. The 2023 recognition and photograph remain tied to 2023. Any link between the 2023 award and the invoice initiative requires separate confirmation.
 - [ ] Review optional DP World office and Paytm event photographs when supplied. Existing hackathon project images remain in use.

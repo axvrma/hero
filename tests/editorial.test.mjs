@@ -97,7 +97,10 @@ test("missing approved photos are omitted and present approved photos escape use
 
 test("the editorial manifest publishes supplied cleared derivatives and keeps pending assets out", async () => {
   const available = await availableAssets(editorialAssets);
-  assert.deepEqual([...available.keys()], ["professional-portrait", "casual-portrait", "san-francisco-portrait", "google-assistant-2018", "iit-guwahati-certificate", "workshop-hardware"]);
+  assert.deepEqual([...available.keys()], [
+    "professional-portrait", "casual-portrait", "san-francisco-portrait", "google-assistant-2018", "iit-guwahati-certificate", "workshop-hardware",
+    "logo-dp-world", "logo-airtel", "logo-iris", "logo-nurtr", "logo-urstylecoach",
+  ]);
   assert.equal(available.get("professional-portrait").provenance, "ai-assisted-portrait");
   assert.doesNotMatch(photography(available, "professional-portrait"), /<figcaption>/);
   assert.equal(available.get("san-francisco-portrait").width, 420);
@@ -127,26 +130,26 @@ test("certificate derivatives require both approval and reviewed redaction, incl
   }
 });
 
-test("pending owner-supplied logos require individual clearance and use employer-name fallbacks", async () => {
+test("every employer has a published logo and a screen reader label", async () => {
   const root = await mkdtemp(join(tmpdir(), "axvrma-brands-"));
-  const logos = editorialAssets.filter(({ provenance }) => provenance === "owner-supplied-logo");
+  const logos = editorialAssets.filter(({ id }) => id.startsWith("logo-"));
   const [asset] = logos;
   const content = JSON.parse(await readFile("content/portfolio.json", "utf8"));
   try {
-    assert.equal(logos.length, 4);
-    assert.ok(logos.every(({ ownerApproval, rights }) => ownerApproval === "granted" && rights === "pending"));
-    content.assets = await availableAssets(logos, root);
-    assert.match(brandMarquee(content), /<strong>DP World<\/strong>/);
-    assert.doesNotMatch(brandMarquee(content), /<img/);
+    assert.equal(logos.length, content.experience.length);
+    content.assets = await availableAssets(editorialAssets);
+    const html = brandMarquee(content);
+    for (const { id, company } of content.experience) {
+      const logo = content.assets.get(`logo-${id}`);
+      assert.ok(logo, id);
+      assert.ok(html.includes(`src="${logo.path}" alt=""`), id);
+      assert.ok(html.includes(`class="sr-only">${company}</span>`), company);
+    }
+    assert.doesNotMatch(html, /<strong>/);
     await mkdir(join(root, "images/brands"), { recursive: true });
     await writeFile(join(root, "." + asset.path), "logo fixture");
-    await assert.rejects(availableAssets(logos, root), /Unapproved editorial asset/);
-    const approved = { ...asset, publication: "approved", rights: "cleared" };
-    await assert.rejects(availableAssets([{ ...approved, width: 0 }], root), /Invalid editorial image width/);
-    content.assets = await availableAssets([approved, ...logos.slice(1)], root);
-    assert.match(brandMarquee(content), /alt="" width="187" height="116" loading="lazy"/);
-    assert.match(brandMarquee(content), /class="sr-only">DP World/);
-    assert.match(brandMarquee(content), /<strong>IRIS Worldwide<\/strong>/);
+    await assert.rejects(availableAssets([{ ...asset, rights: "pending" }], root), /Unapproved editorial asset/);
+    await assert.rejects(availableAssets([{ ...asset, width: 0 }], root), /Invalid editorial image width/);
   } finally {
     await rm(root, { recursive: true, force: true });
   }
