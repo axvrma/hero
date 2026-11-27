@@ -63,8 +63,8 @@ async function geometry(page, isReference) {
       for (const values of Object.values(result)) values.sort((a, b) => a.y - b.y || a.x - b.x);
       return result;
     }
-    const mobile = innerWidth < 800;
-    const narrow = innerWidth < 1200;
+    const mobile = innerWidth < 810;
+    const narrow = innerWidth < 1280;
     const named = (name) => visibleNodes(`[data-framer-name="${name}"]`);
     const nameOne = (name) => named(name)[0];
     const byBackground = (color, width, height) => visibleNodes("div").filter((node) => {

@@ -9,7 +9,6 @@ import { editorialAssets, impactMetrics } from "../content/publication.mjs";
 import { availableAssets, publishedMetrics, validateEditorial } from "../scripts/lib/publication.mjs";
 import { photography } from "../src/components/photography.mjs";
 import { enterpriseEntry } from "../src/components/work.mjs";
-import { invoiceComparison } from "../src/components/impact.mjs";
 import { brandMarquee, caseMetrics } from "../src/components/homepage.mjs";
 import { calculateExpression, elapsedTime } from "../src/calculations.mjs";
 
@@ -46,14 +45,13 @@ test("owner evidence and disclosure clearance are distinct requirements for publ
   assert.match(invoiceMetrics(approved), /Fixture team · Owner-reported/);
 });
 
-test("the time reduction is derived only from approved times and bars use the same ratio", () => {
+test("the time reduction is derived only from approved times", () => {
   const source = { ...impactMetrics[0], ...disclosure, value: 4, comparison: { before: 16, after: 4 } };
   const derived = { ...impactMetrics[1], ...disclosure };
   assert.throws(() => publishedMetrics([derived, { ...source, publication: "pending" }]), /approved source inputs/);
   assert.throws(() => publishedMetrics([{ ...source, comparison: { before: 0, after: 4 } }]), /Invalid approved time comparison/);
   const metrics = publishedMetrics([source, derived]);
   assert.equal(metrics[1].value, 75);
-  assert.match(invoiceComparison(metrics), /y="24" width="50"/);
   assert.match(invoiceMetrics(metrics), /75%/);
   assert.match(invoiceMetrics(metrics), /Calculated from owner-reported times/);
   assert.doesNotMatch(invoiceMetrics(publishedMetrics([source])), /75%/);

@@ -33,18 +33,3 @@ export function metricList(metrics) {
     <dd><strong>${e(metricValue(metric))}</strong><p>${e(metric.scope)}</p>${attribution(metric)}</dd>
   </div>`).join("")}</dl>`;
 }
-
-export function invoiceComparison(metrics) {
-  const time = metrics.find(({ id }) => id === "invoice-processing-time");
-  if (!time?.comparison) return "";
-  const { before, after } = time.comparison;
-  return `<figure class="invoice-comparison">
-    <figcaption>Time per invoice · Before and after</figcaption>
-    <svg viewBox="0 0 200 38" preserveAspectRatio="none" aria-hidden="true">
-      <rect width="200" height="14" rx="2" class="invoice-before"/>
-      <rect y="24" width="${200 * after / before}" height="14" rx="2" class="invoice-after"/>
-    </svg>
-    <p>Before <strong>${e(before)} min</strong> · After <strong>${e(after)} min</strong></p>
-    ${attribution(time)}
-  </figure>`;
-}

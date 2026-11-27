@@ -138,7 +138,7 @@ function questions(content) {
       <div class="contact-card" id="contact" data-reveal data-compare="contact">
         <h3>Have any more questions or want to start collaborating?</h3>
         <div class="contact-picture">
-          ${contactPhoto ? photoImage(contactPhoto, { sizes: "(max-width: 799px) 280px, 420px" }) : ""}
+          ${contactPhoto ? photoImage(contactPhoto, { sizes: "(max-width: 809px) 280px, 420px" }) : ""}
           <div class="contact-actions">${external(`mailto:${content.profile.email}`, "👋🏻 Let’s talk", "button button-primary")}</div>
         </div>
       </div>

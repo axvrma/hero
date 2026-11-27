@@ -133,9 +133,15 @@ test("all eight viewports have responsive controls, fonts and no horizontal over
         bodyFontLoaded: [...document.fonts].some(({ family, status }) => family === "Manrope" && status === "loaded"),
       };
     }), `${width}×${height}`).toEqual({ width, fontFailures: 0, bodyFontLoaded: true });
-    if (width < 800) {
+    if (width < 810) {
       for (const button of await page.locator(".hero-actions .button").all()) expect((await button.boundingBox()).width).toBe(312);
     }
+  }
+  for (const width of [809, 810, 1279, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    const expected = width < 810 ? 328 : width < 1280 ? 726 : 1024;
+    expect((await page.locator(".case-card").first().boundingBox()).width, `${width}px breakpoint`).toBe(expected);
   }
   for (const path of ["/work#configuration-driven-ui", "/about#story-first-program", "/work#atlas", "/work#design-spec-generator"]) {
     await page.setViewportSize({ width: 320, height: 812 });
